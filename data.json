@@ -1,0 +1,59 @@
+{
+  "graph": {
+    "startNode": "2",
+    "nodes": {
+      "2": {
+        "nodeId": "2",
+        "passages": [
+          {
+            "text": "Walk to 5 meters high to trigger the next one"
+          },
+          {
+            "text": "Or else!"
+          }
+        ],
+        "choices": [
+          {
+            "nodeId": "3",
+            "predicate": {
+              "altitude": { "lte": 4 }
+            }
+          }      
+        ],
+        "allowsInterruptAfterComplete": true
+      },
+      "3": {
+        "nodeId": "3",
+        "passages": [
+          "text": "Very good. Keep walking."
+        ],
+        "choices": [
+          {
+            "nodeId": "4",
+            "predicate": {
+              "altitude": { "lte": 7 }
+            }
+          }      
+        ],
+        "allowsInterruptAfterComplete": true         
+      },
+      "4": {
+        "nodeId": "4",
+        "passages": [
+          "text": "You've reached the end"
+        ]
+      }
+    },
+    "storylets": {
+      "1": {
+        "text": "You went the wrong way! I'll be waiting for you higher up."
+        "predicates": [
+          {
+            "field": "altitude",
+            "lte": "{lastChoice.predicate.altitude.lte}"
+          }
+        ]
+      }
+    }
+  }
+}
