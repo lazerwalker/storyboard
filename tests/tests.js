@@ -28,6 +28,32 @@ describe("starting the game", function() {
   });
 });
 
+describe("outputting content", function() {
+  it("should send the initial node's text", function(done) {
+    graph = new Graph({
+      "startNode": "1",
+      "nodes": {
+        "1": {
+          "nodeId": "1",
+          "passages": [
+            {
+              "type": "text",
+              "content": "Hello World!"
+            }
+          ]
+        } 
+      }
+    });
+
+    graph.addOutput("text", function(text) {
+      expect(text).to.equal("Hello World!");
+      done();
+    });
+
+    graph.start();
+  });
+});
+
 /*
 playing node content
   text
