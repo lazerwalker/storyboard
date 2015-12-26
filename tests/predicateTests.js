@@ -123,3 +123,25 @@ describe("combining multiple conditions", function() {
     expect(result2).to.be.false;
   });
 });
+
+describe("combining multiple variables", function() {
+  let predicate;
+
+  beforeEach(function() {
+    predicate = {"foo": {"lte": 10},
+                 "bar": {"gte": 5}};
+  });
+
+  it("should return true when both are true", function() {
+    const result = checkPredicate(predicate, {"foo": 7, "bar": 7});
+    expect(result).to.be.false;
+  });
+
+  it("should not return true when only one is true", function() {
+    const result1 = checkPredicate(predicate, {"foo": 4, "bar": 4});
+    expect(result1).to.be.false;
+
+    const result2 = checkPredicate(predicate, {"foo": 11, "bar": 11});
+    expect(result2).to.be.false;
+  });
+});
