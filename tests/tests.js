@@ -54,6 +54,43 @@ describe("outputting content", function() {
   });
 });
 
+describe("making choices", function() {
+  beforeEach(function() {
+    graph = new Graph({
+      "startNode": "1",
+      "nodes": {
+        "1": {
+          "nodeId": "1",
+          "choices": [
+            {
+              "nodeId": "2",
+              "predicate": {
+                "counter": { "gte": 10 }
+              }
+            }   
+          ]
+        },
+        "2": {
+          "nodeId": "2"
+        } 
+      }
+    });
+
+    graph.start();
+  });
+
+  it("should switch states when a condition is triggered", function() {
+    expect(graph.currentNode).to.equal("1");
+    graph.receiveInput("counter", 11);
+    expect(graph.currentNode).to.equal("2");
+  });
+
+  it("should not switch states if the condition is not triggered", function() {
+    graph.receiveInput("counter", 5);
+    expect(graph.currentNode).to.equal("1");
+  })
+});
+
 /*
 playing node content
   text
