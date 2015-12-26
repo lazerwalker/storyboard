@@ -153,7 +153,7 @@ describe("making choices", function() {
     });
   });
 
-  context("when the predicate has both gte and lte conditions", function() {
+  context("when the predicate has multiple conditions", function() {
     it("should respect both of them", function() {
       graph = new Graph({
         "startNode": "1",
