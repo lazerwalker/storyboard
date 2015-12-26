@@ -61,6 +61,11 @@ describe("making choices", function() {
       "nodes": {
         "1": {
           "nodeId": "1",
+          "passages": [
+            {
+              "passageId": "5",
+            }
+          ],
           "choices": [
             {
               "nodeId": "2",
@@ -77,18 +82,31 @@ describe("making choices", function() {
     });
 
     graph.start();
+  });  
+
+  // TODO: This is no longer meaningful, until we have the distinction of synchronous vs asynchronous output types
+  context.skip("when the output happens instantly", function() {
+    it("should switch states when a condition is triggered", function() {
+      expect(graph.currentNode).to.equal("1");
+      graph.receiveInput("counter", 11);
+      expect(graph.currentNode).to.equal("2");
+    });
+
+    it("should not switch states if the condition is not triggered", function() {
+      graph.receiveInput("counter", 5);
+      expect(graph.currentNode).to.equal("1");
+    });
   });
 
-  it("should switch states when a condition is triggered", function() {
-    expect(graph.currentNode).to.equal("1");
-    graph.receiveInput("counter", 11);
-    expect(graph.currentNode).to.equal("2");
-  });
+  context("when the output needs to finish first", function() {
+    it("shouldn't change nodes until the content finishes", function() {
+      graph.receiveInput("counter", "11");
+      expect(graph.currentNode).to.equal("1");
 
-  it("should not switch states if the condition is not triggered", function() {
-    graph.receiveInput("counter", 5);
-    expect(graph.currentNode).to.equal("1");
-  })
+      graph.completePassage("5");
+      expect(graph.currentNode).to.equal("2");
+    });
+  });
 });
 
 /*

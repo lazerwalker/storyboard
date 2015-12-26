@@ -6,6 +6,7 @@ export default class Graph {
     this.startNode = options.startNode;
 
     this.currentNode = undefined;
+    this.currentPassage = 0;
 
     this.outputs = new Map();
     this.inputs = new Map();
@@ -30,22 +31,41 @@ export default class Graph {
     this._checkCurrentChoices();
   }
 
+  completePassage(passageId) {
+    if (passageId !== this._currentPassage.passageId) return;
+    this.passageId++;
+
+    if (passageId >= this._currentNode.passages.length) {
+      this.nodeComplete = true;
+      this._checkCurrentChoices();
+    }
+  }
+
   //--
 
   _playCurrentNode() {
     if (!this._currentNode.passages) return;
 
-    for (let passage of this._currentNode.passages) {
-      let outputs = this.outputs[passage.type];
-      if (!outputs) continue;
-      for (let outputCallback of outputs) {
-        outputCallback(passage.content);
-      }
+    this.nodeComplete = false;
+    this.currentPassage = 0;
+    this._currentPassage = this._currentNode.passages[0];
+    this._playCurrentPassage();
+  }
+
+  _playCurrentPassage() {
+    const passage = this._currentNode.passages[this.currentPassage]    
+    let outputs = this.outputs[passage.type];
+    if (!outputs) return;
+
+    for (let outputCallback of outputs) {
+      outputCallback(passage.content);
     }
   }
 
   _checkCurrentChoices() {
     if (!this._currentNode.choices) return;
+    if (!this.nodeComplete) return;
+
     var _this = this;    
     let choices = this._currentNode.choices.filter(function(choice) {
       return _.reduce(choice.predicate, function(memo, obj, input) {
@@ -57,7 +77,7 @@ export default class Graph {
       const newNode = choices[0].nodeId;
       this.currentNode = newNode;
       this._currentNode = this._nodeWithId(newNode);
-      this._checkCurrentChoices()
+      this._playCurrentNode();
     }
   }
 
