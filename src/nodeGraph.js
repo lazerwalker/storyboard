@@ -74,7 +74,14 @@ export default class Graph {
     var _this = this;    
     let choices = this._currentNode.choices.filter(function(choice) {
       return _.reduce(choice.predicate, function(memo, obj, input) {
-        return memo && (_this.inputs[input] >= obj.gte)
+        let value = memo;
+        if (obj.gte) {
+          value = value && (_this.inputs[input] >= obj.gte);
+        }
+        if (obj.lte) {
+          value = value && (_this.inputs[input] <= obj.lte);
+        }
+        return value;
       }, true);
     });
 

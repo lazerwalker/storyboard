@@ -152,4 +152,44 @@ describe("making choices", function() {
       expect(graph.currentNode).to.equal("2");
     });
   });
+
+  context("when the predicate has both gte and lte conditions", function() {
+    it("should respect both of them", function() {
+      graph = new Graph({
+        "startNode": "1",
+        "nodes": {
+          "1": {
+            "nodeId": "1",
+            "passages": [
+              {
+                "passageId": "5",
+              }
+            ],
+            "choices": [
+              {
+                "nodeId": "2",
+                "predicate": {
+                  "counter": { "gte": 10, "lte": 15 }
+                }
+              }   
+            ]
+          },
+          "2": {
+            "nodeId": "2"
+          } 
+        }
+      });
+      graph.start()
+      graph.completePassage("5");
+
+      graph.receiveInput("counter", 9);
+      expect(graph.currentNode).to.equal("1");
+
+      graph.receiveInput("counter", 16);
+      expect(graph.currentNode).to.equal("1");
+
+      graph.receiveInput("counter", 12);
+      expect(graph.currentNode).to.equal("2");
+    });
+  });
 });
