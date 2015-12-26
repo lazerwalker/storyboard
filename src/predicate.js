@@ -2,13 +2,18 @@ const _ = require('underscore');
 
 export default function checkPredicate(predicate, state) {
   return _.reduce(predicate, function(memo, obj, input) {
-    let value = memo;
-    if (obj.gte) {
-      value = value && (state[input] >= obj.gte);
+    const value = state[input];
+    let bool = memo;
+    if (!_.isUndefined(obj.gte)) {
+      bool = bool && (value >= obj.gte);
     }
-    if (obj.lte) {
-      value = value && (state[input] <= obj.lte);
+    if (!_.isUndefined(obj.lte)) {
+      bool = bool && (value <= obj.lte);
     }
-    return value;
+    if (!_.isUndefined(obj.exists)) {
+      console.log(bool, obj.exists, _.isUndefined(value))
+      bool = bool && (obj.exists !== _.isUndefined(value));
+    }
+    return bool;
   }, true);
 }
