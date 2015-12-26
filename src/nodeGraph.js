@@ -1,5 +1,7 @@
 const _ = require('underscore')
 
+import checkPredicate from "./predicate"
+
 export default class Graph {
   constructor(options) {
     this.nodes = options.nodes;
@@ -73,16 +75,7 @@ export default class Graph {
 
     var _this = this;    
     let choices = this._currentNode.choices.filter(function(choice) {
-      return _.reduce(choice.predicate, function(memo, obj, input) {
-        let value = memo;
-        if (obj.gte) {
-          value = value && (_this.inputs[input] >= obj.gte);
-        }
-        if (obj.lte) {
-          value = value && (_this.inputs[input] <= obj.lte);
-        }
-        return value;
-      }, true);
+      return checkPredicate(choice.predicate, _this.inputs)
     });
 
     if (choices.length > 0) {
