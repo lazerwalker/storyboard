@@ -13,10 +13,7 @@ export default class Graph {
   }
 
   start() {
-    this.currentNode = this.startNode;
-    this._currentNode = this._nodeWithId(this.currentNode)
-
-    this._playCurrentNode();
+    this._setNode(this.startNode)
   }
 
   addOutput(type, callback) {
@@ -44,6 +41,12 @@ export default class Graph {
   }
 
   //--
+
+  _setNode(nodeId) {
+      this.currentNode = nodeId;
+      this._currentNode = this._nodeWithId(nodeId);
+      this._playCurrentNode();
+  }
 
   _playCurrentNode() {
     if (!this._currentNode.passages) return;
@@ -76,10 +79,7 @@ export default class Graph {
     });
 
     if (choices.length > 0) {
-      const newNode = choices[0].nodeId;
-      this.currentNode = newNode;
-      this._currentNode = this._nodeWithId(newNode);
-      this._playCurrentNode();
+      this._setNode(choices[0].nodeId);
     }
   }
 
