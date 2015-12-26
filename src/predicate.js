@@ -11,7 +11,6 @@ export default function checkPredicate(predicate, state) {
       bool = bool && (value <= obj.lte);
     }
     if (!_.isUndefined(obj.exists)) {
-      console.log(bool, obj.exists, _.isUndefined(value))
       bool = bool && (obj.exists !== _.isUndefined(value));
     }
     return bool;
