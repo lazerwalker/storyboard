@@ -33,11 +33,13 @@ export default class Graph {
 
   completePassage(passageId) {
     if (passageId !== this._currentPassage.passageId) return;
-    this.passageId++;
+    this.currentPassage++;
 
-    if (passageId >= this._currentNode.passages.length) {
+    if (this.currentPassage >= this._currentNode.passages.length) {
       this.nodeComplete = true;
       this._checkCurrentChoices();
+    } else {
+      this._playCurrentPassage();
     }
   }
 

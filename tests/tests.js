@@ -1,4 +1,10 @@
-var expect = require('chai').expect;
+const chai = require('chai')
+const sinon = require('sinon')
+const sinonChai = require('sinon-chai')
+const expect = chai.expect;
+
+chai.use(sinonChai);
+
 import Graph from '../src/nodeGraph'
 
 var graph;
@@ -51,6 +57,45 @@ describe("outputting content", function() {
     });
 
     graph.start();
+  });
+
+  context("when there are multiple passages", function() {
+    context("when the first one is synchronous", function() {
+      it("shouldn't play the second passage until the first is done", function() {
+        graph = new Graph({
+          "startNode": "1",
+          "nodes": {
+            "1": {
+              "nodeId": "1",
+              "passages": [
+                {
+                  "passageId": "2",
+                  "type": "text",
+                  "content": "First"
+                },
+                {
+                  "type": "text",
+                  "content": "Second"
+                }
+              ],
+            },
+          }
+        });
+
+        const callback = sinon.spy();
+        graph.addOutput("text", callback);
+
+        graph.start();
+
+        expect(callback).to.have.been.calledWith("First");
+        expect(callback).not.to.have.been.calledWith("Second");
+
+        graph.completePassage("2");
+
+        expect(callback).to.have.been.calledWith("Second");
+
+      });
+    });
   });
 });
 
