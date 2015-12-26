@@ -134,7 +134,7 @@ describe("combining multiple variables", function() {
 
   it("should return true when both are true", function() {
     const result = checkPredicate(predicate, {"foo": 7, "bar": 7});
-    expect(result).to.be.false;
+    expect(result).to.be.true;
   });
 
   it("should not return true when only one is true", function() {
