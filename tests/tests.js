@@ -153,24 +153,3 @@ describe("making choices", function() {
     });
   });
 });
-
-/*
-playing node content
-  text
-  waiting for audio to complete
-
-making choices
-  explicit choices
-  predicates
-    when predicate is already met
-    when updates via interrupt
-  set previousChoice
-  set currentNode, nodeHistory
-
-storylets
-
-
---
-
-invisible and grayed out choices
-*/
