@@ -6,6 +6,7 @@ const expect = chai.expect;
 chai.use(sinonChai);
 
 import NodeBag from '../src/nodeBag'
+import * as Actions from '../src/gameActions'
 
 describe("filtering nodes", function() {
   context("when some nodes match the predicate but others don't", function() {
@@ -16,11 +17,12 @@ describe("filtering nodes", function() {
 
       const bag = new NodeBag([first, second, third]);
         
+      let dispatch = sinon.spy();
+      bag.dispatch = dispatch;
+
       const result = bag.checkNodes({"foo": 5});
-      expect(result).to.have.length(2);
-      expect(result).to.contain(first);
-      expect(result).to.contain(second);
-      expect(result).not.to.contain(third);   
+      
+      expect(dispatch).to.have.been.calledWith(Actions.TRIGGERED_BAG_NODES, [first, second]);
     });
   })
 });

@@ -1,4 +1,10 @@
 export const OUTPUT = "output";
-export const CHANGE_NODE = "changeNode";
-export const CHANGE_PASSAGE = "changePassage";
-export const COMPLETE_NODE = "completeNode";
+
+export const CHANGE_GRAPH_NODE = "changeGraphNode";
+export const CHANGE_GRAPH_PASSAGE = "changeGraphPassage";
+export const COMPLETE_GRAPH_NODE = "completeGraphNode";
+
+export const CHANGE_BAG_PASSAGE = "changeBagNode";
+export const COMPLETE_BAG_NODE = "completeBagNode";
+
+export const TRIGGERED_BAG_NODES = "triggeredBagNodes";

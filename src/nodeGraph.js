@@ -4,27 +4,23 @@ import checkPredicate from "./predicate"
 import * as Actions from "./gameActions"
 
 export default class Graph {
-  constructor(options) {
-    this.nodes = options.nodes;
+  constructor(options={}) {
+    this.nodes = options.nodes || {};
     this.startNode = options.startNode;
   }
 
   completePassage(passageId, state) {
     const currentNode = this._nodeWithId(state.graph.currentNodeId)
-    const currentPassage = currentNode.passages[state.graph.currentPassageIndex];
+    if (!currentNode) return;
 
+    const currentPassage = currentNode.passages[state.graph.currentPassageIndex];
     if (passageId !== currentPassage.passageId) return;
 
     const newPassageIndex = state.graph.currentPassageIndex + 1;
-
     if (newPassageIndex >= currentNode.passages.length) {
-      if (this.dispatch) {
-        this.dispatch(Actions.COMPLETE_NODE, currentNode.nodeId)
-      }
+      this.dispatch(Actions.COMPLETE_GRAPH_NODE, currentNode.nodeId)
     } else {
-      if (this.dispatch) {
-        this.dispatch(Actions.CHANGE_PASSAGE, newPassageIndex)
-      }
+      this.dispatch(Actions.CHANGE_GRAPH_PASSAGE, newPassageIndex)
     }
   }
 
@@ -39,7 +35,7 @@ export default class Graph {
     });
 
     if (choices.length > 0 && this.dispatch) {
-      this.dispatch(Actions.CHANGE_NODE, choices[0].nodeId);
+      this.dispatch(Actions.CHANGE_GRAPH_NODE, choices[0].nodeId);
     }
   }
 
