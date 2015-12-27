@@ -1,6 +1,7 @@
 const _ = require('underscore')
 
 import checkPredicate from "./predicate"
+import * as Actions from "./gameActions"
 
 export default class Graph {
   constructor(options) {
@@ -16,13 +17,6 @@ export default class Graph {
 
   start() {
     this._setNode(this.startNode)
-  }
-
-  addOutput(type, callback) {
-    if (!this.outputs[type]) {
-      this.outputs[type] = [];
-    }
-    this.outputs[type].push(callback);
   }
 
   receiveInput(input, value) {
@@ -61,11 +55,8 @@ export default class Graph {
 
   _playCurrentPassage() {
     const passage = this._currentNode.passages[this.currentPassage]    
-    let outputs = this.outputs[passage.type];
-    if (!outputs) return;
-
-    for (let outputCallback of outputs) {
-      outputCallback(passage.content, passage.passageId);
+    if (this.dispatch) {
+      this.dispatch(Actions.OUTPUT, passage);
     }
   }
 

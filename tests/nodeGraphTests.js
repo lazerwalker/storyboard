@@ -6,6 +6,7 @@ const expect = chai.expect;
 chai.use(sinonChai);
 
 import Graph from '../src/nodeGraph'
+import * as Actions from '../src/gameActions'
 
 var graph;
 
@@ -34,66 +35,68 @@ describe("starting the game", function() {
   });
 });
 
+// TODO: Migrate to 'game' test
 describe("outputting content", function() {
   it("should send the initial node's text", function() {
+    const passage = {
+      "passageId": "2",
+      "type": "text",
+      "content": "Hello World!"
+    }
+
     graph = new Graph({
       "startNode": "1",
       "nodes": {
         "1": {
           "nodeId": "1",
-          "passages": [
-            {
-              "passageId": "2",
-              "type": "text",
-              "content": "Hello World!"
-            }
-          ]
+          "passages": [passage]
         } 
       }
     });
 
     const callback = sinon.spy();
-    graph.addOutput("text", callback);
+    graph.dispatch = callback;
     graph.start();
 
-    expect(callback).to.have.been.calledWith("Hello World!", "2")
+    expect(callback).to.have.been.calledWith(Actions.OUTPUT, passage);
   });
 
   context("when there are multiple passages", function() {
     context("when the first one is synchronous", function() {
       it("shouldn't play the second passage until the first is done", function() {
+        const first = {
+          "passageId": "2",
+          "type": "text",
+          "content": "First"
+        } 
+
+        const second = {
+          "passageId": "3",
+          "type": "text",
+          "content": "Second"
+        }
+
         graph = new Graph({
           "startNode": "1",
           "nodes": {
             "1": {
               "nodeId": "1",
-              "passages": [
-                {
-                  "passageId": "2",
-                  "type": "text",
-                  "content": "First"
-                },
-                {
-                  "passageId": "3",
-                  "type": "text",
-                  "content": "Second"
-                }
-              ],
+              "passages": [first, second]
             },
           }
         });
 
         const callback = sinon.spy();
-        graph.addOutput("text", callback);
+        graph.dispatch = callback;
 
         graph.start();
 
-        expect(callback).to.have.been.calledWith("First", "2");
-        expect(callback).not.to.have.been.calledWith("Second", "3");
+        expect(callback).to.have.been.calledWith(Actions.OUTPUT, first)
+        expect(callback).not.to.have.been.calledWith(Actions.OUTPUT, second);
 
         graph.completePassage("2");
 
-        expect(callback).to.have.been.calledWith("Second", "3");
+        expect(callback).to.have.been.calledWith(Actions.OUTPUT, second);
 
       });
     });
