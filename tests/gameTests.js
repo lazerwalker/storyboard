@@ -62,3 +62,81 @@ describe("initialization", function() {
     });
   });
 });
+
+describe("playing the node graph", function() {
+  context("when starting the game", function() {
+    it("should play the appropriate content via an output", function() {
+      const game = new Game({
+        "graph": {
+          "startNode": "1",
+          "nodes": {
+            "1": {
+              "nodeId": "1",
+              "passages": [
+                {
+                  "passageId": "5",
+                  "type": "text",
+                  "content": "Hello World!"
+                }
+              ]
+            } 
+          }
+        }
+      });
+
+      const callback = sinon.spy();
+      game.addOutput("text", callback);
+
+      game.start();
+
+      expect(callback).to.have.been.calledWith("Hello World!", "5");
+    });
+  });
+
+  context("after making a choice", function() {
+    it("should play the appropriate new content", function() {
+      const game = new Game({
+        "graph": {
+          "startNode": "1",
+          "nodes": {
+            "1": {
+              "nodeId": "1",
+              "passages": [
+                {
+                  "passageId": "5",
+                }
+              ],
+              "choices": [
+                {
+                  "nodeId": "2",
+                  "predicate": {
+                    "counter": { "gte": 10 }
+                  }
+                }   
+              ]
+            },
+            "2": {
+              "nodeId": "2",
+              "passages": [
+                {
+                  "passageId": "6",
+                  "type": "text",
+                  "content": "Goodbye World!"
+                }
+              ]
+            } 
+          }
+        }
+      });
+
+      const callback = sinon.spy();
+      game.addOutput("text", callback);
+
+      game.start();
+
+      game.completePassage("5");
+      game.receiveInput("counter", 11);
+      expect(callback).to.have.been.calledWith("Goodbye World!", "6");
+    });
+  });  
+});
