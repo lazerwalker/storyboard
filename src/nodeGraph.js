@@ -22,7 +22,9 @@ export default class Graph {
         this.dispatch(Actions.COMPLETE_NODE, currentNode.nodeId)
       }
     } else {
-      this.dispatch(Actions.CHANGE_PASSAGE, newPassageIndex)
+      if (this.dispatch) {
+        this.dispatch(Actions.CHANGE_PASSAGE, newPassageIndex)
+      }
     }
   }
 
