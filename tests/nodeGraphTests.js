@@ -35,7 +35,7 @@ describe("starting the game", function() {
 });
 
 describe("outputting content", function() {
-  it("should send the initial node's text", function(done) {
+  it("should send the initial node's text", function() {
     graph = new Graph({
       "startNode": "1",
       "nodes": {
@@ -43,6 +43,7 @@ describe("outputting content", function() {
           "nodeId": "1",
           "passages": [
             {
+              "passageId": "2",
               "type": "text",
               "content": "Hello World!"
             }
@@ -51,12 +52,11 @@ describe("outputting content", function() {
       }
     });
 
-    graph.addOutput("text", function(text) {
-      expect(text).to.equal("Hello World!");
-      done();
-    });
-
+    const callback = sinon.spy();
+    graph.addOutput("text", callback);
     graph.start();
+
+    expect(callback).to.have.been.calledWith("Hello World!", "2")
   });
 
   context("when there are multiple passages", function() {
@@ -74,6 +74,7 @@ describe("outputting content", function() {
                   "content": "First"
                 },
                 {
+                  "passageId": "3",
                   "type": "text",
                   "content": "Second"
                 }
@@ -87,12 +88,12 @@ describe("outputting content", function() {
 
         graph.start();
 
-        expect(callback).to.have.been.calledWith("First");
-        expect(callback).not.to.have.been.calledWith("Second");
+        expect(callback).to.have.been.calledWith("First", "2");
+        expect(callback).not.to.have.been.calledWith("Second", "3");
 
         graph.completePassage("2");
 
-        expect(callback).to.have.been.calledWith("Second");
+        expect(callback).to.have.been.calledWith("Second", "3");
 
       });
     });

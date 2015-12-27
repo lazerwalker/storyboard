@@ -65,7 +65,7 @@ export default class Graph {
     if (!outputs) return;
 
     for (let outputCallback of outputs) {
-      outputCallback(passage.content);
+      outputCallback(passage.content, passage.passageId);
     }
   }
 
