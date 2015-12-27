@@ -145,3 +145,23 @@ describe("combining multiple variables", function() {
     expect(result2).to.be.false;
   });
 });
+
+describe("keypath predicates", function() {
+  context("when the value matches", function() {
+    it("should match the predicate", function() {
+      const predicate  = {"foo.bar": {"lte": 10, "gte": 0}};
+      const state = {foo: {bar: 5}}
+      const result = checkPredicate(predicate, state);
+      expect(result).to.be.true;
+    });
+  });
+
+  context("when the predicate is not met", function() {
+    it("should not be a match", function() {
+      const predicate  = {"foo.bar": {"exists": false}};
+      const state = {foo: {bar: 5}}
+      const result = checkPredicate(predicate, state);
+      expect(result).to.be.false;
+    });
+  });
+});

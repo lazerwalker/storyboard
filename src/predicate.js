@@ -1,8 +1,12 @@
 const _ = require('underscore');
+require('underscore-keypath');
 
 export default function checkPredicate(predicate, state) {
   return _.reduce(predicate, function(memo, obj, input) {
-    const value = state[input];
+
+    // TODO: If this is slow, only do valueForKeyPath for strings that need it
+    const value = _(state).valueForKeyPath(input);
+
     let bool = memo;
     if (!_.isUndefined(obj.gte)) {
       bool = bool && (value >= obj.gte);
