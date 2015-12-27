@@ -6,6 +6,7 @@ const expect = chai.expect;
 chai.use(sinonChai);
 
 import Game from '../src/game'
+import * as Actions from '../src/gameActions'
 
 describe("initialization", function() {
   describe("creating a nodeGraph", function() {
@@ -31,7 +32,7 @@ describe("initialization", function() {
     });
 
     it("shouldn't start the game", function() {
-      expect(game.graph.currentNode).to.be.undefined;
+      expect(game.state.graph.currentNodeId).to.be.undefined;
     });
   });
 
@@ -93,9 +94,54 @@ describe("playing the node graph", function() {
     });
   });
 
-  context("after making a choice", function() {
-    it("should play the appropriate new content", function() {
-      const game = new Game({
+  context("when there are multiple passages", function() {
+    let first, second, game, callback;
+    beforeEach(function() {
+      first = {
+        "passageId": "2",
+        "type": "text",
+        "content": "First"
+      } 
+
+      second = {
+        "passageId": "3",
+        "type": "text",
+        "content": "Second"
+      }
+
+      game = new Game({
+        "graph": {
+          "startNode": "1",
+          "nodes": {
+            "1": {
+              "nodeId": "1",
+              "passages": [first, second]
+            },
+          }
+        }
+      });
+
+      callback = sinon.spy();
+      game.addOutput("text", callback);
+
+      game.start();
+    });
+
+    it("shouldn't play the second passage when the first isn't done", function() {
+      expect(callback).to.have.been.calledWith("First", "2")
+      expect(callback).not.to.have.been.calledWith("Second", "3");
+    });
+
+    it("should play the second passage after the first is done", function() {
+      game.completePassage("2");
+      expect(callback).to.have.been.calledWith("Second", "3");
+    })
+  });
+
+  context("when making a choice", function() {
+    let game, callback;
+    beforeEach(function() {
+      game = new Game({
         "graph": {
           "startNode": "1",
           "nodes": {
@@ -129,14 +175,84 @@ describe("playing the node graph", function() {
         }
       });
 
-      const callback = sinon.spy();
+      callback = sinon.spy();
       game.addOutput("text", callback);
-
       game.start();
+    });
 
-      game.completePassage("5");
-      game.receiveInput("counter", 11);
-      expect(callback).to.have.been.calledWith("Goodbye World!", "6");
+    describe("waiting for the node to complete", function() {
+      context("when the output needs to finish first", function() {
+        it("shouldn't change nodes until the content finishes", function() {
+          game.receiveInput("counter", 11);
+          expect(callback).not.to.have.been.calledWith("Goodbye World!", "6");
+          expect(game.state.graph.currentNodeId).to.equal("1");
+        });
+      });
+
+      context("when the output has finished", function() {
+        it("should play the appropriate new content", function() {
+          game.completePassage("5");
+
+          game.receiveInput("counter", 11);
+          expect(callback).to.have.been.calledWith("Goodbye World!", "6");
+        });
+      });
+    });
+
+    describe("when the predicate has multiple conditions", function() {
+      beforeEach(function() {
+       game = new Game({
+          "graph": {
+            "startNode": "1",
+            "nodes": {
+              "1": {
+                "nodeId": "1",
+                "passages": [
+                  {
+                    "passageId": "5",
+                  }
+                ],
+                "choices": [
+                  {
+                    "nodeId": "2",
+                    "predicate": {
+                      "counter": { "gte": 10, "lte": 15 }
+                    }
+                  }   
+                ]
+              },
+              "2": {
+                "nodeId": "2",
+                "passages": [{ 
+                  "passageId": "1",
+                  "content": "Hi",
+                  "type": "text"
+                }]
+              } 
+            }
+          }
+        });
+       callback = sinon.spy();
+       game.addOutput("text", callback);
+       game.start();
+       game.completePassage("5");
+      });
+ 
+
+      it("shouldn't transition when only one condition is met", function() {
+        game.receiveInput("counter", 9);
+        expect(callback).not.to.have.been.calledWith("Hi", "1");
+      });
+
+      it("shouldn't transition when only the other condition is met", function() {
+        game.receiveInput("counter", 16);
+        expect(callback).not.to.have.been.calledWith("Hi", "1");
+      });
+
+      it("should transition when both conditions are met", function() {
+        game.receiveInput("counter", 12);
+        expect(callback).to.have.been.calledWith("Hi", "1");
+      });
     });
   });  
 });
