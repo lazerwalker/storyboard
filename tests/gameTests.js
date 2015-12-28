@@ -459,6 +459,24 @@ describe("receiveDispatch", function() {
 
       expect(game.bag.checkNodes).to.have.been.calledWith(game.state);
     });
+
+    context("when the node has never been visited before", function() {
+      it("should add it to the bag node history", function() {
+        const game = new Game({});
+        expect(game.state.bag.nodeHistory["1"]).to.be.undefined;
+        game.receiveDispatch(Actions.COMPLETE_BAG_NODE, "1");
+        expect(game.state.bag.nodeHistory["1"]).to.equal(1);
+      })
+    })
+
+    context("when the node has been visited before", function() {
+      it("should increment its node history", function() {
+        const game = new Game({});
+        game.receiveDispatch(Actions.COMPLETE_BAG_NODE, "1");
+        game.receiveDispatch(Actions.COMPLETE_BAG_NODE, "1");
+        expect(game.state.bag.nodeHistory["1"]).to.equal(2);
+      });
+    })
   });
 
   describe("OUTPUT", function() {

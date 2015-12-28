@@ -17,6 +17,7 @@ export default class Game {
 
     this.state.bag = new Map();
     this.state.bag.activePassageIds = {};
+    this.state.bag.nodeHistory = new Map();
     this.state.bag.nodes = options.bag;
 
     this.graph = new NodeGraph(options.graph);
@@ -78,8 +79,16 @@ export default class Game {
       this.bag.playCurrentPassage(nodeId, this.state);
 
     } else if (action === Actions.COMPLETE_BAG_NODE) {
-      delete this.state.bag.activePassageIds[data];
-      this.bag.checkNodes(this.state);
+      const nodeId = data;
+      delete this.state.bag.activePassageIds[nodeId];
+
+      if (!this.state.bag.nodeHistory[nodeId]) {
+        this.state.bag.nodeHistory[nodeId] = 0;
+      } 
+
+      this.state.bag.nodeHistory[nodeId]++;     
+
+      this.bag.checkNodes(this.state);      
     }
   }
 
