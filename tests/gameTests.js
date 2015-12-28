@@ -258,7 +258,7 @@ describe("playing the node graph", function() {
 });
 
 describe("triggering events from the bag", function() {
-  context("when an input change results in a valid bag node", function() {
+  context("triggered by an input change", function() {
     let node, game, output;
     beforeEach(function() {
       node = {
@@ -302,6 +302,76 @@ describe("triggering events from the bag", function() {
         game.completePassage("1");
         expect(output).to.have.been.calledWith("Well let me tell you!", "2");
       });
+    });
+  });
+
+
+  context("triggered by a graph node being completed", function() {
+    let node, game, output;
+    beforeEach(function() {
+      node = {
+        nodeId: "5", 
+        predicate: { "graph.nodeComplete": { "gte": 1 }},
+        passages: [
+          {
+            "passageId": "1",
+            "type": "text",
+            "content": "Hello"
+          }
+        ]
+      }
+
+      game = new Game({
+        bag: {"5": node},
+        graph: {
+          startNode: "4",
+          nodes: {
+            "4": {
+              nodeId: "4",
+              passages: [{
+                passageId: "2"
+              }]
+            }
+          }
+        }
+      });
+
+      output = sinon.spy();
+      game.addOutput("text", output);
+      game.start();
+    });
+
+    it("should not trigger the node initially", function() {
+      expect(output).not.to.have.been.calledWith("Hello", "1");
+    });
+
+    describe("when the graph node is complete", function() {
+      it("should play the bag node", function() {
+        game.completePassage("2");
+        expect(output).to.have.been.calledWith("Hello", "1");
+      });
+    });
+  });
+});
+
+describe("receiveDispatch", function() {
+  // TODO: Backfill this out
+  describe("COMPLETE_BAG_NODE", function() {
+    it("should remove the node from the list of active bag passages", function() {
+      const game = new Game({});
+      game.state.bag.activePassageIds["1"] = 0;
+
+      game.receiveDispatch(Actions.COMPLETE_BAG_NODE, "1");
+
+      expect(game.state.bag.activePassageIds["1"]).to.be.undefined;
+    });
+
+    it("should trigger a sweep of new bag nodes", function() {
+      const game = new Game({});
+      sinon.stub(game.bag, "checkNodes");
+      game.receiveDispatch(Actions.COMPLETE_BAG_NODE, "1");
+
+      expect(game.bag.checkNodes).to.have.been.calledWith(game.state);
     });
   });
 });

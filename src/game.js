@@ -46,6 +46,7 @@ export default class Game {
     } else if (action === Actions.COMPLETE_GRAPH_NODE) {
       this.state.graph.nodeComplete = true;
       this.graph.checkChoiceTransitions(this.state);
+      this.bag.checkNodes(this.state);
 
     } else if (action === Actions.TRIGGERED_BAG_NODES) {
       const node = data[0];
