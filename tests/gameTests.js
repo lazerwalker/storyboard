@@ -460,4 +460,74 @@ describe("receiveDispatch", function() {
       expect(game.bag.checkNodes).to.have.been.calledWith(game.state);
     });
   });
+
+  describe("OUTPUT", function() {
+    describe("selecting outputs", function() {
+      let textOutput1, textOutput2, audioOutput, game, passage;
+      beforeEach(function() {
+        textOutput1 = sinon.spy();
+        textOutput2 = sinon.spy();
+        audioOutput = sinon.spy();
+
+        game = new Game({});
+        game.addOutput("text", textOutput1);
+        game.addOutput("text", textOutput2);
+        game.addOutput("audio", audioOutput);
+
+        passage = {
+          "passageId": "5",
+          "content": "Hello World!",
+          "type": "text"
+        };
+
+        game.receiveDispatch(Actions.OUTPUT, passage)
+      });
+      it("should send output to all registered outputs of that type", function() {
+        expect(textOutput1).to.have.been.calledWith("Hello World!", "5");
+        expect(textOutput2).to.have.been.calledWith("Hello World!", "5");      
+      });
+
+      it("should only send output to outputs of the same type", function() {
+        expect(audioOutput).not.to.have.been.calledWith("Hello World!", "5");
+      });    
+    });
+
+    it("should evaluate all embedded variables", function() {
+      const game = new Game({});
+      const output = sinon.spy()
+
+      const passage = {
+        "passageId": "5",
+        "content": "Hello {yourName}, it's {myName}!",
+        "type": "text"
+      };
+
+      game.state.yourName = "Stanley";
+      game.state.myName = "Ollie";
+      game.addOutput("text", output);
+
+      game.receiveDispatch(Actions.OUTPUT, passage);
+
+      expect(output).to.have.been.calledWith("Hello Stanley, it's Ollie!", "5");
+    });
+
+    it("should allow nested keypaths in variables", function() {
+      const game = new Game({});
+      const output = sinon.spy()
+
+      const passage = {
+        "passageId": "5",
+        "content": "You're in node {graph.currentNodeId}!",
+        "type": "text"
+      };
+
+      game.state.graph.currentNodeId = "1";
+      game.addOutput("text", output);
+
+      game.receiveDispatch(Actions.OUTPUT, passage);
+
+      expect(output).to.have.been.calledWith("You're in node 1!", "5");
+    });
+  });
 });
+

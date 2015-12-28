@@ -1,4 +1,5 @@
-const _ = require('underscore')
+const _ = require('underscore');
+require("underscore-keypath");
 
 import NodeBag from "./nodeBag"
 import NodeGraph from "./nodeGraph"
@@ -32,7 +33,11 @@ export default class Game {
       if (!outputs) return;
 
       for (let outputCallback of outputs) {
-        outputCallback(data.content, data.passageId);
+        const string = data.content.replace(
+          /\{(.+?)\}/g,
+          (match, keyPath) => _(this.state).valueForKeyPath(keyPath)
+        );
+        outputCallback(string, data.passageId);
       }      
     } else if (action === Actions.MAKE_GRAPH_CHOICE) {
       this.state.graph.previousNodeId = this.state.graph.currentNodeId;
