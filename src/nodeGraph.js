@@ -35,7 +35,7 @@ export default class Graph {
     });
 
     if (choices.length > 0 && this.dispatch) {
-      this.dispatch(Actions.CHANGE_GRAPH_NODE, choices[0].nodeId);
+      this.dispatch(Actions.MAKE_GRAPH_CHOICE, choices[0]);
     }
   }
 

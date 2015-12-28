@@ -31,6 +31,8 @@ export default class Game {
       for (let outputCallback of outputs) {
         outputCallback(data.content, data.passageId);
       }      
+    } else if (action === Actions.MAKE_GRAPH_CHOICE) {
+      this.receiveDispatch(Actions.CHANGE_GRAPH_NODE, data.nodeId);
 
     } else if (action === Actions.CHANGE_GRAPH_NODE) {
       this.state.graph.currentNodeId = data;

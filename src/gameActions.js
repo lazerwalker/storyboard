@@ -1,6 +1,7 @@
 export const OUTPUT = "output";
 
 export const CHANGE_GRAPH_NODE = "changeGraphNode";
+export const MAKE_GRAPH_CHOICE = "makeGraphChoice";
 export const CHANGE_GRAPH_PASSAGE = "changeGraphPassage";
 export const COMPLETE_GRAPH_NODE = "completeGraphNode";
 
