@@ -38,6 +38,7 @@ export default class Game {
       this.state.graph.currentPassageIndex = 0;
 
       this.graph.playCurrentPassage(this.state);
+      this.bag.checkNodes(this.state);
 
     } else if (action === Actions.CHANGE_GRAPH_PASSAGE) {
       this.state.graph.currentPassageIndex = data;

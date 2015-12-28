@@ -351,6 +351,65 @@ describe("triggering events from the bag", function() {
       });
     });
   });
+
+  context("triggered by reaching a specific graph node", function() {
+    let node, game, output;
+    beforeEach(function() {
+      node = {
+        nodeId: "5", 
+        predicate: { 
+          "graph.currentNodeId": { gte: "2", lte: "2" }
+        },
+        passages: [
+          {
+            "passageId": "1",
+            "type": "text",
+            "content": "Hello"
+          }
+        ]
+      }
+
+      game = new Game({
+        bag: {"5": node},
+        graph: {
+          startNode: "4",
+          nodes: {
+            "4": {
+              nodeId: "4",
+              passages: [{
+                passageId: "2"
+              }],
+              choices: [{
+                nodeId: "2",
+                predicate: { "foo": { exists: false }}
+              }]
+            },
+          "2": {
+              nodeId: "2",
+              passages: [{
+                passageId: "3"
+              }]
+            }            
+          }
+        }
+      });
+
+      output = sinon.spy();
+      game.addOutput("text", output);
+      game.start();
+    });
+
+    it("should not trigger the node initially", function() {
+      expect(output).not.to.have.been.calledWith("Hello", "1");
+    });
+
+    describe("when the target graph node hasn't been completed", function() {
+      it("should trigger the bag node", function() {
+        game.completePassage("2");
+        expect(output).to.have.been.calledWith("Hello", "1");
+      });    
+    });
+  });
 });
 
 describe("receiveDispatch", function() {
