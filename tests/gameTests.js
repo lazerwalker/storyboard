@@ -417,9 +417,10 @@ describe("receiveDispatch", function() {
   describe("MAKE_GRAPH_CHOICE",function() {
     let choice1, choice2, game;
     beforeEach(function() {
-      choice1 = { "choiceId": "1" }
-      choice2 = { "choiceId": "2" }
+      choice1 = { nodeId: "3" }
+      choice2 = { nodeId: "4" }
       game = new Game({});
+      game.state.graph.currentNodeId = "2";
       game.receiveDispatch(Actions.MAKE_GRAPH_CHOICE, choice1);
       game.receiveDispatch(Actions.MAKE_GRAPH_CHOICE, choice2);
     });
@@ -429,8 +430,16 @@ describe("receiveDispatch", function() {
     });
 
     it("should store the full choice history in reverse-chronological order", function() {
-      expect(game.state.graph.previousChoices).to.eql([choice2, choice1]);
+      expect(game.state.graph.choiceHistory).to.eql([choice2, choice1]);
     });
+
+    it("should store the previous nodeId", function() {
+      expect(game.state.graph.previousNodeId).to.equal("3");
+    });
+
+    it("should store the full node history in reverse-chronological order", function() {
+      expect(game.state.graph.nodeHistory).to.eql(["3", "2"]);
+    });    
   });
 
   describe("COMPLETE_BAG_NODE", function() {

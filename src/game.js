@@ -11,7 +11,8 @@ export default class Game {
     this.outputs = new Map();
 
     this.state.graph = new Map();
-    this.state.graph.previousChoices = [];
+    this.state.graph.choiceHistory = [];
+    this.state.graph.nodeHistory = [];
 
     this.state.bag = new Map();
     this.state.bag.activePassageIds = {};
@@ -34,9 +35,13 @@ export default class Game {
         outputCallback(data.content, data.passageId);
       }      
     } else if (action === Actions.MAKE_GRAPH_CHOICE) {
-      this.receiveDispatch(Actions.CHANGE_GRAPH_NODE, data.nodeId);
+      this.state.graph.previousNodeId = this.state.graph.currentNodeId;
+      this.state.graph.nodeHistory.unshift(this.state.graph.currentNodeId);
+
       this.state.graph.previousChoice = Object.assign({}, data);
-      this.state.graph.previousChoices.unshift(Object.assign({}, data));
+      this.state.graph.choiceHistory.unshift(Object.assign({}, data));
+
+      this.receiveDispatch(Actions.CHANGE_GRAPH_NODE, data.nodeId);
 
     } else if (action === Actions.CHANGE_GRAPH_NODE) {
       this.state.graph.currentNodeId = data;
