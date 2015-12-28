@@ -305,7 +305,6 @@ describe("triggering events from the bag", function() {
     });
   });
 
-
   context("triggered by a graph node being completed", function() {
     let node, game, output;
     beforeEach(function() {

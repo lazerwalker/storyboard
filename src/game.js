@@ -62,6 +62,7 @@ export default class Game {
 
     } else if (action === Actions.COMPLETE_BAG_NODE) {
       delete this.state.bag.activePassageIds[data];
+      this.bag.checkNodes(this.state);
     }
   }
 
