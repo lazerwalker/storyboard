@@ -414,6 +414,25 @@ describe("triggering events from the bag", function() {
 
 describe("receiveDispatch", function() {
   // TODO: Backfill this out
+  describe("MAKE_GRAPH_CHOICE",function() {
+    let choice1, choice2, game;
+    beforeEach(function() {
+      choice1 = { "choiceId": "1" }
+      choice2 = { "choiceId": "2" }
+      game = new Game({});
+      game.receiveDispatch(Actions.MAKE_GRAPH_CHOICE, choice1);
+      game.receiveDispatch(Actions.MAKE_GRAPH_CHOICE, choice2);
+    });
+
+    it("should update the previousChoice with the most recent choice", function() {
+      expect(game.state.graph.previousChoice).to.eql(choice2);
+    });
+
+    it("should store the full choice history in reverse-chronological order", function() {
+      expect(game.state.graph.previousChoices).to.eql([choice2, choice1]);
+    });
+  });
+
   describe("COMPLETE_BAG_NODE", function() {
     it("should remove the node from the list of active bag passages", function() {
       const game = new Game({});
