@@ -1,0 +1,3 @@
+[submodule "iOS"]
+	path = iOS
+	url = git@bitbucket.org:lazerwalker/filbert-ios.git
