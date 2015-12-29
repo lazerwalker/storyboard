@@ -1,32 +1,35 @@
 {
   "graph": {
-    "startNode": "2",
+    "startNode": "1",
     "nodes": {
-      "2": {
-        "nodeId": "2",
+      "1": {
+        "nodeId": "1",
         "passages": [
           {
-            "text": "Walk to 5 meters high to trigger the next one"
+            "passageId": "1",
+            "type": "audio",
+            "content": "Walk to 5 meters high to trigger the next one"
           },
           {
-            "text": "Or else!"
+            "passageId": "2",
+            "type": "audio",
+            "content": "Or else!"
           }
         ],
-        "choices": [
-          {
-            "nodeId": "3",
+        "choices": [{
+            "nodeId": "2",
             "predicate": {
               "altitude": { "lte": 4 }
             }
-          }      
-        ],
-        "allowsInterruptAfterComplete": true
+        }]
       },
-      "3": {
-        "nodeId": "3",
-        "passages": [
-          "text": "Very good. Keep walking."
-        ],
+      "2": {
+        "nodeId": "2",
+        "passages": [{
+          "passageId": "3",
+          "type": "audio",
+          "content": "Very good. Keep walking."
+        }],
         "choices": [
           {
             "nodeId": "4",
@@ -34,25 +37,28 @@
               "altitude": { "lte": 7 }
             }
           }      
-        ],
-        "allowsInterruptAfterComplete": true         
+        ]
       },
-      "4": {
-        "nodeId": "4",
-        "passages": [
-          "text": "You've reached the end"
-        ]
+      "3": {
+        "nodeId": "3",
+        "passages": [{
+          "passageId": "4",
+          "type": "audio",
+          "content": "You've reached the end"
+        }]
       }
-    },
-    "storylets": {
-      "1": {
-        "text": "You went the wrong way! I'll be waiting for you higher up."
-        "predicates": [
-          {
-            "field": "altitude",
-            "lte": "{lastChoice.predicate.altitude.lte}"
-          }
-        ]
+    }
+  },
+  "bag": {
+    "4": {
+      "nodeId": "4",
+      "passages": [{
+        "passageId": "5",
+        "type": "audio",
+        "content": "You went the wrong way! I'll be waiting for you higher up."
+      }],
+      "predicate": {
+        "altitude": { "lte": "{lastChoice.predicate.altitude.lte}" }
       }
     }
   }
