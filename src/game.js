@@ -6,29 +6,29 @@ import NodeGraph from "./nodeGraph"
 
 import * as Actions from "./gameActions"
 
-export default class Game {
-  constructor(options) {
-    this.state = new Map();
-    this.outputs = new Map();
+const Game = function(options) {
+  this.state = new Map();
+  this.outputs = new Map();
 
-    this.state.graph = new Map();
-    this.state.graph.choiceHistory = [];
-    this.state.graph.nodeHistory = [];
+  this.state.graph = new Map();
+  this.state.graph.choiceHistory = [];
+  this.state.graph.nodeHistory = [];
 
-    this.state.bag = new Map();
-    this.state.bag.activePassageIds = {};
-    this.state.bag.nodeHistory = new Map();
-    this.state.bag.nodes = options.bag;
+  this.state.bag = new Map();
+  this.state.bag.activePassageIds = {};
+  this.state.bag.nodeHistory = new Map();
+  this.state.bag.nodes = options.bag;
 
-    this.graph = new NodeGraph(options.graph);
-    this.bag = new NodeBag(options.bag);
+  this.graph = new NodeGraph(options.graph);
+  this.bag = new NodeBag(options.bag);
 
-    for (let obj of [this.graph, this.bag]) {
-      obj.dispatch = _.bind(this.receiveDispatch, this)
-    }
+  for (let obj of [this.graph, this.bag]) {
+    obj.dispatch = _.bind(this.receiveDispatch, this)
   }
+}
 
-  receiveDispatch(action, data) {
+Game.prototype = {
+  receiveDispatch: function(action, data) {
     if (action === Actions.OUTPUT) {
       let outputs = this.outputs[data.type];
       if (!outputs) return;
@@ -90,29 +90,32 @@ export default class Game {
 
       this.bag.checkNodes(this.state);      
     }
-  }
+  },
 
-  start() {
+  start: function() {
     if (this.graph.startNode) {
       this.receiveDispatch(Actions.CHANGE_GRAPH_NODE, this.graph.startNode)
     }
-  }
+  },
 
-  addOutput(type, callback) {
+  addOutput: function(type, callback) {
+    if (!this.outputs) this.outputs = {};
     if (!this.outputs[type]) {
       this.outputs[type] = [];
     }
     this.outputs[type].push(callback);
-  }
+  },
 
-  receiveInput(type, value) {
+  receiveInput: function(type, value) {
     this.state[type] = value;
     this.graph.checkChoiceTransitions(this.state);
     this.bag.checkNodes(this.state);
-  }
+  },
 
-  completePassage(passageId) {
+  completePassage: function(passageId) {
     this.graph.completePassage(passageId, this.state);
     this.bag.completePassage(passageId, this.state);
   }
 }
+
+module.exports = Game
