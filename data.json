@@ -8,18 +8,19 @@
           {
             "passageId": "1",
             "type": "audio",
-            "content": "Walk to 5 meters high to trigger the next one"
+            "content": "Welcome to this experience. To start, put your headphones in and put your phone in your pocket."
           },
           {
             "passageId": "2",
             "type": "audio",
-            "content": "Or else!"
+            "content": "We won't continue until then."
           }
         ],
         "choices": [{
             "nodeId": "2",
             "predicate": {
-              "altitude": { "lte": 4 }
+              "proximity": { "gte": 1 },
+              "headphones": { "gte": 1 }
             }
         }]
       },
