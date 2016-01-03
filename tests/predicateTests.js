@@ -101,6 +101,20 @@ describe("predicate types", function() {
       });
     });    
   });
+
+  describe("string equality", function() {
+    it("should return true when two strings are equal", function() {
+      const predicate = {"foo": {"lte": "bar", "gte": "bar"}};
+      const result = checkPredicate(predicate, {foo: "bar"})
+      expect(result).to.be.true
+    })
+
+    it("should return false when two strings are not equal", function() {
+      const predicate = {"foo": {"lte": "bar", "gte": "bar"}};
+      const result = checkPredicate(predicate, {foo: "baz"})
+      expect(result).to.be.false
+    })
+  });
 });
 
 describe("combining multiple conditions", function() {
@@ -147,21 +161,49 @@ describe("combining multiple variables", function() {
 });
 
 describe("keypath predicates", function() {
-  context("when the value matches", function() {
-    it("should match the predicate", function() {
-      const predicate  = {"foo.bar": {"lte": 10, "gte": 0}};
-      const state = {foo: {bar: 5}}
-      const result = checkPredicate(predicate, state);
-      expect(result).to.be.true;
+  describe("checking the value of a keypath as input", function() {
+    context("when the value matches", function() {
+      it("should match the predicate", function() {
+        const predicate  = {"foo.bar": {"lte": 10, "gte": 0}};
+        const state = {foo: {bar: 5}}
+        const result = checkPredicate(predicate, state);
+        expect(result).to.be.true;
+      });
     });
-  });
 
-  context("when the predicate is not met", function() {
-    it("should not be a match", function() {
-      const predicate  = {"foo.bar": {"exists": false}};
-      const state = {foo: {bar: 5}}
-      const result = checkPredicate(predicate, state);
-      expect(result).to.be.false;
+    context("when the predicate is not met", function() {
+      it("should not be a match", function() {
+        const predicate  = {"foo.bar": {"exists": false}};
+        const state = {foo: {bar: 5}}
+        const result = checkPredicate(predicate, state);
+        expect(result).to.be.false;
+      });
+    });
+  })
+
+  describe("checking a value against a keypath value", function() {
+    context("when the value matches", function() {
+      it("should match the predicate", function() {
+        const predicate  = {"foo": {"lte": "bar.baz", "gte": "bar.baz"}};
+        const state = {
+          foo: "hello",
+          bar: { baz: "hello" }
+        }
+        const result = checkPredicate(predicate, state);
+        expect(result).to.be.true;
+      });
+    });
+
+    context("when the predicate is not met", function() {
+      it("should not be a match", function() {
+        const predicate  = {"foo": {"lte": "bar.baz"}};
+        const state = {
+          foo: 10,
+          bar: { baz: 5 }
+        }
+        const result = checkPredicate(predicate, state);
+        expect(result).to.be.false;
+      });
     });
   });
 });
