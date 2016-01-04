@@ -218,7 +218,23 @@ describe("playing the node graph", function() {
 
       describe("when the skipped passage is the last one", function() {
         it("should complete the node", function() {
+          const game = new Game({
+            "graph": {
+              "startNode": "1",
+              "nodes": {
+                "1": {
+                  "nodeId": "1",
+                  "passages": [{passageId: "2", content: "Hi!", predicate: { foo: {exists: true}}}]
+                },
+              }
+            }
+          });
+          const callback = sinon.spy();
+          game.addOutput("text", callback);
+          game.start();
 
+          expect(callback).not.to.have.been.calledWith("Hi!", "2");
+          expect(game.state.graph.nodeComplete).to.be.true;
         })
       })
     })
