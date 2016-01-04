@@ -7,13 +7,13 @@
         "passages": [
           {
             "passageId": "1",
-            "type": "audio",
-            "content": "Welcome to this experience. To start, put your headphones in and put your phone in your pocket."
+            "type": "mp3",
+            "content": "audio1"
           },
           {
             "passageId": "2",
-            "type": "audio",
-            "content": "We won't continue until then."
+            "type": "mp3",
+            "content": "audio2"
           }
         ],
         "choices": [{
