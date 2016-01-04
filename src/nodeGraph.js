@@ -16,11 +16,27 @@ export default class Graph {
     const currentPassage = currentNode.passages[state.graph.currentPassageIndex];
     if (passageId !== currentPassage.passageId) return;
 
-    const newPassageIndex = state.graph.currentPassageIndex + 1;
-    if (newPassageIndex >= currentNode.passages.length) {
-      this.dispatch(Actions.COMPLETE_GRAPH_NODE, currentNode.nodeId)
-    } else {
-      this.dispatch(Actions.CHANGE_GRAPH_PASSAGE, newPassageIndex)
+    this.startNextPassage(state)
+  }
+
+  startNextPassage(state) { 
+    const currentNode = this._nodeWithId(state.graph.currentNodeId)
+    if (!currentNode) return
+
+    let found = false
+    let newPassageIndex = state.graph.currentPassageIndex
+    while(!found) {
+      newPassageIndex = newPassageIndex + 1
+      if (newPassageIndex >= currentNode.passages.length) {
+        found = true;
+        this.dispatch(Actions.COMPLETE_GRAPH_NODE, currentNode.nodeId)
+      } else {
+        const newPassage = currentNode.passages[newPassageIndex];
+        if (!newPassage.predicate || checkPredicate(newPassage.predicate)) {
+          found = true;
+          this.dispatch(Actions.CHANGE_GRAPH_PASSAGE, newPassageIndex)
+        }
+      }
     }
   }
 

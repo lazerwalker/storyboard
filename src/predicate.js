@@ -16,6 +16,8 @@ const keyPathify = function(input, state, checkIfDefined = false) {
 }
 
 export default function checkPredicate(predicate, state) {
+  if (!predicate) { return false }
+
   return _.reduce(predicate, function(memo, obj, input) {
 
     // TODO: If this is slow, only do valueForKeyPath for strings that need it

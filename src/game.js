@@ -52,9 +52,9 @@ Game.prototype = {
     } else if (action === Actions.CHANGE_GRAPH_NODE) {
       this.state.graph.currentNodeId = data;
       this.state.graph.nodeComplete = false;
-      this.state.graph.currentPassageIndex = 0;
+      this.state.graph.currentPassageIndex = -1;
 
-      this.graph.playCurrentPassage(this.state);
+      this.graph.startNextPassage(this.state);
       this.bag.checkNodes(this.state);
 
     } else if (action === Actions.CHANGE_GRAPH_PASSAGE) {

@@ -95,46 +95,132 @@ describe("playing the node graph", function() {
   });
 
   context("when there are multiple passages", function() {
-    let first, second, game, callback;
-    beforeEach(function() {
-      first = {
-        "passageId": "2",
-        "type": "text",
-        "content": "First"
-      } 
+    describe("waiting for completion", function() {
+     let first, second, game, callback;
+      beforeEach(function() {
+        first = {
+          "passageId": "2",
+          "type": "text",
+          "content": "First"
+        } 
 
-      second = {
-        "passageId": "3",
-        "type": "text",
-        "content": "Second"
-      }
-
-      game = new Game({
-        "graph": {
-          "startNode": "1",
-          "nodes": {
-            "1": {
-              "nodeId": "1",
-              "passages": [first, second]
-            },
-          }
+        second = {
+          "passageId": "3",
+          "type": "text",
+          "content": "Second"
         }
+
+        game = new Game({
+          "graph": {
+            "startNode": "1",
+            "nodes": {
+              "1": {
+                "nodeId": "1",
+                "passages": [first, second]
+              },
+            }
+          }
+        });
+
+        callback = sinon.spy();
+        game.addOutput("text", callback);
+
+        game.start();
       });
 
-      callback = sinon.spy();
-      game.addOutput("text", callback);
+      it("shouldn't play the second passage when the first isn't done", function() {
+        expect(callback).to.have.been.calledWith("First", "2")
+        expect(callback).not.to.have.been.calledWith("Second", "3");
+      });
 
-      game.start();
-    });
+      it("should play the second passage after the first is done", function() {
+        game.completePassage("2");
+        expect(callback).to.have.been.calledWith("Second", "3");
+      })
+    })
 
-    it("shouldn't play the second passage when the first isn't done", function() {
-      expect(callback).to.have.been.calledWith("First", "2")
-      expect(callback).not.to.have.been.calledWith("Second", "3");
-    });
+    describe("when one of them should be skipped", function() {
+      describe("when there are passages after the skipped one", function() {
+        let first, second, game, callback;        
+        beforeEach(function() {
+          first = {
+            "passageId": "2",
+            "type": "text",
+            "content": "First",
+            "predicate": {foo: {exists: true}}
+          } 
+        })        
+        context("when the appropriate passage has no predicate", function() {
+          beforeEach(function() {
+            second = {
+              "passageId": "3",
+              "type": "text",
+              "content": "Second"
+            }
 
-    it("should play the second passage after the first is done", function() {
-      game.completePassage("2");
-      expect(callback).to.have.been.calledWith("Second", "3");
+            game = new Game({
+              "graph": {
+                "startNode": "1",
+                "nodes": {
+                  "1": {
+                    "nodeId": "1",
+                    "passages": [first, second]
+                  },
+                }
+              }
+            });
+
+            callback = sinon.spy();
+            game.addOutput("text", callback);
+          })
+
+          it("should go on to the next passage", function() {
+            game.start();
+
+            expect(callback).not.to.have.been.calledWith("First", "2")
+            expect(callback).to.have.been.calledWith("Second", "3") 
+          })
+        });
+
+        context("when the appropriate passage has a matching predicate", function() {
+          beforeEach(function() {
+            second = {
+              "passageId": "3",
+              "type": "text",
+              "content": "Second",
+              "predicate": {foo: {exists: false}}
+            }
+
+            game = new Game({
+              "graph": {
+                "startNode": "1",
+                "nodes": {
+                  "1": {
+                    "nodeId": "1",
+                    "passages": [first, second]
+                  },
+                }
+              }
+            });
+
+            callback = sinon.spy();
+            game.addOutput("text", callback);
+          })
+
+          it("should go to the next passage", function() {
+            game.start();
+
+            expect(callback).not.to.have.been.calledWith("First", "2")
+            expect(callback).to.have.been.calledWith("Second", "3")
+          })
+        })
+      })
+
+      describe("when the skipped passage is the last one", function() {
+        it("should complete the node", function() {
+
+        })
+      })
     })
   });
 
@@ -419,7 +505,14 @@ describe("receiveDispatch", function() {
     beforeEach(function() {
       choice1 = { nodeId: "3" }
       choice2 = { nodeId: "4" }
-      game = new Game({});
+      game = new Game({
+        graph: { 
+          nodes: { 
+            2: {nodeId: "2"}, 
+            3: {nodeId: "3", "passages":[]}, 
+            4:{ nodeId: "4", "passages":[]}
+          }}})
+
       game.state.graph.currentNodeId = "2";
       game.receiveDispatch(Actions.MAKE_GRAPH_CHOICE, choice1);
       game.receiveDispatch(Actions.MAKE_GRAPH_CHOICE, choice2);
