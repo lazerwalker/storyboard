@@ -32,7 +32,7 @@ export default class Graph {
         this.dispatch(Actions.COMPLETE_GRAPH_NODE, currentNode.nodeId)
       } else {
         const newPassage = currentNode.passages[newPassageIndex];
-        if (!newPassage.predicate || checkPredicate(newPassage.predicate)) {
+        if ((!newPassage.predicate) || checkPredicate(newPassage.predicate, state)) {
           found = true;
           this.dispatch(Actions.CHANGE_GRAPH_PASSAGE, newPassageIndex)
         }

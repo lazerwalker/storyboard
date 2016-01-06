@@ -147,9 +147,9 @@ describe("playing the node graph", function() {
             "passageId": "2",
             "type": "text",
             "content": "First",
-            "predicate": {foo: {exists: true}}
+            "predicate": {foo: {lte: 0}}
           } 
-        })        
+        })   
         context("when the appropriate passage has no predicate", function() {
           beforeEach(function() {
             second = {
@@ -172,6 +172,7 @@ describe("playing the node graph", function() {
 
             callback = sinon.spy();
             game.addOutput("text", callback);
+            game.receiveInput("foo", true)
           })
 
           it("should go on to the next passage", function() {
@@ -188,7 +189,7 @@ describe("playing the node graph", function() {
               "passageId": "3",
               "type": "text",
               "content": "Second",
-              "predicate": {foo: {exists: false}}
+              "predicate": {bar: {gte: 1}}
             }
 
             game = new Game({
@@ -205,11 +206,12 @@ describe("playing the node graph", function() {
 
             callback = sinon.spy();
             game.addOutput("text", callback);
+            game.receiveInput("foo", 1)
+            game.receiveInput("bar", 1)
           })
 
           it("should go to the next passage", function() {
             game.start();
-
             expect(callback).not.to.have.been.calledWith("First", "2")
             expect(callback).to.have.been.calledWith("Second", "3")
           })
