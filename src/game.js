@@ -90,6 +90,8 @@ Game.prototype = {
 
       this.bag.checkNodes(this.state);      
     }
+
+    this.emitState();
   },
 
   start: function() {
@@ -110,11 +112,22 @@ Game.prototype = {
     this.state[type] = value;
     this.graph.checkChoiceTransitions(this.state);
     this.bag.checkNodes(this.state);
+
+    this.emitState();
   },
 
   completePassage: function(passageId) {
     this.graph.completePassage(passageId, this.state);
     this.bag.completePassage(passageId, this.state);
+  },
+
+  emitState: function() {
+    if (this.stateListener) {
+      const obj = Object.assign({}, this.state)
+      delete obj.bag
+      const json = JSON.stringify(obj, null, 2)
+      this.stateListener(json)
+    }
   }
 }
 

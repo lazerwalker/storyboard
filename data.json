@@ -7,13 +7,21 @@
         "passages": [
           {
             "passageId": "1",
-            "type": "mp3",
-            "content": "audio1"
+            "type": "speech",
+            "content": "Good morning! I want us both to get away for a few minutes. Away from the noise of the city, away from the Uber or Lyft that probably took you here, even away from the shiny {device} you're holding in your hand now."
+          },
+          {
+            "passageId": "3",
+            "type": "speech",
+            "predicate": { "headphones": {"gte": 1},
+                           "proximity": {"lte": 0}},
+            "content": "I'm glad you're already wearing headphones. I just need you to put your phone in your pocket or your handbag. Don't worry, I'll wait for you."
           },
           {
             "passageId": "2",
-            "type": "mp3",
-            "content": "audio2"
+            "type": "speech",            
+            "predicate": { "headphones": {"lte": 0}},
+            "content": "I need you to put on headphones, and then put your phone in your pocket or handbag. Don't worry, I'll wait for you."
           }
         ],
         "choices": [{
@@ -27,15 +35,15 @@
       "2": {
         "nodeId": "2",
         "passages": [{
-          "passageId": "3",
-          "type": "audio",
-          "content": "Very good. Keep walking."
+          "passageId": "4",
+          "type": "speech",
+          "content": "Awesome. Let's go for a little walk. I hope you like stairs. We're going to be walking up a lot of 'em. It's funny how elevation gives you perspective. Clears your head a bit. I want you to start by heading up these giant concrete stairs. Not too quickly. Feel the sturdiness of them under your feet. One foot after the other."
         }],
         "choices": [
           {
-            "nodeId": "4",
+            "nodeId": "3",
             "predicate": {
-              "altitude": { "lte": 7 }
+              "altitude": { "lte": 4 }
             }
           }      
         ]
@@ -43,9 +51,9 @@
       "3": {
         "nodeId": "3",
         "passages": [{
-          "passageId": "4",
-          "type": "audio",
-          "content": "You've reached the end"
+          "passageId": "5",
+          "type": "speech",
+          "content": "Ah, a nice little landing. As you continue to walk up the concrete stairs, look up at the cliff face we're starting to scale, the greenery. Do you spot any blackberries speckled in the green? Maybe not this time of year."
         }]
       }
     }
@@ -54,7 +62,7 @@
     "4": {
       "nodeId": "4",
       "passages": [{
-        "passageId": "5",
+        "passageId": "",
         "type": "audio",
         "content": "You went the wrong way! I'll be waiting for you higher up."
       }],
