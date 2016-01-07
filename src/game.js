@@ -89,6 +89,10 @@ Game.prototype = {
       this.state.bag.nodeHistory[nodeId]++;     
 
       this.bag.checkNodes(this.state);      
+    } else if (action === Actions.RECEIVE_INPUT) {
+      Object.assign(this.state, data)
+      this.graph.checkChoiceTransitions(this.state);
+      this.bag.checkNodes(this.state);
     }
 
     this.emitState();
@@ -109,11 +113,9 @@ Game.prototype = {
   },
 
   receiveInput: function(type, value) {
-    this.state[type] = value;
-    this.graph.checkChoiceTransitions(this.state);
-    this.bag.checkNodes(this.state);
-
-    this.emitState();
+    const obj = {}
+    obj[type] = value
+    this.receiveDispatch(Actions.RECEIVE_INPUT, obj)
   },
 
   completePassage: function(passageId) {

@@ -9,3 +9,5 @@ export const CHANGE_BAG_PASSAGE = "changeBagNode";
 export const COMPLETE_BAG_NODE = "completeBagNode";
 
 export const TRIGGERED_BAG_NODES = "triggeredBagNodes";
+
+export const RECEIVE_INPUT = "receiveInput";
