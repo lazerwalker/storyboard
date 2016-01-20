@@ -361,6 +361,40 @@ describe("playing the node graph", function() {
 });
 
 describe("triggering events from the bag", function() {
+  context("when the game hasn't started yet", function() {
+    let node, game, output;
+    beforeEach(function() {
+      node = {
+        nodeId: "5", 
+        predicate: { "foo": { "lte": 10 }},
+        passages: [
+          {
+            "passageId": "1",
+            "type": "text",
+            "content": "What do you want?"
+          },
+          {
+            "passageId": "2",
+            "type": "text",
+            "content": "Well let me tell you!"
+          }
+        ]
+      }
+
+      game = new Game({
+        "bag": {"5": node}
+      });
+
+      output = sinon.spy();
+      game.addOutput("text", output);
+
+      game.receiveInput("foo", 7);
+    });
+
+    it("shouldn't do anything", function() {
+      expect(output).not.to.have.been.calledOnce;
+    });
+  })
   context("triggered by an input change", function() {
     let node, game, output;
     beforeEach(function() {

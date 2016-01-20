@@ -7,6 +7,8 @@ import NodeGraph from "./nodeGraph"
 import * as Actions from "./gameActions"
 
 const Game = function(options) {
+  this.started = false;
+
   this.state = new Map();
   this.outputs = new Map();
 
@@ -88,18 +90,22 @@ Game.prototype = {
       } 
 
       this.state.bag.nodeHistory[nodeId]++;     
+      this.bag.checkNodes(this.state);  
 
-      this.bag.checkNodes(this.state);      
     } else if (action === Actions.RECEIVE_INPUT) {
       Object.assign(this.state, data)
-      this.graph.checkChoiceTransitions(this.state);
-      this.bag.checkNodes(this.state);
+
+      if (this.started) {
+        this.graph.checkChoiceTransitions(this.state);
+        this.bag.checkNodes(this.state);
+      }
     }
 
     this.emitState();
   },
 
   start: function() {
+    this.started = true;
     if (this.graph.startNode) {
       this.receiveDispatch(Actions.CHANGE_GRAPH_NODE, this.graph.startNode)
     }
@@ -128,6 +134,7 @@ Game.prototype = {
     if (this.stateListener) {
       const obj = Object.assign({}, this.state)
       delete obj.bag
+      delete obj.graph // TODO: Keep this state
       const json = JSON.stringify(obj, null, 2)
       this.stateListener(json)
     }
