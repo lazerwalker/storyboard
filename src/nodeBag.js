@@ -5,11 +5,19 @@ import * as Actions from "./gameActions"
 
 export default class Bag {
   constructor(nodes={}) {
-    this.nodes = nodes;
+    this.nodes = _.object(_.map(nodes, (node, key) => {
+      const activeKeyPath = "bag.activePassageIds." + node.nodeId
+      const finishedKeypath = "bag.nodeHistory." + node.nodeId
+      var newPredicate = {}
+      newPredicate[activeKeyPath] = {"exists": false}
+      newPredicate[finishedKeypath] = {"exists": false}
+      node.predicate = Object.assign({}, node.predicate, newPredicate);
+      return [node.nodeId, node]
+    }));
   }
 
   checkNodes(state) {
-    const filteredNodes = _.filter(this.nodes, (node) => checkPredicate(node.predicate, state) );
+    const filteredNodes = _.filter(this.nodes, (node) => checkPredicate(node.predicate, state));
     if (filteredNodes.length > 0 && this.dispatch) {
       this.dispatch(Actions.TRIGGERED_BAG_NODES, filteredNodes);
     }

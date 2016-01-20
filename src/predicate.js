@@ -16,7 +16,7 @@ const keyPathify = function(input, state, checkIfDefined = false) {
 }
 
 export default function checkPredicate(predicate, state) {
-  if (!predicate) { return false }
+  if (!predicate) { return true }
 
   return _.reduce(predicate, function(memo, obj, input) {
 
@@ -31,7 +31,7 @@ export default function checkPredicate(predicate, state) {
       bool = bool && (value <= keyPathify(obj.lte, state, true));
     }
     if (!_.isUndefined(obj.exists)) {
-      bool = bool && (obj.exists !== _.isUndefined(value));
+      bool = bool && (obj.exists !== _.isUndefined(keyPathify(value, state, true)));
     }
     return bool;
   }, true);

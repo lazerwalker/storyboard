@@ -46,6 +46,7 @@ Game.prototype = {
 
       this.state.graph.previousChoice = Object.assign({}, data);
       this.state.graph.choiceHistory.unshift(Object.assign({}, data));
+      this.bag.checkNodes(this.state);
 
       this.receiveDispatch(Actions.CHANGE_GRAPH_NODE, data.nodeId);
 

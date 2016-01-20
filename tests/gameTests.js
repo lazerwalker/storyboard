@@ -26,9 +26,8 @@ describe("initialization", function() {
     it("should create a valid nodeGraph with the passed options", function() {
       expect(game.graph).to.exist;
 
-      // TODO: is this too implementation-specific?
       expect(game.graph.startNode).to.equal("1");
-      expect(game.graph.nodes).to.eql({"1": node});
+      expect(Object.keys(game.graph.nodes)).to.have.length(1);
     });
 
     it("shouldn't start the game", function() {
@@ -59,7 +58,7 @@ describe("initialization", function() {
       const game = new Game({bag: [node]});
 
       expect(game.bag).to.exist;
-      expect(game.bag.nodes).to.eql([node]);
+      expect(Object.keys(game.bag.nodes)).to.have.length(1)
     });
   });
 });
@@ -513,6 +512,50 @@ describe("triggering events from the bag", function() {
         expect(output).to.have.been.calledWith("Hello", "1");
       });    
     });
+  });
+
+  context("only triggering once", function() {
+
+  })
+
+  context("should only trigger once", function() {
+    let game, node, output;
+    beforeEach(function() {
+      node = {
+        nodeId: "5", 
+        predicate: { "foo": { "lte": 10 }},
+        passages: [
+          {
+            "passageId": "1",
+            "type": "text",
+            "content": "Something"
+          }
+        ]
+      }
+
+      game = new Game({
+        "bag": {"5": node}
+      });
+
+      output = sinon.spy();
+      game.addOutput("text", output);
+      game.start();
+    })
+
+    it("shouldn't play while the first time is still playing", function() {
+      game.receiveInput("foo", 7);
+      game.receiveInput("foo", 7); 
+
+      expect(output).to.have.been.calledOnce;
+    })
+
+    it("should play after the first time has finished", function() {
+      game.receiveInput("foo", 7);
+      game.completePassage("1");
+      game.receiveInput("foo", 7);
+
+      expect(output).to.have.been.calledOnce;
+    })
   });
 });
 
