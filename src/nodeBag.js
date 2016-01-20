@@ -9,6 +9,7 @@ export default class Bag {
       const activeKeyPath = "bag.activePassageIds." + node.nodeId
       const finishedKeypath = "bag.nodeHistory." + node.nodeId
       var newPredicate = {}
+      if (!node.predicate) { node.predicate = {} }
       newPredicate[activeKeyPath] = {"exists": false}
       newPredicate[finishedKeypath] = {"exists": false}
       node.predicate = Object.assign({}, node.predicate, newPredicate);
