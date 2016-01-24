@@ -69,6 +69,14 @@
       "predicate": {
         "altitude": { "lte": "graph.previousChoice.predicate.altitude.gte" }
       }
+    },
+    "5": {
+      "nodeId": "5",
+      "passages": [{
+        "passageId": "7",
+        "type": "mp3",
+        "content": "SoWhat"
+      }]
     }
   }
 }
