@@ -72,6 +72,7 @@
     },
     "5": {
       "nodeId": "5",
+      "track": "background",
       "passages": [{
         "passageId": "7",
         "type": "mp3",
