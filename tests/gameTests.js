@@ -397,6 +397,34 @@ describe("triggering events from the bag", function() {
   })
 
   describe("different ways to trigger an event", function() {
+    context("when the game starts without a startNode", function() {
+      let game, node, output;
+      beforeEach(function() {
+        node = {
+          nodeId: "1", 
+          passages: [
+            {
+              "passageId": "1",
+              "type": "text",
+              "content": "First"
+            }
+          ]
+        }   
+
+        game = new Game({
+          "bag": {"1": node}
+        });
+
+        output = sinon.spy();
+        game.addOutput("text", output);
+        game.start();    
+      });
+
+      it("should play a valid event node", function() {
+        expect(output).to.have.been.calledWith("First", "1")
+      })
+    });
+
     context("triggered by an input change", function() {
       let node, game, output;
       beforeEach(function() {

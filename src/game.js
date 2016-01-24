@@ -108,6 +108,8 @@ Game.prototype = {
     this.started = true;
     if (this.graph.startNode) {
       this.receiveDispatch(Actions.CHANGE_GRAPH_NODE, this.graph.startNode)
+    } else {
+      this.bag.checkNodes(this.state)
     }
   },
 
