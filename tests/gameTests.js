@@ -579,44 +579,87 @@ describe("triggering events from the bag", function() {
     });    
   });
 
-  context("should only trigger once", function() {
-    let game, node, output;
-    beforeEach(function() {
-      node = {
-        nodeId: "5", 
-        predicate: { "foo": { "lte": 10 }},
-        passages: [
-          {
-            "passageId": "1",
-            "type": "text",
-            "content": "Something"
-          }
-        ]
-      }
+  describe("triggering the same node multiple times", function() {
+    context("when the node should only trigger once", function() {
+      let game, node, output;
+      beforeEach(function() {
+        node = {
+          nodeId: "5", 
+          predicate: { "foo": { "lte": 10 }},
+          passages: [
+            {
+              "passageId": "1",
+              "type": "text",
+              "content": "Something"
+            }
+          ]
+        }
 
-      game = new Game({
-        "bag": {"5": node}
-      });
+        game = new Game({
+          "bag": {"5": node}
+        });
 
-      output = sinon.spy();
-      game.addOutput("text", output);
-      game.start();
-    })
+        output = sinon.spy();
+        game.addOutput("text", output);
+        game.start();
+      })
 
-    it("shouldn't play while the first time is still playing", function() {
-      game.receiveInput("foo", 7);
-      game.receiveInput("foo", 7); 
+      it("shouldn't play a second time while it's still playing the first time", function() {
+        game.receiveInput("foo", 7);
+        game.receiveInput("foo", 7); 
 
-      expect(output).to.have.been.calledOnce;
-    })
+        expect(output).to.have.been.calledOnce;
+      })
 
-    it("should play after the first time has finished", function() {
-      game.receiveInput("foo", 7);
-      game.completePassage("1");
-      game.receiveInput("foo", 7);
+      it("shouldn't play even after the first time has completed", function() {
+        game.receiveInput("foo", 7);
+        game.completePassage("1");
+        game.receiveInput("foo", 7);
 
-      expect(output).to.have.been.calledOnce;
-    })
+        expect(output).to.have.been.calledOnce;
+      })
+    });
+    
+    context("when the node should trigger multiple times", function() {
+      let game, node, output;
+      beforeEach(function() {
+        node = {
+          nodeId: "5",
+          allowRepeats: true,
+          predicate: { "foo": { "lte": 10 }},
+          passages: [
+            {
+              "passageId": "1",
+              "type": "text",
+              "content": "Something"
+            }
+          ]
+        }
+
+        game = new Game({
+          "bag": {"5": node}
+        });
+
+        output = sinon.spy();
+        game.addOutput("text", output);
+        game.start();
+      })
+
+      it("shouldn't play a second time while it's still playing the first time", function() {
+        game.receiveInput("foo", 7);
+        game.receiveInput("foo", 7); 
+
+        expect(output).to.have.been.calledOnce;
+      })
+
+      it("should allow playing a second time", function() {
+        game.receiveInput("foo", 7);
+        game.completePassage("1");
+        game.receiveInput("foo", 7);
+
+        expect(output).to.have.been.calledTwice;
+      })
+    });
   });
 
   context("when there are multiple valid nodes", function() {

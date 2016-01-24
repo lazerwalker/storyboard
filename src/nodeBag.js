@@ -6,16 +6,19 @@ import * as Actions from "./gameActions"
 export default class Bag {
   constructor(nodes={}) {
     this.nodes = _.object(_.map(nodes, (node, key) => {
-      const activeKeyPath = "bag.activePassageIds." + node.nodeId
-      const finishedKeypath = "bag.nodeHistory." + node.nodeId
-
       if (!node.predicate) { node.predicate = {} }
       var newPredicate = {
         track: "default"
       }
-      newPredicate[activeKeyPath] = {"exists": false}
-      newPredicate[finishedKeypath] = {"exists": false}
 
+      const activeKeyPath = `bag.activePassageIds.${node.nodeId}`;
+      newPredicate[activeKeyPath] = {"exists": false};
+
+      if(!node.allowRepeats) {
+        const finishedKeypath = `bag.nodeHistory.${node.nodeId}`;
+        newPredicate[finishedKeypath] = {"exists": false};
+      }
+      
       node.predicate = Object.assign({}, node.predicate, newPredicate);
       return [node.nodeId, node]
     }));
