@@ -1,7 +1,20 @@
 {
   "graph": {
-    "startNode": "1",
+    "startNode": "0",
     "nodes": {
+      "0": {
+        "nodeId": "0", 
+        "predicate": { "insideTheMediaLab": { "lte": 0 }},
+        "passages": [{
+          "passageId": "0",
+          "type": "speech",
+          "content": "You need to be in the E14 lobby to begin."
+        }],
+        "choices": [{
+          "nodeId": "1",
+          "predicate": { "insideTheMediaLab": { "gte": 1 }}  
+        }]
+      },
       "1": {
         "nodeId": "1",
         "passages": [
