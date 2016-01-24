@@ -395,162 +395,161 @@ describe("triggering events from the bag", function() {
       expect(output).not.to.have.been.calledOnce;
     });
   })
-  context("triggered by an input change", function() {
-    let node, game, output;
-    beforeEach(function() {
-      node = {
-        nodeId: "5", 
-        predicate: { "foo": { "lte": 10 }},
-        passages: [
-          {
-            "passageId": "1",
-            "type": "text",
-            "content": "What do you want?"
-          },
-          {
-            "passageId": "2",
-            "type": "text",
-            "content": "Well let me tell you!"
-          }
-        ]
-      }
 
-      game = new Game({
-        "bag": {"5": node}
+  describe("different ways to trigger an event", function() {
+    context("triggered by an input change", function() {
+      let node, game, output;
+      beforeEach(function() {
+        node = {
+          nodeId: "5", 
+          predicate: { "foo": { "lte": 10 }},
+          passages: [
+            {
+              "passageId": "1",
+              "type": "text",
+              "content": "What do you want?"
+            },
+            {
+              "passageId": "2",
+              "type": "text",
+              "content": "Well let me tell you!"
+            }
+          ]
+        }
+
+        game = new Game({
+          "bag": {"5": node}
+        });
+
+        output = sinon.spy();
+        game.addOutput("text", output);
+        game.start();
+
+        game.receiveInput("foo", 7);
       });
 
-      output = sinon.spy();
-      game.addOutput("text", output);
-      game.start();
+      it("should trigger that node", function() {
+        expect(output).to.have.been.calledWith("What do you want?", "1");
+      });
 
-      game.receiveInput("foo", 7);
-    });
+      it("should not trigger the second passage yet", function() {
+        expect(output).not.to.have.been.calledWith("Well let me tell you!", "2");
+      });
 
-    it("should trigger that node", function() {
-      expect(output).to.have.been.calledWith("What do you want?", "1");
-    });
-
-    it("should not trigger the second passage yet", function() {
-      expect(output).not.to.have.been.calledWith("Well let me tell you!", "2");
-    });
-
-    describe("when the first passage is done", function() {
-      it("should play the next passage", function() {
-        game.completePassage("1");
-        expect(output).to.have.been.calledWith("Well let me tell you!", "2");
+      describe("when the first passage is done", function() {
+        it("should play the next passage", function() {
+          game.completePassage("1");
+          expect(output).to.have.been.calledWith("Well let me tell you!", "2");
+        });
       });
     });
-  });
 
-  context("triggered by a graph node being completed", function() {
-    let node, game, output;
-    beforeEach(function() {
-      node = {
-        nodeId: "5", 
-        predicate: { "graph.nodeComplete": { "gte": 1 }},
-        passages: [
-          {
-            "passageId": "1",
-            "type": "text",
-            "content": "Hello"
-          }
-        ]
-      }
+    context("triggered by a graph node being completed", function() {
+      let node, game, output;
+      beforeEach(function() {
+        node = {
+          nodeId: "5", 
+          predicate: { "graph.nodeComplete": { "gte": 1 }},
+          passages: [
+            {
+              "passageId": "1",
+              "type": "text",
+              "content": "Hello"
+            }
+          ]
+        }
 
-      game = new Game({
-        bag: {"5": node},
-        graph: {
-          startNode: "4",
-          nodes: {
-            "4": {
-              nodeId: "4",
-              passages: [{
-                passageId: "2"
-              }]
+        game = new Game({
+          bag: {"5": node},
+          graph: {
+            startNode: "4",
+            nodes: {
+              "4": {
+                nodeId: "4",
+                passages: [{
+                  passageId: "2"
+                }]
+              }
             }
           }
+        });
+
+        output = sinon.spy();
+        game.addOutput("text", output);
+        game.start();
+      });
+
+      it("should not trigger the node initially", function() {
+        expect(output).not.to.have.been.calledWith("Hello", "1");
+      });
+
+      describe("when the graph node is complete", function() {
+        it("should play the bag node", function() {
+          game.completePassage("2");
+          expect(output).to.have.been.calledWith("Hello", "1");
+        });
+      });
+    });
+
+    context("triggered by reaching a specific graph node", function() {
+      let node, game, output;
+      beforeEach(function() {
+        node = {
+          nodeId: "5", 
+          predicate: { 
+            "graph.currentNodeId": { gte: "2", lte: "2" }
+          },
+          passages: [
+            {
+              "passageId": "1",
+              "type": "text",
+              "content": "Hello"
+            }
+          ]
         }
-      });
 
-      output = sinon.spy();
-      game.addOutput("text", output);
-      game.start();
-    });
-
-    it("should not trigger the node initially", function() {
-      expect(output).not.to.have.been.calledWith("Hello", "1");
-    });
-
-    describe("when the graph node is complete", function() {
-      it("should play the bag node", function() {
-        game.completePassage("2");
-        expect(output).to.have.been.calledWith("Hello", "1");
-      });
-    });
-  });
-
-  context("triggered by reaching a specific graph node", function() {
-    let node, game, output;
-    beforeEach(function() {
-      node = {
-        nodeId: "5", 
-        predicate: { 
-          "graph.currentNodeId": { gte: "2", lte: "2" }
-        },
-        passages: [
-          {
-            "passageId": "1",
-            "type": "text",
-            "content": "Hello"
-          }
-        ]
-      }
-
-      game = new Game({
-        bag: {"5": node},
-        graph: {
-          startNode: "4",
-          nodes: {
-            "4": {
-              nodeId: "4",
-              passages: [{
-                passageId: "2"
-              }],
-              choices: [{
+        game = new Game({
+          bag: {"5": node},
+          graph: {
+            startNode: "4",
+            nodes: {
+              "4": {
+                nodeId: "4",
+                passages: [{
+                  passageId: "2"
+                }],
+                choices: [{
+                  nodeId: "2",
+                  predicate: { "foo": { exists: false }}
+                }]
+              },
+            "2": {
                 nodeId: "2",
-                predicate: { "foo": { exists: false }}
-              }]
-            },
-          "2": {
-              nodeId: "2",
-              passages: [{
-                passageId: "3"
-              }]
-            }            
+                passages: [{
+                  passageId: "3"
+                }]
+              }            
+            }
           }
-        }
+        });
+
+        output = sinon.spy();
+        game.addOutput("text", output);
+        game.start();
       });
 
-      output = sinon.spy();
-      game.addOutput("text", output);
-      game.start();
-    });
+      it("should not trigger the node initially", function() {
+        expect(output).not.to.have.been.calledWith("Hello", "1");
+      });
 
-    it("should not trigger the node initially", function() {
-      expect(output).not.to.have.been.calledWith("Hello", "1");
-    });
-
-    describe("when the target graph node hasn't been completed", function() {
-      it("should trigger the bag node", function() {
-        game.completePassage("2");
-        expect(output).to.have.been.calledWith("Hello", "1");
-      });    
-    });
+      describe("when the target graph node hasn't been completed", function() {
+        it("should trigger the bag node", function() {
+          game.completePassage("2");
+          expect(output).to.have.been.calledWith("Hello", "1");
+        });    
+      });
+    });    
   });
-
-  context("only triggering once", function() {
-
-  })
 
   context("should only trigger once", function() {
     let game, node, output;
