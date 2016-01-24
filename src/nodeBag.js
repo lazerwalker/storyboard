@@ -8,10 +8,14 @@ export default class Bag {
     this.nodes = _.object(_.map(nodes, (node, key) => {
       const activeKeyPath = "bag.activePassageIds." + node.nodeId
       const finishedKeypath = "bag.nodeHistory." + node.nodeId
-      var newPredicate = {}
+
       if (!node.predicate) { node.predicate = {} }
+      var newPredicate = {
+        track: "default"
+      }
       newPredicate[activeKeyPath] = {"exists": false}
       newPredicate[finishedKeypath] = {"exists": false}
+
       node.predicate = Object.assign({}, node.predicate, newPredicate);
       return [node.nodeId, node]
     }));
@@ -20,7 +24,8 @@ export default class Bag {
   checkNodes(state) {
     const filteredNodes = _.filter(this.nodes, (node) => checkPredicate(node.predicate, state));
     if (filteredNodes.length > 0 && this.dispatch) {
-      this.dispatch(Actions.TRIGGERED_BAG_NODES, filteredNodes);
+      const nodesByTrack = _.groupBy(filteredNodes, "track")
+      this.dispatch(Actions.TRIGGERED_BAG_NODES, nodesByTrack);
     }
   }
 

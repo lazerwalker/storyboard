@@ -20,6 +20,7 @@ const Game = function(options) {
   this.state.bag.activePassageIds = {};
   this.state.bag.nodeHistory = new Map();
   this.state.bag.nodes = options.bag;
+  this.state.bag.activeTracks = new Map();
 
   this.graph = new NodeGraph(options.graph);
   this.bag = new NodeBag(options.bag);
@@ -70,12 +71,14 @@ Game.prototype = {
       this.bag.checkNodes(this.state);
 
     } else if (action === Actions.TRIGGERED_BAG_NODES) {
-      const node = data[0];
-      const nodeId = node.nodeId;
+      _.forEach(data, function(nodes, track) {
+        const node = nodes[0];
+        const nodeId = node.nodeId;
 
-      this.state.bag.activePassageIds[nodeId] =  0;
-      this.bag.playCurrentPassage(nodeId, this.state);
-
+        this.state.bag.activePassageIds[nodeId] =  0;
+        this.state.bag.activeTracks[node.track] = true
+        this.bag.playCurrentPassage(nodeId, this.state);
+      }, this)
     } else if (action === Actions.CHANGE_BAG_PASSAGE) {
       let [nodeId, passageIndex] = data;
       this.state.bag.activePassageIds[nodeId] = passageIndex;
@@ -84,6 +87,9 @@ Game.prototype = {
     } else if (action === Actions.COMPLETE_BAG_NODE) {
       const nodeId = data;
       delete this.state.bag.activePassageIds[nodeId];
+
+      const node = this.state.bag.nodes[nodeId]
+      this.state.bag.activeTracks[node.track] = false
 
       if (!this.state.bag.nodeHistory[nodeId]) {
         this.state.bag.nodeHistory[nodeId] = 0;
