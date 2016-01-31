@@ -1,6 +1,6 @@
 {
-  "name": "filbert",
-  "version": "1.0.0",
+  "name": "storyboard",
+  "version": "0.0.1",
   "description": "",
   "scripts": {
     "test": "mocha --compilers js:babel-register tests"
