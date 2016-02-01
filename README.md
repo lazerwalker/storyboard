@@ -1,5 +1,7 @@
 # Storyboard
 
+[![CI Status](http://img.shields.io/travis/lazerwalker/storyboard.svg?style=flat)](https://travis-ci.org/lazerwalker/storyboard)
+
 Storyboard is a general-purpose engine for multilinear/nonlinear storytelling. It's written in JavaScript (ES6), and intended to be embedded within another game or application (such as the included-as-a-git-submodule [Storyboard-iOS](https://github.com/lazerwalker/storyboard-iOS.git) reference native iOS Swift project)
 
 Right now, it's pre-alpha. Stay tuned for more.
