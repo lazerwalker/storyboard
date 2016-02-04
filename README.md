@@ -20,3 +20,8 @@ That being said:
 * Put your data files in the `examples` folder, with any media needed in a subfolder with the same name (e.g. `sample.json` would have a folder called `sample`)
 
 Knock yourself out.
+
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file in this repository for more information.
