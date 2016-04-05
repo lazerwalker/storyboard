@@ -1,12 +1,27 @@
 const _ = require('underscore');
 require("underscore-keypath");
 
+import Node from "./node"
 import NodeBag from "./nodeBag"
 import NodeGraph from "./nodeGraph"
 
 import * as Actions from "./gameActions"
 
 const Game = function(options) {
+  let bagNodes;
+  if (options.bag) {
+    bagNodes = _.mapObject(options.bag, function(node, key) {
+      return new Node(node)
+    });
+  }
+
+  let graphNodes;
+  if (options.graph) {
+    graphNodes = _.mapObject(options.graph.nodes, function(node, key) {
+      return new Node(node)
+    });
+  }
+
   this.started = false;
 
   this.state = new Map();
@@ -19,11 +34,12 @@ const Game = function(options) {
   this.state.bag = new Map();
   this.state.bag.activePassageIds = {};
   this.state.bag.nodeHistory = new Map();
-  this.state.bag.nodes = options.bag;
+  this.state.bag.nodes = bagNodes;
   this.state.bag.activeTracks = new Map();
 
-  this.graph = new NodeGraph(options.graph);
-  this.bag = new NodeBag(options.bag);
+  const graph = Object.assign({}, options.graph, {nodes: graphNodes})
+  this.graph = new NodeGraph(graph);
+  this.bag = new NodeBag(bagNodes);
 
   for (let obj of [this.graph, this.bag]) {
     obj.dispatch = _.bind(this.receiveDispatch, this)
