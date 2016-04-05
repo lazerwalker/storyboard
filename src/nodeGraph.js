@@ -27,7 +27,7 @@ export default class Graph {
     let newPassageIndex = state.graph.currentPassageIndex
     while(!found) {
       newPassageIndex = newPassageIndex + 1
-      if (newPassageIndex >= currentNode.passages.length) {
+      if (_.isUndefined(currentNode.passages) || newPassageIndex >= currentNode.passages.length) {
         found = true;
         this.dispatch(Actions.COMPLETE_GRAPH_NODE, currentNode.nodeId)
       } else {

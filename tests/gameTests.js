@@ -93,6 +93,58 @@ describe("playing the node graph", function() {
     });
   });
 
+  context("when a node has no passages", function() {
+    let game, callback;
+    beforeEach(function() {
+      game = new Game({
+        "graph": {
+          "startNode": "1",
+          "nodes": {
+            "1": {
+              "nodeId": "1",
+              "choices": [
+                {
+                  "nodeId": "2",
+                  "predicate": {
+                    "continue": { "gte": 1 }
+                  }
+                }   
+              ]
+            },
+            "2": {
+              "nodeId": "2",
+              "passages": [
+                {
+                  "passageId": "6",
+                  "type": "text",
+                  "content": "Goodbye World!"
+                }
+              ]
+            } 
+          }
+        }
+      });
+
+      callback = sinon.spy();
+      game.addOutput("text", callback);
+      game.start();
+
+    });
+
+    context("when a predicate has not yet been met", function() {
+      it("should wait for the predicate to be met", function() {
+        expect(callback).not.to.have.been.called
+      })
+    })
+
+    context("when a predicate has been met", function() {
+      it("should go immediately on", function() {
+        game.receiveInput("continue", true)
+        expect(callback).to.have.been.calledWith("Goodbye World!", "6");
+      });
+    })
+  })
+
   context("when there are multiple passages", function() {
     describe("waiting for completion", function() {
      let first, second, game, callback;
@@ -250,11 +302,6 @@ describe("playing the node graph", function() {
           "nodes": {
             "1": {
               "nodeId": "1",
-              "passages": [
-                {
-                  "passageId": "5",
-                }
-              ],
               "choices": [
                 {
                   "nodeId": "2",
@@ -282,9 +329,7 @@ describe("playing the node graph", function() {
       game.addOutput("text", callback);
       game.start();
 
-      game.completePassage("5")
       game.receiveMomentaryInput("button")
-
     });
 
     it("should trigger the appropriate nodes", function() {
