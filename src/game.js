@@ -128,9 +128,19 @@ Game.prototype = {
   },
 
   receiveInput: function(type, value) {
-    const obj = {}
+    let obj = {}
     obj[type] = value
     this.receiveDispatch(Actions.RECEIVE_INPUT, obj)
+  },
+
+  receiveMomentaryInput: function(type) {
+    let trueObj = {}
+    trueObj[type] = true
+    this.receiveDispatch(Actions.RECEIVE_INPUT, trueObj)
+
+    let falseObj = {}
+    falseObj[type] = false
+    this.receiveDispatch(Actions.RECEIVE_INPUT, falseObj)
   },
 
   completePassage: function(passageId) {
@@ -140,7 +150,7 @@ Game.prototype = {
 
   emitState: function() {
     if (this.stateListener) {
-      const obj = Object.assign({}, this.state)
+      let obj = Object.assign({}, this.state)
       delete obj.bag
       delete obj.graph // TODO: Keep this state
       const json = JSON.stringify(obj, null, 2)
