@@ -572,6 +572,41 @@ describe("triggering events from the bag", function() {
       });
     });
 
+    context("triggered by a push-button input", function() {
+      let node, game, output;
+      beforeEach(function() {
+        node = {
+          nodeId: "5", 
+          predicate: { "button": { "gte": 1 }},
+          passages: [
+            {
+              "passageId": "1",
+              "type": "text",
+              "content": "What do you want?"
+            }
+          ]
+        }
+
+        game = new Game({
+          "bag": {"5": node}
+        });
+
+        output = sinon.spy();
+        game.addOutput("text", output);
+        game.start();
+
+        game.receiveMomentaryInput("button")
+      });
+
+      it("should trigger that node", function() {
+        expect(output).to.have.been.calledWith("What do you want?", "1");
+      });
+
+      it("should not change the global state", function() {
+        expect(game.state.button).to.be.false
+      });
+    })
+
     context("triggered by a graph node being completed", function() {
       let node, game, output;
       beforeEach(function() {
