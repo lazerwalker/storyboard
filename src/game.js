@@ -5,6 +5,8 @@ import Node from "./node"
 import NodeBag from "./nodeBag"
 import NodeGraph from "./nodeGraph"
 
+import keyPathify from "./keyPathify"
+
 import * as Actions from "./gameActions"
 
 const Game = function(options) {
@@ -118,6 +120,17 @@ Game.prototype = {
 
     } else if (action === Actions.RECEIVE_INPUT) {
       Object.assign(this.state, data)
+
+      if (this.started) {
+        this.graph.checkChoiceTransitions(this.state);
+        this.bag.checkNodes(this.state);
+      }
+    } else if (action === Actions.SET_VARIABLES) {
+      const keyPathedData = _.mapObject(data, function(val, key) {
+        return keyPathify(val, this.state, true)
+      }, this)
+
+      Object.assign(this.state, keyPathedData)
 
       if (this.started) {
         this.graph.checkChoiceTransitions(this.state);

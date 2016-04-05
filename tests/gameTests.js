@@ -456,7 +456,66 @@ describe("playing the node graph", function() {
         expect(callback).to.have.been.calledWith("Hi", "1");
       });
     });
-  });  
+  });
+
+  context("when a choice is triggered by an in-passage variable set", function() {
+    let game, callback;
+    beforeEach(function() {
+      game = new Game({
+        "graph": {
+          "startNode": "1",
+          "nodes": {
+            "1": {
+              "nodeId": "1",
+              "passages": [
+                {
+                  "passageId": "5",
+                  "type": "text",
+                  "content": "Hi!",
+                  "set": {
+                    "foo": 1
+                  }
+                }
+              ],
+              "choices": [
+                {
+                  "nodeId": "2",
+                  "predicate": {
+                    "foo": { "gte": 1 }
+                  }
+                }   
+              ]
+            },
+            "2": {
+              "nodeId": "2",
+              "passages": [
+                {
+                  "passageId": "6",
+                  "type": "text",
+                  "content": "Goodbye World!"
+                }
+              ]
+            } 
+          }
+        }
+      });
+
+      callback = sinon.spy();
+      game.addOutput("text", callback);
+
+      game.start();
+    });
+
+    it("shouldn't change until the passage has ended", function() {
+      expect(callback).not.to.have.been.calledWith("Goodbye World!", "6");
+      expect(game.state.graph.currentNodeId).to.equal("1");
+    })
+    it("should change after the passage has ended", function() {
+      game.completePassage("5");
+      expect(callback).to.have.been.calledWith("Goodbye World!", "6");
+      expect(game.state.graph.currentNodeId).to.equal("2");
+    });
+  })  
 });
 
 describe("triggering events from the bag", function() {

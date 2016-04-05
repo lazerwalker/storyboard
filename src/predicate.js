@@ -1,19 +1,5 @@
 const _ = require('underscore');
-require('underscore-keypath');
-
-const keyPathify = function(input, state, checkIfDefined = false) {
-  if (!_.isString(input)) {
-    return input;
-  }
-
-  const result = _(state).valueForKeyPath(input)
-
-  if (checkIfDefined && _.isUndefined(result)) {
-    return input;
-  }
-
-  return result;
-}
+import keyPathify from "./keyPathify"
 
 export default function checkPredicate(predicate, state) {
   if (!predicate) { return true }
