@@ -11,7 +11,7 @@ export default class Bag {
         track: "default"
       }
 
-      const activeKeyPath = `bag.activePassageIds.${node.nodeId}`;
+      const activeKeyPath = `bag.activePassageIndexes.${node.nodeId}`;
       newPredicate[activeKeyPath] = {"exists": false};
 
       if(!node.allowRepeats) {
@@ -36,13 +36,13 @@ export default class Bag {
     const node = this.nodes[nodeId];
     if (!node) return;
 
-    const passageId = state.bag.activePassageIds[nodeId];
+    const passageIndex = state.bag.activePassageIndexes[nodeId];
 
-    node.playPassage(passageId)
+    node.playPassage(passageIndex)
   }
 
   completePassage(passageId, state) {
-    var node = _(state.bag.activePassageIds).chain()
+    var node = _(state.bag.activePassageIndexes).chain()
       .keys()
       .map( (nodeId) => state.bag.nodes[nodeId] )
       .find( function(node) {
@@ -54,7 +54,7 @@ export default class Bag {
 
     if (!node) return;
 
-    const currentIndex = state.bag.activePassageIds[node.nodeId];
+    const currentIndex = state.bag.activePassageIndexes[node.nodeId];
     const currentPassage = node.passages[currentIndex];
     if (passageId !== currentPassage.passageId) return;
 

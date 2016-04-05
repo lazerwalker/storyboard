@@ -34,7 +34,7 @@ const Game = function(options) {
   this.state.graph.nodeHistory = [];
 
   this.state.bag = new Map();
-  this.state.bag.activePassageIds = {};
+  this.state.bag.activePassageIndexes = {};
   this.state.bag.nodeHistory = new Map();
   this.state.bag.nodes = bagNodes;
   this.state.bag.activeTracks = new Map();
@@ -93,18 +93,18 @@ Game.prototype = {
         const node = nodes[0];
         const nodeId = node.nodeId;
 
-        this.state.bag.activePassageIds[nodeId] =  0;
+        this.state.bag.activePassageIndexes[nodeId] =  0;
         this.state.bag.activeTracks[node.track] = true
         this.bag.playCurrentPassage(nodeId, this.state);
       }, this)
     } else if (action === Actions.CHANGE_BAG_PASSAGE) {
       let [nodeId, passageIndex] = data;
-      this.state.bag.activePassageIds[nodeId] = passageIndex;
+      this.state.bag.activePassageIndexes[nodeId] = passageIndex;
       this.bag.playCurrentPassage(nodeId, this.state);
 
     } else if (action === Actions.COMPLETE_BAG_NODE) {
       const nodeId = data;
-      delete this.state.bag.activePassageIds[nodeId];
+      delete this.state.bag.activePassageIndexes[nodeId];
 
       const node = this.state.bag.nodes[nodeId]
       this.state.bag.activeTracks[node.track] = false

@@ -9,8 +9,8 @@ export default class Node {
     this.dispatch = dispatch
   }
 
-  playPassage(passageId) {
-    const passage = this.passages[passageId]
+  playPassage(passageIndex) {
+    const passage = this.passages[passageIndex]
 
     if (passage && this.dispatch) {
       this.dispatch(Actions.OUTPUT, passage);
