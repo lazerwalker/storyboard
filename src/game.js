@@ -9,16 +9,18 @@ import * as Actions from "./gameActions"
 
 const Game = function(options) {
   let bagNodes;
+  let dispatch = _.bind(this.receiveDispatch, this)
+
   if (options.bag) {
     bagNodes = _.mapObject(options.bag, function(node, key) {
-      return new Node(node)
+      return new Node(node, dispatch)
     });
   }
 
   let graphNodes;
   if (options.graph) {
     graphNodes = _.mapObject(options.graph.nodes, function(node, key) {
-      return new Node(node)
+      return new Node(node, dispatch)
     });
   }
 
@@ -42,7 +44,7 @@ const Game = function(options) {
   this.bag = new NodeBag(bagNodes);
 
   for (let obj of [this.graph, this.bag]) {
-    obj.dispatch = _.bind(this.receiveDispatch, this)
+    obj.dispatch = dispatch
   }
 }
 

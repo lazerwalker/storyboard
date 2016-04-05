@@ -49,7 +49,6 @@ describe("initialization", function() {
 
     expect(game.graph).to.exist;
     expect(game.graph.startNode).to.equal("1");
-    expect(game.graph.nodes).to.eql({"1": node});
   });
 
   describe("creating a nodeBag", function() {

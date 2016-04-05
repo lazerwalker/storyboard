@@ -33,14 +33,12 @@ export default class Bag {
   }
 
   playCurrentPassage(nodeId, state) {
-    const index = state.bag.activePassageIds[nodeId];
     const node = this.nodes[nodeId];
     if (!node) return;
 
-    const passage = node.passages[index];
-    if (!passage) return;
+    const passageId = state.bag.activePassageIds[nodeId];
 
-    this.dispatch(Actions.OUTPUT, passage);
+    node.playPassage(passageId)
   }
 
   completePassage(passageId, state) {

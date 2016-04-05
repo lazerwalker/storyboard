@@ -57,13 +57,11 @@ export default class Graph {
 
   playCurrentPassage(state) {
     const node = this._nodeWithId(state.graph.currentNodeId)
+    const passageId = state.graph.currentPassageIndex
+
     if (!node) return;
 
-    const passage = node.passages[state.graph.currentPassageIndex]
-
-    if (passage && this.dispatch) {
-      this.dispatch(Actions.OUTPUT, passage);
-    }
+    node.playPassage(passageId)
   }  
 
   //--
