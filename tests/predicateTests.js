@@ -6,6 +6,7 @@ const expect = chai.expect;
 chai.use(sinonChai);
 
 import checkPredicate from '../src/predicate'
+import keyPathify from '../src/keyPathify'
 
 describe("predicate types", function() {
   describe("lte", function() {
@@ -195,6 +196,31 @@ describe("combining multiple variables", function() {
     expect(result2).to.be.false;
   });
 });
+
+describe("random numbers", function() {
+  context("when the value is a random integer", function() {
+    let result1, result2, result3;
+    beforeEach(function() {
+      const predicate = {"foo": { 
+        "eq": { "randInt": [0, 6] }
+      }}
+     
+      result1 = checkPredicate(predicate, {foo: 4, rngSeed: "knownSeed"})
+      result2 = checkPredicate(predicate, {foo: 1, rngSeed: "knownSeed"})
+      result3 = checkPredicate(predicate, {foo: 0, rngSeed: "knownSeed"})      
+    })
+
+    afterEach(function() {
+      keyPathify(undefined, {rngSeed: "erase"})
+    })
+
+    it("should compare against a seeded random number", function() {
+      expect(result1).to.be.true
+      expect(result2).to.be.true
+      expect(result3).to.be.true
+    })
+  })
+})
 
 describe("keypath predicates", function() {
   describe("checking the value of a keypath as input", function() {

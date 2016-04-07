@@ -7,6 +7,7 @@ chai.use(sinonChai);
 
 import Game from '../src/game'
 import * as Actions from '../src/gameActions'
+import keyPathify from '../src/keyPathify'
 
 describe("setting variables", function() {
   context("within the graph", function() {
@@ -23,7 +24,9 @@ describe("setting variables", function() {
                   "passageId": "1",
                   "set": {
                     "foo": "bar",
-                    "baz": "graph.currentNodeId"
+                    "baz": "graph.currentNodeId",
+                    "random1": { "randInt": [0, 6] },
+                    "random2": { "randInt": [0, 6] }                    
                   }
                 }
               ]
@@ -35,7 +38,12 @@ describe("setting variables", function() {
       callback = sinon.spy();
       game.addOutput("text", callback);
 
+      game.state.rngSeed = "knownSeed"
       game.start();      
+    })
+
+    afterEach(function() {
+      keyPathify(undefined, {rngSeed: "erase"})
     })
 
     it("should set variable literals", function() {
@@ -44,6 +52,11 @@ describe("setting variables", function() {
 
     it("should set keypath variables", function() {
       expect(game.state.baz).to.equal("1")
+    })
+
+    it("should set random numbers", function() {
+      expect(game.state.random1).to.equal(4)
+      expect(game.state.random2).to.equal(1)
     })
 
     context("when the passage also has content in it", function() {
@@ -98,7 +111,9 @@ describe("setting variables", function() {
                 "passageId": "1",
                 "set": {
                   "foo": "bar",
-                  "baz": "bag.activePassageIndexes.1"
+                  "baz": "bag.activePassageIndexes.1",
+                  "random1": { "randInt": [0, 6] },
+                  "random2": { "randInt": [0, 6] } 
                 }
               }
             ]
@@ -109,7 +124,12 @@ describe("setting variables", function() {
       const callback = sinon.spy();
       game.addOutput("text", callback);
 
+      game.state.rngSeed = "knownSeed"
       game.start();      
+    })
+
+    afterEach(function() {
+      keyPathify(undefined, {rngSeed: "erase"})
     })
 
     it("should set variable literals", function() {
@@ -118,6 +138,11 @@ describe("setting variables", function() {
 
     it("should set keypath variables", function() {
       expect(game.state.baz).to.equal(0)
+    })
+
+    it("should set random numbers", function() {
+      expect(game.state.random1).to.equal(4)
+      expect(game.state.random2).to.equal(1)
     })
   })
 });
