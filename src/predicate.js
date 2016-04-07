@@ -10,6 +10,11 @@ export default function checkPredicate(predicate, state) {
     const value = keyPathify(input, state)
 
     let bool = memo;
+
+    if (!_.isUndefined(obj.eq)) {
+       bool = bool && (value === keyPathify(obj.eq, state, true));
+    }
+
     if (!_.isUndefined(obj.gte)) {
       bool = bool && (value >= keyPathify(obj.gte, state, true));
     }

@@ -54,6 +54,56 @@ describe("predicate types", function() {
     });
   });
 
+  describe("eq", function() {
+    let predicate;
+    beforeEach(function() {
+      predicate = {"foo": {"eq": 5}}
+    });
+
+    context("numbers", function() {
+      it("should fire for equal values", function() {
+        const result = checkPredicate(predicate, {"foo": 5});
+        expect(result).to.be.true
+      })
+
+      it("should not fire for greater values", function() {
+        const result = checkPredicate(predicate, {"foo": 6});
+        expect(result).to.be.false
+      })
+
+      it("should not fire for lesser values", function() {
+        const result = checkPredicate(predicate, {"foo": 4});
+        expect(result).to.be.false        
+      })
+    })
+
+    context("strings", function() {
+      it("should return true when two strings are equal", function() {
+        const predicate = {"foo": {"eq": "bar"}};
+        const result = checkPredicate(predicate, {foo: "bar"})
+        expect(result).to.be.true
+      })
+
+      it("should return false when two strings are not equal", function() {
+        const predicate = {"foo": {"eq": "bar"}};
+        const result = checkPredicate(predicate, {foo: "baz"})
+        expect(result).to.be.false
+      })
+
+      it("should return false when the input value is a substring", function() {
+        const predicate = {"foo": {"eq": "ba"}};
+        const result = checkPredicate(predicate, {foo: "bar"})
+        expect(result).to.be.false        
+      })
+
+      it("should return false when the state value is a subtring", function() {
+        const predicate = {"foo": {"eq": "bar"}};
+        const result = checkPredicate(predicate, {foo: "ba"})
+        expect(result).to.be.false                
+      })
+    })
+  })
+
   describe("exists", function() {
     describe("when asserting an object should exist", function() {
       let predicate;
@@ -100,20 +150,6 @@ describe("predicate types", function() {
         expect(result).to.be.true;
       });
     });    
-  });
-
-  describe("string equality", function() {
-    it("should return true when two strings are equal", function() {
-      const predicate = {"foo": {"lte": "bar", "gte": "bar"}};
-      const result = checkPredicate(predicate, {foo: "bar"})
-      expect(result).to.be.true
-    })
-
-    it("should return false when two strings are not equal", function() {
-      const predicate = {"foo": {"lte": "bar", "gte": "bar"}};
-      const result = checkPredicate(predicate, {foo: "baz"})
-      expect(result).to.be.false
-    })
   });
 });
 
