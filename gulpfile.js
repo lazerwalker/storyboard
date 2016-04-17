@@ -7,6 +7,7 @@ var gulp = require('gulp');
 var source = require('vinyl-source-stream');
 var gutil = require('gulp-util');
 var babelify = require('babelify')
+var babel = require('gulp-babel')
 
 var customOpts = {
   entries: ['./src/game.js'],
@@ -14,16 +15,41 @@ var customOpts = {
 };
 
 var opts = Object.assign({}, watchify.args, customOpts);
-var b = watchify(browserify(opts)); 
-b.transform(babelify)
+
+var browser = browserify(opts)
+browser.transform(babelify)
+
+var browserWatch = watchify(browserify(opts));
+browserWatch.transform(babelify)
 
 
-gulp.task('default', bundle); // so you can run `gulp js` to build the file
-b.on('update', bundle); // on any dep update, runs the bundler
-b.on('log', gutil.log); // output build logs to terminal
+gulp.task('default', browserBundle);
+gulp.task('browser', browserBundle);
+gulp.task('node', nodeBundle)
 
-function bundle() {
-  return b.bundle()
+gulp.task('watch', watchBundle)
+browserWatch.on('update', watchBundle); // on any dep update, runs the bundler
+
+browser.on('log', gutil.log); // output build logs to terminal
+browserWatch.on('log', gutil.log); // output build logs to terminal
+
+function browserBundle() {
+  return browser.bundle()
+    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+    .pipe(fs.createWriteStream("dist.js"));
+}
+
+function nodeBundle() {
+return gulp.src("src/**/*.jsit ")
+  .pipe(babel({
+    presets: ['es2015']
+  }))
+  .pipe(gulp.dest('lib/'))
+  .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+}
+
+function watchBundle() {
+  return browserWatch.bundle()
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
     .pipe(fs.createWriteStream("dist.js"));
 }

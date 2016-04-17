@@ -3,14 +3,16 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "test": "mocha --compilers js:babel-register tests"
+    "test": "mocha --compilers js:babel-register tests",
+    "compile": "gulp",
+    "prepublish": "npm run compile"
   },
   "babel": {
     "presets": [
       "es2015"
     ]
   },
-  "main": "src/game.js",
+  "main": "lib/game.js",
   "browserify": {
     "transform": [
       "babelify"
@@ -29,6 +31,7 @@
     "babel-register": "^6.3.13",
     "babelify": "^7.2.0",
     "chai": "^3.4.1",
+    "gulp-babel": "^6.1.2",
     "gulp-util": "^3.0.7",
     "mocha": "^2.3.4",
     "sinon": "^1.17.2",
