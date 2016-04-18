@@ -991,6 +991,42 @@ describe("triggering events from the bag", function() {
   })
 });
 
+describe("receiving input", function() {
+  context("when the input variable is a keypath", function() {
+    context("when the keypath exists", function() {
+      let game;
+      beforeEach(function() {
+        game = new Game({})
+        game.state.foo = {}
+        game.receiveInput("foo.bar", "baz")
+
+      })
+
+      it("should create the appropriate state", function() {
+        expect(game.state.foo.bar).to.equal("baz")
+      })
+
+      it("should not create the wrong variable", function() {
+        expect(game.state["foo.bar"]).to.not.exist
+      })
+    })
+
+    // TODO: This behavior should eventually match the previous test case
+    context("when the keypath doesn't exist", function() {
+      let game;
+      beforeEach(function() {
+        game = new Game({})
+        game.receiveInput("foo.bar", "baz")
+      })
+
+      it("should create a variable with a period", function() {
+        expect(game.state["foo.bar"]).to.equal("baz")
+      })
+
+    })
+  })
+})
+
 // TODO: Find somewhere else for these to live?
 describe("receiveDispatch", function() {
   // TODO: Backfill this out

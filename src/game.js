@@ -119,7 +119,13 @@ Game.prototype = {
       this.bag.checkNodes(this.state);  
 
     } else if (action === Actions.RECEIVE_INPUT) {
-      Object.assign(this.state, data)
+      let newState = Object.assign({}, this.state)
+      _.each(Object.keys(data), function(key) {
+        if (!_(newState).setValueForKeyPath(key, data[key])) {
+          newState[key] = data[key]
+        }
+      })
+      Object.assign(this.state, newState)
 
       if (this.started) {
         this.graph.checkChoiceTransitions(this.state);
