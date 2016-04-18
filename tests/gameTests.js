@@ -1025,6 +1025,14 @@ describe("receiving input", function() {
 
     })
   })
+
+  context.only("when the input data is an object", function() {
+    it("should set the object", function() {
+      let game = new Game({});
+      game.receiveInput("foo", {"bar": "baz"})
+      expect(game.state.foo.bar).to.equal("baz")
+    })
+  })
 })
 
 // TODO: Find somewhere else for these to live?
