@@ -40,10 +40,8 @@ function browserBundle() {
 }
 
 function nodeBundle() {
-return gulp.src("src/**/*.jsit ")
-  .pipe(babel({
-    presets: ['es2015']
-  }))
+return gulp.src("src/**/*.js")
+  .pipe(babel())
   .pipe(gulp.dest('lib/'))
   .on('error', gutil.log.bind(gutil, 'Browserify Error'))
 }
