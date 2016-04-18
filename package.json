@@ -3,8 +3,8 @@
   "version": "0.0.2",
   "description": "An engine for nonlinear and multilinear storytelling",
   "scripts": {
-    "test": "mocha --compilers js:babel-register tests",
-    "compile": "gulp node",
+    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-register tests",
+    "compile": "./node_modules/gulp/bin/gulp.js node",
     "prepublish": "npm run compile"
   },
   "babel": {
@@ -36,6 +36,7 @@
     "babel-register": "^6.3.13",
     "babelify": "^7.2.0",
     "chai": "^3.4.1",
+    "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-util": "^3.0.7",
     "mocha": "^2.3.4",
