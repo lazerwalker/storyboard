@@ -1,0 +1,126 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/Cellar/node/5.0.0/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'publish' ]
+2 info using npm@3.3.9
+3 info using node@v5.0.0
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: '/Users/lazerwalker/Code/filbert',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory /Users/lazerwalker/.npm/storyboard-engine/0.0.1/package.tgz not in flight; packing
+9 info lifecycle storyboard-engine@0.0.1~prepublish: storyboard-engine@0.0.1
+10 verbose lifecycle storyboard-engine@0.0.1~prepublish: unsafe-perm in lifecycle true
+11 verbose lifecycle storyboard-engine@0.0.1~prepublish: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/Users/lazerwalker/Code/filbert/node_modules/.bin:/Users/lazerwalker/.rvm/gems/ruby-2.1.3/bin:/Users/lazerwalker/.rvm/gems/ruby-2.1.3@global/bin:/Users/lazerwalker/.rvm/rubies/ruby-2.1.3/bin:/Users/lazerwalker/Code/other/torch/install/bin:/Users/lazerwalker/Code/other/torch/install/bin:/Users/lazerwalker/.rvm/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/bin:/usr/local/texlive/2011/bin/x86_64-darwin:/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/usr/texbin:/Applications/Postgres.app/Contents/Versions/9.4/bin
+12 verbose lifecycle storyboard-engine@0.0.1~prepublish: CWD: /Users/lazerwalker/Code/filbert
+13 silly lifecycle storyboard-engine@0.0.1~prepublish: Args: [ '-c', 'npm run compile' ]
+14 silly lifecycle storyboard-engine@0.0.1~prepublish: Returned: code: 0  signal: null
+15 verbose tar pack [ '/Users/lazerwalker/.npm/storyboard-engine/0.0.1/package.tgz',
+15 verbose tar pack   '/Users/lazerwalker/Code/filbert' ]
+16 verbose tarball /Users/lazerwalker/.npm/storyboard-engine/0.0.1/package.tgz
+17 verbose folder /Users/lazerwalker/Code/filbert
+18 verbose addLocalTarball adding from inside cache /Users/lazerwalker/.npm/storyboard-engine/0.0.1/package.tgz
+19 silly cache afterAdd storyboard-engine@0.0.1
+20 verbose afterAdd /Users/lazerwalker/.npm/storyboard-engine/0.0.1/package/package.json not in flight; writing
+21 verbose afterAdd /Users/lazerwalker/.npm/storyboard-engine/0.0.1/package/package.json written
+22 silly publish { name: 'storyboard-engine',
+22 silly publish   version: '0.0.1',
+22 silly publish   description: 'An engine for nonlinear and multilinear storytelling',
+22 silly publish   scripts:
+22 silly publish    { test: 'mocha --compilers js:babel-register tests',
+22 silly publish      compile: 'gulp node',
+22 silly publish      prepublish: 'npm run compile' },
+22 silly publish   babel:
+22 silly publish    { presets: [ 'es2015' ],
+22 silly publish      plugins: [ 'transform-object-assign' ] },
+22 silly publish   main: 'lib/game.js',
+22 silly publish   browserify: { transform: [ 'babelify' ] },
+22 silly publish   repository:
+22 silly publish    { type: 'git',
+22 silly publish      url: 'git+ssh://git@github.com/lazerwalker/storyboard.git' },
+22 silly publish   author: '',
+22 silly publish   license: 'ISC',
+22 silly publish   homepage: 'https://github.com/lazerwalker/storyboard',
+22 silly publish   devDependencies:
+22 silly publish    { babel: '^6.3.26',
+22 silly publish      'babel-core': '^6.7.6',
+22 silly publish      'babel-plugin-transform-object-assign': '^6.5.0',
+22 silly publish      'babel-preset-es2015': '^6.3.13',
+22 silly publish      'babel-register': '^6.3.13',
+22 silly publish      babelify: '^7.2.0',
+22 silly publish      chai: '^3.4.1',
+22 silly publish      'gulp-babel': '^6.1.2',
+22 silly publish      'gulp-util': '^3.0.7',
+22 silly publish      mocha: '^2.3.4',
+22 silly publish      sinon: '^1.17.2',
+22 silly publish      'sinon-chai': '^2.8.0',
+22 silly publish      'vinyl-source-stream': '^1.1.0',
+22 silly publish      watchify: '^3.6.1' },
+22 silly publish   dependencies:
+22 silly publish    { seedrandom: '^2.4.2',
+22 silly publish      underscore: '^1.8.3',
+22 silly publish      'underscore-keypath': '^0.9.1' },
+22 silly publish   readme: '# Storyboard\n\n[![CI Status](http://img.shields.io/travis/lazerwalker/storyboard.svg?style=flat)](https://travis-ci.org/lazerwalker/storyboard)\n\nStoryboard is a general-purpose engine for multilinear/nonlinear storytelling. It\'s written in JavaScript (ES6), and intended to be embedded within another game or application (such as the included-as-a-git-submodule [Storyboard-iOS](https://github.com/lazerwalker/storyboard-iOS.git) reference native iOS Swift project)\n\nRight now, it\'s pre-alpha. Stay tuned for more.\n\n\n## Setup and Usage\n\nReal documentation is coming later; right now, this really isn\'t intended for use by anyone other than me.\n\nThat being said:\n\n* `npm install` to install dependencies\n* `gulp` to compile to a production file suitable for client-side JS consumption (`dist.js` in the root folder)\n* `npm test` runs the test suite. It\'s got decent coverage at a functional, not unit, level.\n* If using the reference iOS client, `git submodule update --init`\n* Put your data files in the `examples` folder, with any media needed in a subfolder with the same name (e.g. `sample.json` would have a folder called `sample`)\n\nKnock yourself out.\n\n\n## Gulp scripts\n\nFor development, a few gulp scripts exist.\n\n* `gulp browser` compiles a single `dist.js` file. This file exposes a `Game` class object in the global scope, and is intended to be used in client-side environments (e.g. JS within a web browser but without a Browserify pipeline, a JavaScriptCore thread on iOS)\n* `gulp node` compiles each individual ES6 source file (in `src/`) into an equivalent non-ES6 file in `lib/`. This is intended for requiring storyboard as a `npm` library in node.js\n* `gulp watch` is the equivalent of `gulp browser`, but listens for live file changes and automatically recompiles.\n\n\n## License\n\nThis project is licensed under the MIT License. See the LICENSE file in this repository for more information.',
+22 silly publish   readmeFilename: 'README.md',
+22 silly publish   gitHead: '1ec57e28a66fe9e3a2b731d876d8aaad28370747',
+22 silly publish   bugs: { url: 'https://github.com/lazerwalker/storyboard/issues' },
+22 silly publish   _id: 'storyboard-engine@0.0.1',
+22 silly publish   _shasum: 'a173b3f588f2b72165087c3208cb7d8a3e8f324d',
+22 silly publish   _from: '.' }
+23 verbose getPublishConfig undefined
+24 silly mapToRegistry name storyboard-engine
+25 silly mapToRegistry using default registry
+26 silly mapToRegistry registry https://registry.npmjs.org/
+27 silly mapToRegistry uri https://registry.npmjs.org/storyboard-engine
+28 verbose publish registryBase https://registry.npmjs.org/
+29 silly publish uploading /Users/lazerwalker/.npm/storyboard-engine/0.0.1/package.tgz
+30 verbose request uri https://registry.npmjs.org/storyboard-engine
+31 verbose request sending authorization for write operation
+32 info attempt registry request try #1 at 8:06:15 PM
+33 verbose request using bearer token for auth
+34 verbose request id 1a57bd7437d4abc8
+35 http request PUT https://registry.npmjs.org/storyboard-engine
+36 http 403 https://registry.npmjs.org/storyboard-engine
+37 verbose headers { 'content-type': 'application/json',
+37 verbose headers   'cache-control': 'max-age=300',
+37 verbose headers   'content-length': '95',
+37 verbose headers   'accept-ranges': 'bytes',
+37 verbose headers   date: 'Mon, 18 Apr 2016 00:06:35 GMT',
+37 verbose headers   via: '1.1 varnish',
+37 verbose headers   connection: 'keep-alive',
+37 verbose headers   'x-served-by': 'cache-atl6235-ATL',
+37 verbose headers   'x-cache': 'MISS',
+37 verbose headers   'x-cache-hits': '0',
+37 verbose headers   'x-timer': 'S1460937976.100559,VS0,VE19537',
+37 verbose headers   vary: 'Accept-Encoding' }
+38 verbose request invalidating /Users/lazerwalker/.npm/registry.npmjs.org/storyboard-engine on PUT
+39 error publish Failed PUT 403
+40 verbose stack Error: "You cannot publish over the previously published version 0.0.1." : storyboard-engine
+40 verbose stack     at makeError (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+40 verbose stack     at CachingRegistryClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:252:14)
+40 verbose stack     at Request._callback (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+40 verbose stack     at Request.self.callback (/usr/local/lib/node_modules/npm/node_modules/request/request.js:198:22)
+40 verbose stack     at emitTwo (events.js:87:13)
+40 verbose stack     at Request.emit (events.js:172:7)
+40 verbose stack     at Request.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1082:10)
+40 verbose stack     at emitOne (events.js:82:20)
+40 verbose stack     at Request.emit (events.js:169:7)
+40 verbose stack     at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1009:12)
+41 verbose statusCode 403
+42 verbose pkgid storyboard-engine
+43 verbose cwd /Users/lazerwalker/Code/filbert
+44 error Darwin 15.4.0
+45 error argv "/usr/local/Cellar/node/5.0.0/bin/node" "/usr/local/bin/npm" "publish"
+46 error node v5.0.0
+47 error npm  v3.3.9
+48 error code E403
+49 error "You cannot publish over the previously published version 0.0.1." : storyboard-engine
+50 error If you need help, you may report this error at:
+50 error     <https://github.com/npm/npm/issues>
+51 verbose exit [ 1, true ]

@@ -1,6 +1,6 @@
 {
   "name": "storyboard-engine",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An engine for nonlinear and multilinear storytelling",
   "scripts": {
     "test": "mocha --compilers js:babel-register tests",
