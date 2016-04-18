@@ -1,6 +1,7 @@
 lib/
 dist.js
 node_modules
+npm-debug.log
 # Created by https://www.gitignore.io/api/osx
 
 ### OSX ###
