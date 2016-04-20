@@ -338,6 +338,53 @@ describe("playing the node graph", function() {
     it("should not affect the actual variable", function() {
       expect(game.state.button).to.be.false
     })
+
+    context("when a value is passed in", function() {
+      beforeEach(function() {
+        game = new Game({
+          "graph": {
+            "startNode": "1",
+            "nodes": {
+              "1": {
+                "nodeId": "1",
+                "choices": [
+                  {
+                    "nodeId": "2",
+                    "predicate": {
+                      "button": { "eq": "pushed!" }
+                    }
+                  }   
+                ]
+              },
+              "2": {
+                "nodeId": "2",
+                "passages": [
+                  {
+                    "passageId": "6",
+                    "type": "text",
+                    "content": "Goodbye World!"
+                  }
+                ]
+              } 
+            }
+          }
+        });
+
+        callback = sinon.spy();
+        game.addOutput("text", callback);
+        game.start();
+
+        game.receiveMomentaryInput("button", "pushed!")
+      });
+
+      it("should trigger the appropriate nodes", function() {
+        expect(callback).to.have.been.calledWith("Goodbye World!", "6");
+      });
+
+      it("should not affect the actual variable", function() {
+        expect(game.state.button).to.be.false
+      })
+    })
   });
 
   context("when making a choice", function() {
@@ -1026,7 +1073,7 @@ describe("receiving input", function() {
     })
   })
 
-  context.only("when the input data is an object", function() {
+  context("when the input data is an object", function() {
     it("should set the object", function() {
       let game = new Game({});
       game.receiveInput("foo", {"bar": "baz"})

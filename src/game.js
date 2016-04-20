@@ -170,9 +170,9 @@ Game.prototype = {
     this.receiveDispatch(Actions.RECEIVE_INPUT, obj)
   },
 
-  receiveMomentaryInput: function(type) {
+  receiveMomentaryInput: function(type, value) {
     let trueObj = {}
-    trueObj[type] = true
+    trueObj[type] = value || true
     this.receiveDispatch(Actions.RECEIVE_INPUT, trueObj)
 
     let falseObj = {}
