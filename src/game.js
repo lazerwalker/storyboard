@@ -176,7 +176,7 @@ Game.prototype = {
     this.receiveDispatch(Actions.RECEIVE_INPUT, trueObj)
 
     let falseObj = {}
-    falseObj[type] = false
+    falseObj[type] = undefined
     this.receiveDispatch(Actions.RECEIVE_INPUT, falseObj)
   },
 

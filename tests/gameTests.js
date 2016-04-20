@@ -336,7 +336,7 @@ describe("playing the node graph", function() {
     });
 
     it("should not affect the actual variable", function() {
-      expect(game.state.button).to.be.false
+      expect(game.state.button).to.not.exist
     })
 
     context("when a value is passed in", function() {
@@ -382,7 +382,7 @@ describe("playing the node graph", function() {
       });
 
       it("should not affect the actual variable", function() {
-        expect(game.state.button).to.be.false
+        expect(game.state.button).to.not.exist
       })
     })
   });
@@ -708,7 +708,7 @@ describe("triggering events from the bag", function() {
       });
 
       it("should not change the global state", function() {
-        expect(game.state.button).to.be.false
+        expect(game.state.button).to.not.exist
       });
     })
 
