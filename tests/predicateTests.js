@@ -203,6 +203,29 @@ describe("combining multiple conditions", function() {
       });
     })
 
+    context("within a predicate key", function() {
+      beforeEach(function() {
+        predicate = {"foo": {"or": [
+          {"eq": 3},
+          {"eq": 5}
+        ]}}
+      })      
+
+      it("should trigger when the first condition is met", function() {
+        const result = checkPredicate(predicate, {foo: 3})
+        expect(result).to.be.true;
+      });
+
+      it("should trigger when the second condition is met", function() {
+        const result = checkPredicate(predicate, {foo: 5})
+        expect(result).to.be.true;
+      });
+
+      it("should not fire when neither condition is met", function() {
+        const result = checkPredicate(predicate, {foo: 4})
+        expect(result).to.be.false;
+      });
+    })
   })
 
 });

@@ -4,8 +4,7 @@ import keyPathify from "./keyPathify"
 export default function checkPredicate(predicate, state) {
   if (!predicate) { return true }
 
-  return _.reduce(predicate, function(memo, obj, key) {
-
+  function check(memo, obj, key) {
     // TODO: If this is slow, only do valueForKeyPath for strings that need it
     const value = keyPathify(key, state)
 
@@ -17,21 +16,28 @@ export default function checkPredicate(predicate, state) {
     }
 
 
-    let bool = memo;
+    if (!_.isUndefined(obj.or) && _.isArray(obj.or)) {
+      // since check is built around the assumption that everything is ANDed,
+      // we need to pass in true or else it will short-circuit.
+      // This is pretty sloppy, and suggests an eventual better model is needed.
+      memo = memo && _.reduce(obj.or, ((m, o, k) => m || check(true, o, key)), false)
+    }
 
     if (!_.isUndefined(obj.eq)) {
-       bool = bool && (value === keyPathify(obj.eq, state, true));
+       memo = memo && (value === keyPathify(obj.eq, state, true));
     }
 
     if (!_.isUndefined(obj.gte)) {
-      bool = bool && (value >= keyPathify(obj.gte, state, true));
+      memo = memo && (value >= keyPathify(obj.gte, state, true));
     }
     if (!_.isUndefined(obj.lte)) {
-      bool = bool && (value <= keyPathify(obj.lte, state, true));
+      memo = memo && (value <= keyPathify(obj.lte, state, true));
     }
     if (!_.isUndefined(obj.exists)) {
-      bool = bool && (obj.exists !== _.isUndefined(keyPathify(value, state, true)));
+      memo = memo && (obj.exists !== _.isUndefined(keyPathify(value, state, true)));
     }
-    return bool;
-  }, true);
+    return memo;
+  }
+
+  return _.reduce(predicate, check, true)
 }
