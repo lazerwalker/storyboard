@@ -48,6 +48,13 @@ const Game = function(options) {
   for (let obj of [this.graph, this.bag]) {
     obj.dispatch = dispatch
   }
+
+  var that = this;
+  this.addOutput("wait", (timeout, passageId) => {
+    setTimeout(() => { 
+      this.completePassage(passageId);
+    }, parseInt(timeout))
+  });
 }
 
 Game.prototype = {
