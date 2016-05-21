@@ -155,24 +155,56 @@ describe("predicate types", function() {
 });
 
 describe("combining multiple conditions", function() {
-  let predicate;
+  describe("using an (implicit) AND", function() {
+    let predicate;
 
-  beforeEach(function() {
-    predicate = {"foo": {"lte": 10, "gte": 5}}
-  });
+    beforeEach(function() {
+      predicate = {"foo": {"lte": 10, "gte": 5}}
+    });
 
-  it("should return true when both are true", function() {
-    const result = checkPredicate(predicate, {"foo": 7});
-    expect(result).to.be.true;
-  });
+    it("should return true when both are true", function() {
+      const result = checkPredicate(predicate, {"foo": 7});
+      expect(result).to.be.true;
+    });
 
-  it("should not return true when only one is true", function() {
-    const result1 = checkPredicate(predicate, {"foo": 4});
-    expect(result1).to.be.false;
+    it("should not return true when only one is true", function() {
+      const result1 = checkPredicate(predicate, {"foo": 4});
+      expect(result1).to.be.false;
 
-    const result2 = checkPredicate(predicate, {"foo": 11});
-    expect(result2).to.be.false;
-  });
+      const result2 = checkPredicate(predicate, {"foo": 11});
+      expect(result2).to.be.false;
+    });    
+  })
+
+  describe("using an explicit OR", function() {
+    let predicate;
+
+    context("when used at the top level of the predicate", function() {
+      beforeEach(function() {
+        predicate = {"or": [
+          {"foo": {"eq": 3}},
+          {"foo": {"eq": 5}}
+        ]}
+      })      
+
+      it("should trigger when the first condition is met", function() {
+        const result = checkPredicate(predicate, {foo: 3})
+        expect(result).to.be.true;
+      });
+
+      it("should trigger when the second condition is met", function() {
+        const result = checkPredicate(predicate, {foo: 5})
+        expect(result).to.be.true;
+      });
+
+      it("should not fire when neither condition is met", function() {
+        const result = checkPredicate(predicate, {foo: 4})
+        expect(result).to.be.false;
+      });
+    })
+
+  })
+
 });
 
 describe("combining multiple variables", function() {
