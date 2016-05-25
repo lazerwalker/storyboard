@@ -189,6 +189,41 @@ describe("playing the node graph", function() {
       })
     })
 
+    describe("when a passage has no content", function() {
+      let first, second, game, callback;        
+      beforeEach(function() {
+        first = {
+          "passageId": "1"
+        }
+
+        second = {
+          "passageId": "2",
+          "type": "text",
+          "content": "Second"
+        }
+
+        game = new Game({
+          "graph": {
+            "startNode": "1",
+            "nodes": {
+              "1": {
+                "nodeId": "1",
+                "passages": [first, second]
+              },
+            }
+          }
+        });
+
+        callback = sinon.spy();
+        game.addOutput("text", callback);
+        game.start()
+      })
+
+      it("should go on to the next passage", function() {
+        expect(callback).to.have.been.calledWith("Second", "2") 
+      })
+    })
+
     describe("when one of them should be skipped", function() {
       describe("when there are passages after the skipped one", function() {
         let first, second, game, callback;        
@@ -399,6 +434,8 @@ describe("playing the node graph", function() {
               "passages": [
                 {
                   "passageId": "5",
+                  "type": "text",
+                  "content": "foobar"
                 }
               ],
               "choices": [
@@ -735,7 +772,9 @@ describe("triggering events from the bag", function() {
               "4": {
                 nodeId: "4",
                 passages: [{
-                  passageId: "2"
+                  passageId: "2",
+                  type: "text",
+                  content: "foobar"
                 }]
               }
             }
@@ -784,7 +823,9 @@ describe("triggering events from the bag", function() {
               "4": {
                 nodeId: "4",
                 passages: [{
-                  passageId: "2"
+                  passageId: "2",
+                  type: "text",
+                  content: "hi"                  
                 }],
                 choices: [{
                   nodeId: "2",
@@ -794,7 +835,9 @@ describe("triggering events from the bag", function() {
             "2": {
                 nodeId: "2",
                 passages: [{
-                  passageId: "3"
+                  passageId: "3",
+                  type: "text",
+                  content: "hi"
                 }]
               }            
             }

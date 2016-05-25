@@ -14,12 +14,18 @@ export default class Node {
 
     if (!passage || !this.dispatch) return
 
-    if (passage.content) {
+    const hasContent = !_.isUndefined(passage.content)
+
+    if (hasContent) {
       this.dispatch(Actions.OUTPUT, passage);
     }
 
     if (passage.set) {
       this.dispatch(Actions.SET_VARIABLES, passage.set)
+    }
+
+    if (!hasContent) {
+      this.dispatch(Actions.COMPLETE_PASSAGE, passage.passageId);
     }
   }
 }

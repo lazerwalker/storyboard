@@ -13,3 +13,5 @@ export const TRIGGERED_BAG_NODES = "triggeredBagNodes";
 export const RECEIVE_INPUT = "receiveInput";
 
 export const SET_VARIABLES = "setVariables";
+
+export const COMPLETE_PASSAGE = "completePassage";

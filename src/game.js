@@ -149,6 +149,8 @@ Game.prototype = {
         this.graph.checkChoiceTransitions(this.state);
         this.bag.checkNodes(this.state);
       }
+    } else if (action === Actions.COMPLETE_PASSAGE) {
+      this.completePassage(data);
     }
 
     this.emitState();
