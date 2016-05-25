@@ -222,6 +222,48 @@ describe("playing the node graph", function() {
       it("should go on to the next passage", function() {
         expect(callback).to.have.been.calledWith("Second", "2") 
       })
+
+      context("when it's the last one in a node", function() {
+        let first, second, game, callback;        
+        beforeEach(function() {
+          first = {
+            "passageId": "1"
+          }
+
+          second = {
+            "passageId": "2",
+            "type": "text",
+            "content": "Second"
+          }
+
+          game = new Game({
+            "graph": {
+              "startNode": "1",
+              "nodes": {
+                "1": {
+                  "nodeId": "1",
+                  "passages": [first],
+                  "choices": [{
+                    "nodeId": "2"
+                  }]
+                },
+                "2": {
+                  "nodeId": "2",
+                  "passages": [second]
+                },              
+              }
+            }
+          });
+
+          callback = sinon.spy();
+          game.addOutput("text", callback);
+          game.start()
+        })
+
+        it("should go on to the next node", function() {
+          expect(callback).to.have.been.calledWith("Second", "2") 
+        })
+      })
     })
 
     describe("when one of them should be skipped", function() {
