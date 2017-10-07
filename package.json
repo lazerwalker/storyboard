@@ -21,14 +21,12 @@
       "babelify"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:lazerwalker/storyboard.git"
-  },
-  "author": "",
+  "repository": "git@github.com:lazerwalker/storyboard.git",
+  "author": "Mike Lazer-Walker <michael@lazerwalker.com>",
   "license": "ISC",
   "homepage": "https://github.com/lazerwalker/storyboard",
   "devDependencies": {
+    "@types/node": "^8.0.33",
     "babel": "^6.3.26",
     "babel-core": "^6.7.6",
     "babel-plugin-transform-object-assign": "^6.5.0",
