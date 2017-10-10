@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "seedrandom": "^2.4.2",
+    "storyboard-parser": "file:/Users/lazerwalker/Code/storyboard-lang",
     "underscore": "^1.8.3",
     "underscore-keypath": "^0.9.1"
   }

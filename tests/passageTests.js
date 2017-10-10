@@ -5,7 +5,7 @@ const expect = chai.expect;
 
 chai.use(sinonChai);
 
-import Game from '../src/game'
+import { Game } from '../src/game'
 import * as Actions from '../src/gameActions'
 import keyPathify from '../src/keyPathify'
 
@@ -14,7 +14,7 @@ describe("'wait' passages", function() {
     beforeEach(function() {
       game = new Game({
         "graph": {
-          "startNode": "1",
+          "start": "1",
           "nodes": {
             "1": {
               "nodeId": "1",
@@ -38,8 +38,8 @@ describe("'wait' passages", function() {
       callback = sinon.spy();
       game.addOutput("text", callback);
 
-      game.start();     
-  }); 
+      game.start();
+  });
 
   context("immediately", function() {
     it("should not play the next passage yet", function () {

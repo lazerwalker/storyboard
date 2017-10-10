@@ -5,7 +5,7 @@ const expect = chai.expect;
 
 chai.use(sinonChai);
 
-import Game from '../src/game'
+import { Game } from '../src/game'
 import * as Actions from '../src/gameActions'
 import keyPathify from '../src/keyPathify'
 
@@ -15,7 +15,7 @@ describe("setting variables", function() {
     beforeEach(function() {
       game = new Game({
         "graph": {
-          "startNode": "1",
+          "start": "1",
           "nodes": {
             "1": {
               "nodeId": "1",
@@ -26,11 +26,11 @@ describe("setting variables", function() {
                     "foo": "bar",
                     "baz": "graph.currentNodeId",
                     "random1": { "randInt": [0, 6] },
-                    "random2": { "randInt": [0, 6] }                    
+                    "random2": { "randInt": [0, 6] }
                   }
                 }
               ]
-            } 
+            }
           }
         }
       });
@@ -39,7 +39,7 @@ describe("setting variables", function() {
       game.addOutput("text", callback);
 
       game.state.rngSeed = "knownSeed"
-      game.start();      
+      game.start();
     })
 
     afterEach(function() {
@@ -63,7 +63,7 @@ describe("setting variables", function() {
       beforeEach(function() {
         game = new Game({
           "graph": {
-            "startNode": "1",
+            "start": "1",
             "nodes": {
               "1": {
                 "nodeId": "1",
@@ -78,7 +78,7 @@ describe("setting variables", function() {
                     }
                   }
                 ]
-              } 
+              }
             }
           }
         });
@@ -86,7 +86,7 @@ describe("setting variables", function() {
         callback = sinon.spy();
         game.addOutput("text", callback);
 
-        game.start();      
+        game.start();
       })
 
       it("should output the content", function() {
@@ -113,11 +113,11 @@ describe("setting variables", function() {
                   "foo": "bar",
                   "baz": "bag.activePassageIndexes.1",
                   "random1": { "randInt": [0, 6] },
-                  "random2": { "randInt": [0, 6] } 
+                  "random2": { "randInt": [0, 6] }
                 }
               }
             ]
-          } 
+          }
         }
       });
 
@@ -125,7 +125,7 @@ describe("setting variables", function() {
       game.addOutput("text", callback);
 
       game.state.rngSeed = "knownSeed"
-      game.start();      
+      game.start();
     })
 
     afterEach(function() {

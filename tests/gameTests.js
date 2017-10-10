@@ -5,7 +5,7 @@ const expect = chai.expect;
 
 chai.use(sinonChai);
 
-import Game from '../src/game'
+import { Game } from '../src/game'
 import * as Actions from '../src/gameActions'
 
 describe("initialization", function() {
@@ -15,7 +15,7 @@ describe("initialization", function() {
       node = { "nodeId": "1" };
       game = new Game({
         "graph": {
-          "startNode": "1",
+          "start": "1",
           "nodes": {
             "1": node
           }
@@ -24,10 +24,10 @@ describe("initialization", function() {
     });
 
     it("should create a valid nodeGraph with the passed options", function() {
-      expect(game.graph).to.exist;
+      expect(game.story.graph).to.exist;
 
-      expect(game.graph.startNode).to.equal("1");
-      expect(Object.keys(game.graph.nodes)).to.have.length(1);
+      expect(game.story.graph.start).to.equal("1");
+      expect(Object.keys(game.story.graph.nodes)).to.have.length(1);
     });
 
     it("shouldn't start the game", function() {
@@ -40,15 +40,15 @@ describe("initialization", function() {
     const node = { "nodeId": "1" };
     const game = new Game({
       "graph": {
-        "startNode": "1",
+        "start": "1",
         "nodes": {
           "1": node
         }
       }
     });
 
-    expect(game.graph).to.exist;
-    expect(game.graph.startNode).to.equal("1");
+    expect(game.story.graph).to.exist;
+    expect(game.story.graph.start).to.equal("1");
   });
 
   describe("creating a nodeBag", function() {
@@ -56,8 +56,8 @@ describe("initialization", function() {
       const node = {"nodeId": "5"}
       const game = new Game({bag: [node]});
 
-      expect(game.bag).to.exist;
-      expect(Object.keys(game.bag.nodes)).to.have.length(1)
+      expect(game.story.bag).to.exist;
+      expect(Object.keys(game.story.bag.nodes)).to.have.length(1)
     });
   });
 });
@@ -67,7 +67,7 @@ describe("playing the node graph", function() {
     it("should play the appropriate content via an output", function() {
       const game = new Game({
         "graph": {
-          "startNode": "1",
+          "start": "1",
           "nodes": {
             "1": {
               "nodeId": "1",
@@ -78,7 +78,7 @@ describe("playing the node graph", function() {
                   "content": "Hello World!"
                 }
               ]
-            } 
+            }
           }
         }
       });
@@ -97,7 +97,7 @@ describe("playing the node graph", function() {
     beforeEach(function() {
       game = new Game({
         "graph": {
-          "startNode": "1",
+          "start": "1",
           "nodes": {
             "1": {
               "nodeId": "1",
@@ -107,7 +107,7 @@ describe("playing the node graph", function() {
                   "predicate": {
                     "continue": { "gte": 1 }
                   }
-                }   
+                }
               ]
             },
             "2": {
@@ -119,7 +119,7 @@ describe("playing the node graph", function() {
                   "content": "Goodbye World!"
                 }
               ]
-            } 
+            }
           }
         }
       });
@@ -152,7 +152,7 @@ describe("playing the node graph", function() {
           "passageId": "2",
           "type": "text",
           "content": "First"
-        } 
+        }
 
         second = {
           "passageId": "3",
@@ -162,7 +162,7 @@ describe("playing the node graph", function() {
 
         game = new Game({
           "graph": {
-            "startNode": "1",
+            "start": "1",
             "nodes": {
               "1": {
                 "nodeId": "1",
@@ -190,7 +190,7 @@ describe("playing the node graph", function() {
     })
 
     describe("when a passage has no content", function() {
-      let first, second, game, callback;        
+      let first, second, game, callback;
       beforeEach(function() {
         first = {
           "passageId": "1"
@@ -204,7 +204,7 @@ describe("playing the node graph", function() {
 
         game = new Game({
           "graph": {
-            "startNode": "1",
+            "start": "1",
             "nodes": {
               "1": {
                 "nodeId": "1",
@@ -220,11 +220,11 @@ describe("playing the node graph", function() {
       })
 
       it("should go on to the next passage", function() {
-        expect(callback).to.have.been.calledWith("Second", "2") 
+        expect(callback).to.have.been.calledWith("Second", "2")
       })
 
       context("when it's the last one in a node", function() {
-        let first, second, game, callback;        
+        let first, second, game, callback;
         beforeEach(function() {
           first = {
             "passageId": "1"
@@ -238,7 +238,7 @@ describe("playing the node graph", function() {
 
           game = new Game({
             "graph": {
-              "startNode": "1",
+              "start": "1",
               "nodes": {
                 "1": {
                   "nodeId": "1",
@@ -250,7 +250,7 @@ describe("playing the node graph", function() {
                 "2": {
                   "nodeId": "2",
                   "passages": [second]
-                },              
+                },
               }
             }
           });
@@ -261,22 +261,22 @@ describe("playing the node graph", function() {
         })
 
         it("should go on to the next node", function() {
-          expect(callback).to.have.been.calledWith("Second", "2") 
+          expect(callback).to.have.been.calledWith("Second", "2")
         })
       })
     })
 
     describe("when one of them should be skipped", function() {
       describe("when there are passages after the skipped one", function() {
-        let first, second, game, callback;        
+        let first, second, game, callback;
         beforeEach(function() {
           first = {
             "passageId": "2",
             "type": "text",
             "content": "First",
             "predicate": {foo: {lte: 0}}
-          } 
-        })   
+          }
+        })
         context("when the appropriate passage has no predicate", function() {
           beforeEach(function() {
             second = {
@@ -287,7 +287,7 @@ describe("playing the node graph", function() {
 
             game = new Game({
               "graph": {
-                "startNode": "1",
+                "start": "1",
                 "nodes": {
                   "1": {
                     "nodeId": "1",
@@ -306,7 +306,7 @@ describe("playing the node graph", function() {
             game.start();
 
             expect(callback).not.to.have.been.calledWith("First", "2")
-            expect(callback).to.have.been.calledWith("Second", "3") 
+            expect(callback).to.have.been.calledWith("Second", "3")
           })
         });
 
@@ -321,7 +321,7 @@ describe("playing the node graph", function() {
 
             game = new Game({
               "graph": {
-                "startNode": "1",
+                "start": "1",
                 "nodes": {
                   "1": {
                     "nodeId": "1",
@@ -349,7 +349,7 @@ describe("playing the node graph", function() {
         it("should complete the node", function() {
           const game = new Game({
             "graph": {
-              "startNode": "1",
+              "start": "1",
               "nodes": {
                 "1": {
                   "nodeId": "1",
@@ -374,7 +374,7 @@ describe("playing the node graph", function() {
     beforeEach(function() {
       game = new Game({
         "graph": {
-          "startNode": "1",
+          "start": "1",
           "nodes": {
             "1": {
               "nodeId": "1",
@@ -384,7 +384,7 @@ describe("playing the node graph", function() {
                   "predicate": {
                     "button": { "gte": 1 }
                   }
-                }   
+                }
               ]
             },
             "2": {
@@ -396,7 +396,7 @@ describe("playing the node graph", function() {
                   "content": "Goodbye World!"
                 }
               ]
-            } 
+            }
           }
         }
       });
@@ -420,7 +420,7 @@ describe("playing the node graph", function() {
       beforeEach(function() {
         game = new Game({
           "graph": {
-            "startNode": "1",
+            "start": "1",
             "nodes": {
               "1": {
                 "nodeId": "1",
@@ -430,7 +430,7 @@ describe("playing the node graph", function() {
                     "predicate": {
                       "button": { "eq": "pushed!" }
                     }
-                  }   
+                  }
                 ]
               },
               "2": {
@@ -442,7 +442,7 @@ describe("playing the node graph", function() {
                     "content": "Goodbye World!"
                   }
                 ]
-              } 
+              }
             }
           }
         });
@@ -469,7 +469,7 @@ describe("playing the node graph", function() {
     beforeEach(function() {
       game = new Game({
         "graph": {
-          "startNode": "1",
+          "start": "1",
           "nodes": {
             "1": {
               "nodeId": "1",
@@ -486,7 +486,7 @@ describe("playing the node graph", function() {
                   "predicate": {
                     "counter": { "gte": 10 }
                   }
-                }   
+                }
               ]
             },
             "2": {
@@ -498,7 +498,7 @@ describe("playing the node graph", function() {
                   "content": "Goodbye World!"
                 }
               ]
-            } 
+            }
           }
         }
       });
@@ -531,7 +531,7 @@ describe("playing the node graph", function() {
       beforeEach(function() {
        game = new Game({
           "graph": {
-            "startNode": "1",
+            "start": "1",
             "nodes": {
               "1": {
                 "nodeId": "1",
@@ -546,17 +546,17 @@ describe("playing the node graph", function() {
                     "predicate": {
                       "counter": { "gte": 10, "lte": 15 }
                     }
-                  }   
+                  }
                 ]
               },
               "2": {
                 "nodeId": "2",
-                "passages": [{ 
+                "passages": [{
                   "passageId": "1",
                   "content": "Hi",
                   "type": "text"
                 }]
-              } 
+              }
             }
           }
         });
@@ -565,7 +565,7 @@ describe("playing the node graph", function() {
        game.start();
        game.completePassage("5");
       });
- 
+
 
       it("shouldn't transition when only one condition is met", function() {
         game.receiveInput("counter", 9);
@@ -589,7 +589,7 @@ describe("playing the node graph", function() {
     beforeEach(function() {
       game = new Game({
         "graph": {
-          "startNode": "1",
+          "start": "1",
           "nodes": {
             "1": {
               "nodeId": "1",
@@ -609,7 +609,7 @@ describe("playing the node graph", function() {
                   "predicate": {
                     "foo": { "gte": 1 }
                   }
-                }   
+                }
               ]
             },
             "2": {
@@ -621,7 +621,7 @@ describe("playing the node graph", function() {
                   "content": "Goodbye World!"
                 }
               ]
-            } 
+            }
           }
         }
       });
@@ -641,7 +641,7 @@ describe("playing the node graph", function() {
       expect(callback).to.have.been.calledWith("Goodbye World!", "6");
       expect(game.state.graph.currentNodeId).to.equal("2");
     });
-  })  
+  })
 });
 
 describe("triggering events from the bag", function() {
@@ -649,7 +649,7 @@ describe("triggering events from the bag", function() {
     let node, game, output;
     beforeEach(function() {
       node = {
-        nodeId: "5", 
+        nodeId: "5",
         predicate: { "foo": { "lte": 10 }},
         passages: [
           {
@@ -681,11 +681,11 @@ describe("triggering events from the bag", function() {
   })
 
   describe("different ways to trigger an event", function() {
-    context("when the game starts without a startNode", function() {
+    context("when the game starts without a start", function() {
       let game, node, output;
       beforeEach(function() {
         node = {
-          nodeId: "1", 
+          nodeId: "1",
           passages: [
             {
               "passageId": "1",
@@ -693,7 +693,7 @@ describe("triggering events from the bag", function() {
               "content": "First"
             }
           ]
-        }   
+        }
 
         game = new Game({
           "bag": {"1": node}
@@ -701,7 +701,7 @@ describe("triggering events from the bag", function() {
 
         output = sinon.spy();
         game.addOutput("text", output);
-        game.start();    
+        game.start();
       });
 
       it("should play a valid event node", function() {
@@ -713,7 +713,7 @@ describe("triggering events from the bag", function() {
       let node, game, output;
       beforeEach(function() {
         node = {
-          nodeId: "5", 
+          nodeId: "5",
           predicate: { "foo": { "lte": 10 }},
           passages: [
             {
@@ -760,7 +760,7 @@ describe("triggering events from the bag", function() {
       let node, game, output;
       beforeEach(function() {
         node = {
-          nodeId: "5", 
+          nodeId: "5",
           predicate: { "button": { "gte": 1 }},
           passages: [
             {
@@ -795,7 +795,7 @@ describe("triggering events from the bag", function() {
       let node, game, output;
       beforeEach(function() {
         node = {
-          nodeId: "5", 
+          nodeId: "5",
           predicate: { "graph.nodeComplete": { "gte": 1 }},
           passages: [
             {
@@ -809,7 +809,7 @@ describe("triggering events from the bag", function() {
         game = new Game({
           bag: {"5": node},
           graph: {
-            startNode: "4",
+            start: "4",
             nodes: {
               "4": {
                 nodeId: "4",
@@ -844,8 +844,8 @@ describe("triggering events from the bag", function() {
       let node, game, output;
       beforeEach(function() {
         node = {
-          nodeId: "5", 
-          predicate: { 
+          nodeId: "5",
+          predicate: {
             "graph.currentNodeId": { gte: "2", lte: "2" }
           },
           passages: [
@@ -860,14 +860,14 @@ describe("triggering events from the bag", function() {
         game = new Game({
           bag: {"5": node},
           graph: {
-            startNode: "4",
+            start: "4",
             nodes: {
               "4": {
                 nodeId: "4",
                 passages: [{
                   passageId: "2",
                   type: "text",
-                  content: "hi"                  
+                  content: "hi"
                 }],
                 choices: [{
                   nodeId: "2",
@@ -881,7 +881,7 @@ describe("triggering events from the bag", function() {
                   type: "text",
                   content: "hi"
                 }]
-              }            
+              }
             }
           }
         });
@@ -899,9 +899,9 @@ describe("triggering events from the bag", function() {
         it("should trigger the bag node", function() {
           game.completePassage("2");
           expect(output).to.have.been.calledWith("Hello", "1");
-        });    
+        });
       });
-    });    
+    });
   });
 
   describe("triggering the same node multiple times", function() {
@@ -909,7 +909,7 @@ describe("triggering events from the bag", function() {
       let game, node, output;
       beforeEach(function() {
         node = {
-          nodeId: "5", 
+          nodeId: "5",
           predicate: { "foo": { "lte": 10 }},
           passages: [
             {
@@ -931,7 +931,7 @@ describe("triggering events from the bag", function() {
 
       it("shouldn't play a second time while it's still playing the first time", function() {
         game.receiveInput("foo", 7);
-        game.receiveInput("foo", 7); 
+        game.receiveInput("foo", 7);
 
         expect(output).to.have.been.calledOnce;
       })
@@ -944,7 +944,7 @@ describe("triggering events from the bag", function() {
         expect(output).to.have.been.calledOnce;
       })
     });
-    
+
     context("when the node should trigger multiple times", function() {
       let game, node, output;
       beforeEach(function() {
@@ -972,7 +972,7 @@ describe("triggering events from the bag", function() {
 
       it("shouldn't play a second time while it's still playing the first time", function() {
         game.receiveInput("foo", 7);
-        game.receiveInput("foo", 7); 
+        game.receiveInput("foo", 7);
 
         expect(output).to.have.been.calledOnce;
       })
@@ -992,7 +992,7 @@ describe("triggering events from the bag", function() {
       let game, node1, node2, output;
       beforeEach(function() {
         node1 = {
-          nodeId: "1", 
+          nodeId: "1",
           passages: [
             {
               "passageId": "1",
@@ -1003,7 +1003,7 @@ describe("triggering events from the bag", function() {
         }
 
         node2 = {
-          nodeId: "2", 
+          nodeId: "2",
           passages: [
             {
               "passageId": "2",
@@ -1011,7 +1011,7 @@ describe("triggering events from the bag", function() {
               "content": "Second"
             }
           ]
-        }        
+        }
 
         game = new Game({
           "bag": {"1": node1, "2": node2}
@@ -1019,7 +1019,7 @@ describe("triggering events from the bag", function() {
 
         output = sinon.spy();
         game.addOutput("text", output);
-        game.start();    
+        game.start();
       });
 
       it("should only play one of them at once", function() {
@@ -1028,7 +1028,7 @@ describe("triggering events from the bag", function() {
         // This may change in the future, and this test will fail as a result.
 
         expect(output).to.have.been.calledOnce;
-        expect(output).to.have.been.calledWith("First", "1");        
+        expect(output).to.have.been.calledWith("First", "1");
       })
     });
 
@@ -1036,7 +1036,7 @@ describe("triggering events from the bag", function() {
       let game, node1, node2, output;
       beforeEach(function() {
         node1 = {
-          nodeId: "1", 
+          nodeId: "1",
           track: "primary",
           passages: [
             {
@@ -1048,7 +1048,7 @@ describe("triggering events from the bag", function() {
         }
 
         node2 = {
-          nodeId: "2", 
+          nodeId: "2",
           track: "primary",
           passages: [
             {
@@ -1057,7 +1057,7 @@ describe("triggering events from the bag", function() {
               "content": "Second"
             }
           ]
-        }        
+        }
 
         game = new Game({
           "bag": {"1": node1, "2": node2}
@@ -1065,7 +1065,7 @@ describe("triggering events from the bag", function() {
 
         output = sinon.spy();
         game.addOutput("text", output);
-        game.start();    
+        game.start();
       });
 
       it("should only play one of them at once", function() {
@@ -1074,7 +1074,7 @@ describe("triggering events from the bag", function() {
         // This may change in the future, and this test will fail as a result.
 
         expect(output).to.have.been.calledOnce;
-        expect(output).to.have.been.calledWith("First", "1");        
+        expect(output).to.have.been.calledWith("First", "1");
       })
     });
 
@@ -1103,7 +1103,7 @@ describe("triggering events from the bag", function() {
               "content": "secondary track!"
             }
           ]
-        }        
+        }
 
         game = new Game({
           "bag": {"1": node1, "2": node2}
@@ -1111,13 +1111,13 @@ describe("triggering events from the bag", function() {
 
         output = sinon.spy();
         game.addOutput("text", output);
-        game.start();    
+        game.start();
       });
 
       it("should play both of them", function() {
         expect(output).to.have.been.calledTwice;
         expect(output).to.have.been.calledWith("primary track!", "1");
-        expect(output).to.have.been.calledWith("secondary track!", "2");        
+        expect(output).to.have.been.calledWith("secondary track!", "2");
       })
     });
   })
@@ -1176,10 +1176,10 @@ describe("receiveDispatch", function() {
       choice1 = { nodeId: "3" }
       choice2 = { nodeId: "4" }
       game = new Game({
-        graph: { 
-          nodes: { 
-            2: {nodeId: "2"}, 
-            3: {nodeId: "3", "passages":[]}, 
+        graph: {
+          nodes: {
+            2: {nodeId: "2"},
+            3: {nodeId: "3", "passages":[]},
             4:{ nodeId: "4", "passages":[]}
           }}})
 
@@ -1202,7 +1202,7 @@ describe("receiveDispatch", function() {
 
     it("should store the full node history in reverse-chronological order", function() {
       expect(game.state.graph.nodeHistory).to.eql(["3", "2"]);
-    });    
+    });
   });
 
   // TODO:
@@ -1211,7 +1211,7 @@ describe("receiveDispatch", function() {
   describe.skip("COMPLETE_BAG_NODE", function() {
     it("should remove the node from the list of active bag passages", function() {
       const game = new Game({});
-      game.state.bag.activePassageIds["1"] = 0;      
+      game.state.bag.activePassageIds["1"] = 0;
       game.receiveDispatch(Actions.COMPLETE_BAG_NODE, "1");
 
       expect(game.state.bag.activePassageIds["1"]).to.be.undefined;
@@ -1267,12 +1267,12 @@ describe("receiveDispatch", function() {
       });
       it("should send output to all registered outputs of that type", function() {
         expect(textOutput1).to.have.been.calledWith("Hello World!", "5");
-        expect(textOutput2).to.have.been.calledWith("Hello World!", "5");      
+        expect(textOutput2).to.have.been.calledWith("Hello World!", "5");
       });
 
       it("should only send output to outputs of the same type", function() {
         expect(audioOutput).not.to.have.been.calledWith("Hello World!", "5");
-      });    
+      });
     });
 
     it("should evaluate all embedded variables", function() {

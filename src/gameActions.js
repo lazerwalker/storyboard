@@ -1,17 +1,13 @@
-export const OUTPUT = "output";
-
-export const CHANGE_GRAPH_NODE = "changeGraphNode";
-export const MAKE_GRAPH_CHOICE = "makeGraphChoice";
-export const CHANGE_GRAPH_PASSAGE = "changeGraphPassage";
-export const COMPLETE_GRAPH_NODE = "completeGraphNode";
-
-export const CHANGE_BAG_PASSAGE = "changeBagNode";
-export const COMPLETE_BAG_NODE = "completeBagNode";
-
-export const TRIGGERED_BAG_NODES = "triggeredBagNodes";
-
-export const RECEIVE_INPUT = "receiveInput";
-
-export const SET_VARIABLES = "setVariables";
-
-export const COMPLETE_PASSAGE = "completePassage";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OUTPUT = "output";
+exports.CHANGE_GRAPH_NODE = "changeGraphNode";
+exports.MAKE_GRAPH_CHOICE = "makeGraphChoice";
+exports.CHANGE_GRAPH_PASSAGE = "changeGraphPassage";
+exports.COMPLETE_GRAPH_NODE = "completeGraphNode";
+exports.CHANGE_BAG_PASSAGE = "changeBagNode";
+exports.COMPLETE_BAG_NODE = "completeBagNode";
+exports.TRIGGERED_BAG_NODES = "triggeredBagNodes";
+exports.RECEIVE_INPUT = "receiveInput";
+exports.SET_VARIABLES = "setVariables";
+exports.COMPLETE_PASSAGE = "completePassage";

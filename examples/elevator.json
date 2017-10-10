@@ -1,9 +1,9 @@
 {
   "graph": {
-    "startNode": "0",
+    "start": "0",
     "nodes": {
       "0": {
-        "nodeId": "0", 
+        "nodeId": "0",
         "predicate": { "insideTheMediaLab": { "lte": 0 }},
         "passages": [{
           "passageId": "0",
@@ -12,7 +12,7 @@
         }],
         "choices": [{
           "nodeId": "1",
-          "predicate": { "insideTheMediaLab": { "gte": 1 }}  
+          "predicate": { "insideTheMediaLab": { "gte": 1 }}
         }]
       },
       "1": {
@@ -32,7 +32,7 @@
           },
           {
             "passageId": "2",
-            "type": "speech",            
+            "type": "speech",
             "predicate": { "headphones": {"lte": 0}},
             "content": "I need you to put on headphones, and then put your {device} in your pocket or handbag. Don't worry, I'll wait for you."
           }
@@ -58,7 +58,7 @@
             "predicate": {
               "altitude": { "gte": 11, "lte": 12 }
             }
-          }      
+          }
         ]
       },
       "3": {
