@@ -13,8 +13,7 @@ const expect = chai.expect
 
 describe("filtering nodes", function() {
   context("when some nodes match the predicate but others don't", function() {
-    // TODO: This test won't work until I'm properly handling numbers
-    it.skip("should only return the nodes that match", function() {
+    it("should only return the nodes that match", function() {
       const story = `
         ## first
           [foo <= 10]
@@ -35,7 +34,7 @@ describe("filtering nodes", function() {
 
       let action, data;
 
-      function dispatch(passedAction: string, passedData: any) {
+      bag.dispatch! = (passedAction: string, passedData: any) => {
         expect(passedAction).to.equal(Actions.TRIGGERED_BAG_NODES)
 
         let firstNode = bag.nodes["first"]
@@ -44,7 +43,6 @@ describe("filtering nodes", function() {
         expect(passedData).to.eql({"default": [firstNode, secondNode]});
       }
 
-      bag.dispatch! = dispatch
       const state = new State()
       state.foo = "5"
 

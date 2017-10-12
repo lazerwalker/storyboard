@@ -8,6 +8,11 @@ var seed: string|number|undefined;
 var rng = seedrandom();
 
 export default function keyPathify(input: string|any, state: any, checkIfDefined = false) {
+  // Coerce stringly-numbers into numbers
+  if (input == parseInt(input)) {
+    return parseInt(input)
+  }
+
   // TODO: I'm not sure I like this solution.
   if (state.rngSeed && state.rngSeed !== seed) {
     seed = state.rngSeed
