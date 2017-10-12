@@ -1,4 +1,4 @@
-import * as Parser from "storyboard-parser";
+import * as Parser from "storyboard-lang";
 import { Dispatch } from '../types/dispatch';
 export declare class Node implements Parser.Node {
     constructor(data: {} | undefined, dispatch: Dispatch);

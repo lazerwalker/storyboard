@@ -1,4 +1,4 @@
-import * as Parser from 'storyboard-parser';
+import * as Parser from 'storyboard-lang';
 export declare class State {
     constructor();
     [key: string]: any;

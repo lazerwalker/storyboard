@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var _ = require('underscore');
 var Actions = require("./gameActions");
-var Node = (function () {
+var Node = /** @class */ (function () {
     function Node(data, dispatch) {
         if (data === void 0) { data = {}; }
         Object.assign(this, data);

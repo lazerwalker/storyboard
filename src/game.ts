@@ -11,15 +11,22 @@ import * as Actions from "./gameActions"
 import { Node } from './node'
 import { State } from './state'
 import { Story } from './story'
-import * as Parser from 'storyboard-parser'
+import * as Parser from 'storyboard-lang'
 
 export type OutputCallback = ((content: string, passageId: Parser.PassageId) => void)
 
 export class Game {
-  constructor(storyData: Parser.Story) {
-    let bagNodes;
+  constructor(storyData: string|Parser.Story) {
+    let story: Parser.Story
+    if (typeof storyData === "string") {
+      // TODO: Error handling
+      story = Parser.parseString(storyData)!
+    } else {
+      story = storyData
+    }
+
     let dispatch = _.bind(this.receiveDispatch, this)
-    this.story = new Story(storyData, dispatch)
+    this.story = new Story(story, dispatch)
     this.state = new State()
 
     this.started = false;

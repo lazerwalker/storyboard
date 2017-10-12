@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var State = (function () {
+var State = /** @class */ (function () {
     function State() {
         this.graph = new GraphState();
         this.bag = new BagState();
@@ -8,7 +8,7 @@ var State = (function () {
     return State;
 }());
 exports.State = State;
-var GraphState = (function () {
+var GraphState = /** @class */ (function () {
     function GraphState() {
         this.choiceHistory = [];
         this.nodeHistory = [];
@@ -16,7 +16,7 @@ var GraphState = (function () {
     return GraphState;
 }());
 exports.GraphState = GraphState;
-var BagState = (function () {
+var BagState = /** @class */ (function () {
     function BagState() {
         this.activePassageIndexes = {};
         this.nodeHistory = {};

@@ -4,7 +4,7 @@ var _ = require('underscore');
 var predicate_1 = require("./predicate");
 var Actions = require("./gameActions");
 var node_1 = require("./node");
-var Bag = (function () {
+var Bag = /** @class */ (function () {
     function Bag(nodes, dispatch) {
         this.dispatch = dispatch;
         this.nodes = _.mapObject(nodes || {}, function (node, key) {

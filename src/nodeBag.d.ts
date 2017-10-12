@@ -1,4 +1,4 @@
-import * as Parser from "storyboard-parser";
+import * as Parser from "storyboard-lang";
 import { Dispatch } from '../types/dispatch';
 import { Node } from './node';
 import { State } from './state';

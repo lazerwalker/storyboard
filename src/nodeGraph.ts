@@ -13,13 +13,13 @@ export class Graph implements Parser.StoryGraph {
   constructor(graph: Parser.StoryGraph|undefined, dispatch: Dispatch) {
     if (graph) {
       this.nodes = _.mapObject(graph.nodes, (n: Parser.Node) => new Node(n, dispatch))
-      this.start = graph.start;
+      this.start = graph.start || Object.keys(this.nodes)[0];
     }
     this.dispatch = dispatch
   }
 
   readonly nodes: {[name: string]: Node}
-  readonly start?: Parser.NodeId
+  readonly start: Parser.NodeId
   readonly dispatch: Dispatch
 
   completePassage(passageId: Parser.PassageId, state: State) {

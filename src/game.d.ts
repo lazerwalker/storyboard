@@ -1,9 +1,9 @@
 import { State } from './state';
 import { Story } from './story';
-import * as Parser from 'storyboard-parser';
+import * as Parser from 'storyboard-lang';
 export declare type OutputCallback = ((content: string, passageId: Parser.PassageId) => void);
 export declare class Game {
-    constructor(storyData: Parser.Story);
+    constructor(storyData: string | Parser.Story);
     readonly story: Story;
     state: State;
     outputs: {

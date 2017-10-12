@@ -1,6 +1,6 @@
 import * as chai from 'chai';
 import * as sinonChai from 'sinon-chai'
-import { spy } from 'sinon'
+import * as sinon from 'sinon'
 
 chai.use(sinonChai);
 const expect = chai.expect
@@ -14,29 +14,14 @@ describe("setting variables", function() {
   context("within the graph", function() {
     let game: Game, callback: any;
     beforeEach(function() {
-      game = new Game({
-        "graph": {
-          "start": "node",
-          "nodes": {
-            "node": {
-              "nodeId": "node",
-              "passages": [
-                {
-                  "passageId": "1",
-                  "set": {
-                    "foo": "bar",
-                    "baz": "graph.currentNodeId",
-                    "random1": { randInt: [0, 6] },
-                    "random2": { randInt: [0, 6] }
-                  }
-                }
-              ]
-            }
-          }
-        }
-      });
+      const story = `
+        # node
+          set foo to bar
+          set baz to graph.currentNodeId
+      `
+      game = new Game(story)
 
-      callback = spy();
+      callback = sinon.spy();
       game.addOutput("text", callback);
 
       game.state.rngSeed = "knownSeed"
@@ -57,12 +42,7 @@ describe("setting variables", function() {
       expect(game.state.baz).to.equal("node")
     })
 
-    it("should set random numbers", function() {
-      expect(game.state.random1).to.equal(4)
-      expect(game.state.random2).to.equal(1)
-    })
-
-    context("when the passage also has content in it", function() {
+    context("functionality not yet in the lang", () => {
       beforeEach(function() {
         game = new Game({
           "graph": {
@@ -73,11 +53,9 @@ describe("setting variables", function() {
                 "passages": [
                   {
                     "passageId": "1",
-                    "type": "text",
-                    "content": "Hi There!",
                     "set": {
-                      "foo": "bar",
-                      "baz": "graph.currentNodeId"
+                      "random1": { randInt: [0, 6] },
+                      "random2": { randInt: [0, 6] }
                     }
                   }
                 ]
@@ -86,18 +64,46 @@ describe("setting variables", function() {
           }
         });
 
-        callback = spy();
+        callback = sinon.spy();
+        game.addOutput("text", callback);
+
+        game.state.rngSeed = "knownSeed"
+        game.start();
+      })
+
+      it("should set random numbers", function() {
+        expect(game.state.random1).to.equal(4)
+        expect(game.state.random2).to.equal(1)
+      })
+    })
+
+    context("when the passage also has content in it", function() {
+      beforeEach(function() {
+        const story = `
+          # node
+            set foo to bar
+            set baz to graph.currentNodeId
+            text: Hi there!
+        `
+
+        game = new Game(story)
+        console.log(JSON.stringify(game.story, null, 3))
+        callback = sinon.spy();
         game.addOutput("text", callback);
 
         game.start();
       })
 
       it("should output the content", function() {
-        expect(callback).to.have.been.calledWith("Hi There!", "1")
+        expect(callback).to.have.been.calledWith("Hi there!", sinon.match.any)
       })
 
       it("should set the variable", function() {
         expect(game.state.foo).to.equal("bar")
+      })
+
+      it("should set keypath variables", function() {
+        expect(game.state.baz).to.equal("node")
       })
     })
   })
@@ -105,26 +111,15 @@ describe("setting variables", function() {
   context("within the bag", function() {
     let game: Game, callback: any;
     beforeEach(function() {
-      game = new Game({
-        "bag": {
-          "node": {
-            "nodeId": "node",
-            "passages": [
-              {
-                "passageId": "1",
-                "set": {
-                  "foo": "bar",
-                  "baz": "bag.activePassageIndexes.node",
-                  "random1": { "randInt": [0, 6] },
-                  "random2": { "randInt": [0, 6] }
-                }
-              }
-            ]
-          }
-        }
-      });
+      const story = `
+        ## node
+          set foo to bar
+          set baz to bag.activePassageIndexes.node
+          text: Hi there!
+      `
+      game = new Game(story)
 
-      const callback = spy();
+      const callback = sinon.spy();
       game.addOutput("text", callback);
 
       game.state.rngSeed = "knownSeed"
@@ -142,12 +137,41 @@ describe("setting variables", function() {
     })
 
     it("should set keypath variables", function() {
-      expect(game.state.baz).to.equal(0)
+      expect(game.state.baz).to.equal(1)
     })
 
-    it("should set random numbers", function() {
-      expect(game.state.random1).to.equal(4)
-      expect(game.state.random2).to.equal(1)
+    context("functionality not yet in the lang", () => {
+      beforeEach(function() {
+        game = new Game({
+          "bag": {
+            "node": {
+              "nodeId": "node",
+              "passages": [
+                {
+                  "passageId": "1",
+                  "set": {
+                    "foo": "bar",
+                    "baz": "bag.activePassageIndexes.node",
+                    "random1": { "randInt": [0, 6] },
+                    "random2": { "randInt": [0, 6] }
+                  }
+                }
+              ]
+            }
+          }
+        });
+
+        const callback = sinon.spy();
+        game.addOutput("text", callback);
+
+        game.state.rngSeed = "knownSeed"
+        game.start();
+      })
+
+      it("should set random numbers", function() {
+        expect(game.state.random1).to.equal(4)
+        expect(game.state.random2).to.equal(1)
+      })
     })
   })
 });

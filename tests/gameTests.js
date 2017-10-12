@@ -11,15 +11,8 @@ describe.skip("initialization", function () {
     describe("creating a nodeGraph", function () {
         var node, game;
         beforeEach(function () {
-            node = { "nodeId": "1" };
-            game = new game_1.Game({
-                "graph": {
-                    "start": "1",
-                    "nodes": {
-                        "1": node
-                    }
-                }
-            });
+            var story = "\n        start: node\n        # node\n      ";
+            game = new game_1.Game(story);
         });
         it("should create a valid nodeGraph with the passed options", function () {
             expect(game.story.graph).to.exist;
@@ -30,23 +23,10 @@ describe.skip("initialization", function () {
             expect(game.state.graph.currentNodeId).to.be.undefined;
         });
     });
-    it("should create a valid nodeGraph with the passed options", function () {
-        var node = { "nodeId": "1" };
-        var game = new game_1.Game({
-            "graph": {
-                "start": "1",
-                "nodes": {
-                    "1": node
-                }
-            }
-        });
-        expect(game.story.graph).to.exist;
-        expect(game.story.graph.start).to.equal("1");
-    });
     describe("creating a nodeBag", function () {
         it("should create a valid nodeBag with the passed nodes", function () {
-            var node = { "nodeId": "n" };
-            var game = new game_1.Game({ bag: { "n": node } });
+            var story = "## node";
+            var game = new game_1.Game(story);
             expect(game.story.bag).to.exist;
             expect(Object.keys(game.story.bag.nodes)).to.have.length(1);
         });

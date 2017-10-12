@@ -6,12 +6,20 @@ var keyPathify_1 = require("./keyPathify");
 var Actions = require("./gameActions");
 var state_1 = require("./state");
 var story_1 = require("./story");
-var Game = (function () {
+var Parser = require("storyboard-lang");
+var Game = /** @class */ (function () {
     function Game(storyData) {
         var _this = this;
-        var bagNodes;
+        var story;
+        if (typeof storyData === "string") {
+            // TODO: Error handling
+            story = Parser.parseString(storyData);
+        }
+        else {
+            story = storyData;
+        }
         var dispatch = _.bind(this.receiveDispatch, this);
-        this.story = new story_1.Story(storyData, dispatch);
+        this.story = new story_1.Story(story, dispatch);
         this.state = new state_1.State();
         this.started = false;
         this.outputs = {};

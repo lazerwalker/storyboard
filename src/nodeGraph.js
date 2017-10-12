@@ -4,11 +4,11 @@ var _ = require('underscore');
 var predicate_1 = require("./predicate");
 var Actions = require("./gameActions");
 var node_1 = require("./node");
-var Graph = (function () {
+var Graph = /** @class */ (function () {
     function Graph(graph, dispatch) {
         if (graph) {
             this.nodes = _.mapObject(graph.nodes, function (n) { return new node_1.Node(n, dispatch); });
-            this.start = graph.start;
+            this.start = graph.start || Object.keys(this.nodes)[0];
         }
         this.dispatch = dispatch;
     }
