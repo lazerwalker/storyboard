@@ -7,7 +7,7 @@ import { State } from './state'
 var seed: string|number|undefined;
 var rng = seedrandom();
 
-export default function keyPathify(input: string|any, state: State, checkIfDefined = false) {
+export default function keyPathify(input: string|any, state: any, checkIfDefined = false) {
   // TODO: I'm not sure I like this solution.
   if (state.rngSeed && state.rngSeed !== seed) {
     seed = state.rngSeed

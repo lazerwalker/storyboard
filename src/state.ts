@@ -7,6 +7,8 @@ export class State {
     this.bag = new BagState()
   }
 
+  [key:string]: any;
+
   rngSeed?: string|number
   graph: GraphState;
   bag: BagState;

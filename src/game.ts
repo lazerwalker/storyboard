@@ -175,13 +175,13 @@ export class Game {
     this.outputs[type].push(callback);
   }
 
-  receiveInput(type: string, value: string) {
+  receiveInput(type: string, value: any) {
     let obj: any = {}
     obj[type] = value
     this.receiveDispatch(Actions.RECEIVE_INPUT, obj)
   }
 
-  receiveMomentaryInput(type: string, value: string) {
+  receiveMomentaryInput(type: string, value?: string) {
     let trueObj: any = {}
     trueObj[type] = value || true
     this.receiveDispatch(Actions.RECEIVE_INPUT, trueObj)

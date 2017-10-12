@@ -4,7 +4,7 @@ import keyPathify from "./keyPathify"
 import { State } from './state'
 import { Predicate } from 'storyboard-parser'
 
-export default function checkPredicate(predicate: Predicate|undefined, state: State) {
+export default function checkPredicate(predicate: Predicate|undefined, state: any) {
   if (!predicate) { return true }
 
   function check(memo: any, obj: any, key: string) {

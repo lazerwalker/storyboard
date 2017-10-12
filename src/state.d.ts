@@ -1,6 +1,7 @@
 import * as Parser from 'storyboard-parser';
 export declare class State {
     constructor();
+    [key: string]: any;
     rngSeed?: string | number;
     graph: GraphState;
     bag: BagState;

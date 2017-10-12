@@ -26,7 +26,11 @@
   "license": "ISC",
   "homepage": "https://github.com/lazerwalker/storyboard",
   "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.43",
     "@types/node": "^8.0.33",
+    "@types/sinon": "^2.3.6",
+    "@types/sinon-chai": "^2.7.29",
     "babel": "^6.3.26",
     "babel-core": "^6.7.6",
     "babel-plugin-transform-object-assign": "^6.5.0",

@@ -14,8 +14,8 @@ export declare class Game {
     receiveDispatch(action: string, data: any): void;
     start(): void;
     addOutput(type: string, callback: OutputCallback): void;
-    receiveInput(type: string, value: string): void;
-    receiveMomentaryInput(type: string, value: string): void;
+    receiveInput(type: string, value: any): void;
+    receiveMomentaryInput(type: string, value?: string): void;
     completePassage(passageId: Parser.PassageId): void;
     emitState(): void;
 }
