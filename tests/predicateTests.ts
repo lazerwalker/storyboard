@@ -5,7 +5,7 @@ import { spy } from 'sinon'
 chai.use(sinonChai);
 const expect = chai.expect
 
-import * as Parser from 'storyboard-parser'
+import * as Parser from 'storyboard-lang'
 import checkPredicate from '../src/predicate'
 import keyPathify from '../src/keyPathify'
 

@@ -3,7 +3,7 @@ import * as sinonChai from 'sinon-chai'
 
 import { Bag } from '../src/nodeBag'
 import * as Actions from '../src/gameActions'
-import * as Parser from 'storyboard-parser'
+import * as Parser from 'storyboard-lang'
 import { State } from '../src/state'
 
 chai.use(sinonChai);

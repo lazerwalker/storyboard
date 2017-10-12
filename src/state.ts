@@ -1,4 +1,4 @@
-import * as Parser from 'storyboard-parser'
+import * as Parser from 'storyboard-lang'
 import { Node } from './node'
 
 export class State {

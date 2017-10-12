@@ -2,7 +2,7 @@ const _ = require('underscore');
 import keyPathify from "./keyPathify"
 
 import { State } from './state'
-import { Predicate } from 'storyboard-parser'
+import { Predicate } from 'storyboard-lang'
 
 export default function checkPredicate(predicate: Predicate|undefined, state: any) {
   if (!predicate) { return true }

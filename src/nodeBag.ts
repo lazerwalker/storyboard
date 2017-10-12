@@ -2,7 +2,7 @@ const _ = require('underscore')
 
 import checkPredicate from "./predicate"
 import * as Actions from "./gameActions"
-import * as Parser from "storyboard-parser"
+import * as Parser from "storyboard-lang"
 
 import { Dispatch } from '../types/dispatch'
 import { Node } from './node'

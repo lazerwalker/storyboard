@@ -6,7 +6,7 @@ chai.use(sinonChai);
 const expect = chai.expect
 
 import { Game } from '../src/game'
-import * as Parser from 'storyboard-parser'
+import * as Parser from 'storyboard-lang'
 import * as Actions from '../src/gameActions'
 
 describe.skip("initialization", function() {
