@@ -2,10 +2,12 @@
   "name": "storyboard-engine",
   "version": "0.1.0",
   "description": "An engine for nonlinear and multilinear storytelling",
+  "main": "dist/src/game.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --compilers js:babel-register tests",
+    "test": "./node_modules/mocha/bin/mocha --compilers ts:ts-node/register,tsx:ts-node/register tests",
     "compile": "./node_modules/gulp/bin/gulp.js node",
-    "prepublish": "npm run compile"
+    "prepublish": "npm run build",
+    "build": "tsc"
   },
   "babel": {
     "presets": [
@@ -15,7 +17,6 @@
       "transform-object-assign"
     ]
   },
-  "main": "lib/game.js",
   "browserify": {
     "transform": [
       "babelify"
@@ -44,6 +45,8 @@
     "mocha": "^2.3.4",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.3",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.6.1"
   },
