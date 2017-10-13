@@ -6,6 +6,9 @@ Storyboard is a general-purpose engine for multilinear/nonlinear storytelling. I
 
 Right now, it's pre-alpha. Stay tuned for more.
 
+**HEADS-UP**: This library is currently in all kinds of turmoil, and isn't probably usable right now. Specifically, I'm partway through rewriting everything in TypeScript (done, but not hooked up to build infrastructure properly) and integrating [storyboard-lang](https://github.com/lazerwalker/storyboard-lang), a DSL for writing storyboard scripts.
+
+If you're interested in progress, you should check out https://twitch.tv/lzrwkr, where I livestream dev work on this at least once a week.
 
 ## Setup and Usage
 
@@ -14,7 +17,7 @@ Real documentation is coming later; right now, this really isn't intended for us
 That being said:
 
 * `npm install` to install dependencies
-* `gulp` to compile to a production file suitable for client-side JS consumption (`dist.js` in the root folder)
+* `gulp` to compile to a production file suitable for client-side JS consumption (`dist.js` in the root folder) (WARNING: This is currently broken)
 * `npm test` runs the test suite. It's got decent coverage at a functional, not unit, level.
 * If using the reference iOS client, `git submodule update --init`
 * Put your data files in the `examples` folder, with any media needed in a subfolder with the same name (e.g. `sample.json` would have a folder called `sample`)
