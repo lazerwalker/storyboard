@@ -1,5 +1,4 @@
-const _ = require('underscore');
-require("underscore-keypath");
+import * as _ from "lodash"
 
 import NodeBag from "./nodeBag"
 import NodeGraph from "./nodeGraph"
@@ -12,6 +11,7 @@ import { Node } from './node'
 import { State } from './state'
 import { Story } from './story'
 import * as Parser from 'storyboard-lang'
+import { Dispatch } from '../types/dispatch'
 
 export type OutputCallback = ((content: string, passageId: Parser.PassageId) => void)
 
@@ -25,7 +25,7 @@ export class Game {
       story = storyData
     }
 
-    let dispatch = _.bind(this.receiveDispatch, this)
+    let dispatch = _.bind(this.receiveDispatch, this) as Dispatch
     this.story = new Story(story, dispatch)
     this.state = new State()
 
@@ -57,7 +57,7 @@ export class Game {
       for (let outputCallback of outputs) {
         const string = data.content.replace(
           /\{(.+?)\}/g,
-          (match: string, keyPath: string) => _(this.state).valueForKeyPath(keyPath)
+          (match: string, keyPath: string) => _(this.state).get(keyPath)
         );
         outputCallback(string, data.passageId);
       }
@@ -100,7 +100,7 @@ export class Game {
       this.story.bag.checkNodes(this.state);
 
     } else if (action === Actions.TRIGGERED_BAG_NODES) {
-      _.forEach(data, function(nodes: Node[], track: string) {
+      _.forEach(data, (nodes: Node[], track: string) => {
         const node = nodes[0];
         const nodeId = node.nodeId;
 
@@ -108,7 +108,7 @@ export class Game {
         // TODO: We should have a BagNode class that always has track defined
         this.state.bag.activeTracks[node.track!] = true
         this.story.bag.playCurrentPassage(nodeId, this.state);
-      }, this)
+      })
     } else if (action === Actions.CHANGE_BAG_PASSAGE) {
       let [nodeId, passageIndex] = data;
       this.state.bag.activePassageIndexes[nodeId] = passageIndex;
@@ -130,13 +130,11 @@ export class Game {
       this.story.bag.checkNodes(this.state);
 
     } else if (action === Actions.RECEIVE_INPUT) {
-      let newState = (<any>Object).assign({}, this.state)
-      _.each(Object.keys(data), function(key: string) {
-        if (!_(newState).setValueForKeyPath(key, data[key])) {
-          newState[key] = data[key]
-        }
+      let newState =_.assign({}, this.state)
+      _.forIn(data, (value: any, key: string) => {
+        _.set(newState, key, keyPathify(value, this.state, true))
       });
-      (<any>Object).assign(this.state, newState)
+      _.assign(this.state, newState)
 
       if (this.started) {
         if (this.story.graph) {
@@ -146,9 +144,9 @@ export class Game {
         this.story.bag.checkNodes(this.state);
       }
     } else if (action === Actions.SET_VARIABLES) {
-      const keyPathedData: any = _.mapObject(data, function(val: any, key: string) {
+      const keyPathedData: any = _.mapValues(data, (val: any, key: string) => {
         return keyPathify(val, this.state, true)
-      }, this);
+      });
 
       (<any>Object).assign(this.state, keyPathedData)
 

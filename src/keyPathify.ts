@@ -1,5 +1,4 @@
-const _ = require('underscore');
-require('underscore-keypath');
+import * as _ from 'lodash'
 const seedrandom = require('seedrandom');
 
 import { State } from './state'
@@ -28,7 +27,7 @@ export default function keyPathify(input: string|any, state: any, checkIfDefined
     return input;
   }
 
-  const result = _(state).valueForKeyPath(input)
+  const result = _(state).get(input)
 
   if (checkIfDefined && _.isUndefined(result)) {
     return input;

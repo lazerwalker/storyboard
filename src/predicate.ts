@@ -1,4 +1,4 @@
-const _ = require('underscore');
+import * as _ from 'lodash'
 import keyPathify from "./keyPathify"
 
 import { State } from './state'
@@ -7,7 +7,7 @@ import { Predicate } from 'storyboard-lang'
 export default function checkPredicate(predicate: Predicate|undefined, state: any) {
   if (!predicate) { return true }
 
-  function check(memo: any, obj: any, key: string) {
+  function check(memo: any, obj: any, key: string): boolean {
     // TODO: If this is slow, only do valueForKeyPath for strings that need it
     const value = keyPathify(key, state)
 

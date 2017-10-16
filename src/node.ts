@@ -1,4 +1,4 @@
-const _ = require('underscore')
+import * as _ from "lodash"
 
 import checkPredicate from "./predicate"
 import * as Actions from "./gameActions"

@@ -86,7 +86,7 @@ describe("playing the node graph", function() {
                 {
                   "nodeId": "2",
                   "predicate": {
-                    "continue": { "gte": 1 }
+                    "continue": { "eq": true }
                   }
                 }
               ]
@@ -1131,10 +1131,13 @@ describe("receiving input", function() {
         game.receiveInput("foo.bar", "baz")
       })
 
-      it("should create a variable with a period", function() {
-        expect(game.state["foo.bar"]).to.equal("baz")
+      it("should create nested state", function() {
+        expect(game.state.foo.bar).to.equal("baz")
       })
 
+      it("should not create the wrong variable", function() {
+        expect(game.state["foo.bar"]).to.not.exist
+      })
     })
   })
 

@@ -1,4 +1,4 @@
-const _ = require('underscore')
+import * as _ from 'lodash'
 
 import checkPredicate from "./predicate"
 import * as Actions from "./gameActions"
@@ -12,7 +12,7 @@ export class Graph implements Parser.StoryGraph {
 
   constructor(graph: Parser.StoryGraph|undefined, dispatch: Dispatch) {
     if (graph) {
-      this.nodes = _.mapObject(graph.nodes, (n: Parser.Node) => new Node(n, dispatch))
+      this.nodes = _.mapValues(graph.nodes, (n: Parser.Node) => new Node(n, dispatch))
       this.start = graph.start || Object.keys(this.nodes)[0];
     }
     this.dispatch = dispatch

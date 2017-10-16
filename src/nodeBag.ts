@@ -1,4 +1,4 @@
-const _ = require('underscore')
+import * as _ from 'lodash'
 
 import checkPredicate from "./predicate"
 import * as Actions from "./gameActions"
@@ -11,7 +11,7 @@ import { State } from './state'
 export class Bag {
   constructor(nodes: Parser.NodeBag|undefined, dispatch: Dispatch) {
     this.dispatch = dispatch
-    this.nodes = _.mapObject(nodes || {}, (node: Parser.Node, key: string) => {
+    this.nodes = _.mapValues(nodes || {}, (node, key) => {
       // TODO: Rip this out into a "BagNode" object? Should these apply to normal nodes?
       if (!node.predicate) { node.predicate = {} }
       var newPredicate: Parser.Predicate = {
@@ -35,7 +35,7 @@ export class Bag {
   readonly dispatch: Dispatch
 
   checkNodes(state: State) {
-    const filteredNodes = _.filter(this.nodes, (node: Node) => checkPredicate(node.predicate, state));
+    const filteredNodes = _.filter(this.nodes, (node) => checkPredicate(node.predicate, state));
     if (filteredNodes.length > 0 && this.dispatch) {
       const nodesByTrack = _.groupBy(filteredNodes, "track")
       this.dispatch(Actions.TRIGGERED_BAG_NODES, nodesByTrack);
@@ -52,17 +52,21 @@ export class Bag {
   }
 
   completePassage(passageId: Parser.PassageId, state: State) {
-    var node = _(state.bag.activePassageIndexes).chain()
+    const nodes = _.chain(state.bag.activePassageIndexes)
       .keys()
-      .map( (nodeId: string) => this.nodes[nodeId] )
-      .find( function(node: Node) {
-        return _(node.passages).chain()
-          .pluck('passageId')
-          .contains(passageId)
-          .value();
-      }).value();
+      .map((nodeId: string): Node => this.nodes[nodeId])
+      .value()
 
-    if (!node) return;
+    // TODO: Needing this to be its own assignment, instead of part of the chain,
+    // appears to be a bug in @types/lodash
+    const node = _.find(nodes, (node: Node) => {
+        return _.chain(node.passages)
+          .map('passageId')
+          .includes(passageId)
+          .value()
+      })
+
+    if (!node || !node.passages) return;
 
     const currentIndex = state.bag.activePassageIndexes[node.nodeId];
     const currentPassage = node.passages[currentIndex];
