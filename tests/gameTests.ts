@@ -118,7 +118,7 @@ describe("playing the node graph", function() {
     })
 
     context("when a predicate has been met", function() {
-      it("should go immediately on", function() {
+      it.only("should go immediately on", function() {
         game.receiveInput("continue", true)
         expect(callback).to.have.been.calledWith("Goodbye World!", "6");
       });
