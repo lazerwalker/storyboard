@@ -28,8 +28,10 @@
   "homepage": "https://github.com/lazerwalker/storyboard",
   "devDependencies": {
     "@types/chai": "^4.0.4",
+    "@types/lodash": "^4.14.78",
     "@types/mocha": "^2.2.43",
     "@types/node": "^8.0.33",
+    "@types/seedrandom": "^2.4.27",
     "@types/sinon": "^2.3.6",
     "@types/sinon-chai": "^2.7.29",
     "babel": "^6.3.26",
@@ -51,9 +53,8 @@
     "watchify": "^3.6.1"
   },
   "dependencies": {
+    "lodash": "^4.17.4",
     "seedrandom": "^2.4.2",
-    "storyboard-lang": "file:../storyboard-lang",
-    "underscore": "^1.8.3",
-    "underscore-keypath": "^0.9.1"
+    "storyboard-lang": "file:../storyboard-lang"
   }
 }
