@@ -57,8 +57,6 @@ export class Bag {
       .map((nodeId: string): Node => this.nodes[nodeId])
       .value()
 
-    // TODO: Needing this to be its own assignment, instead of part of the chain,
-    // appears to be a bug in @types/lodash
     const node = _.find(nodes, (node: Node) => {
         return _.chain(node.passages)
           .map('passageId')
