@@ -1,6 +1,6 @@
 import * as chai from 'chai';
 import * as sinonChai from 'sinon-chai'
-import { spy, stub } from 'sinon'
+import * as sinon from 'sinon'
 
 chai.use(sinonChai);
 const expect = chai.expect
@@ -9,7 +9,7 @@ import { Game } from '../src/game'
 import * as Parser from 'storyboard-lang'
 import * as Actions from '../src/gameActions'
 
-describe.skip("initialization", function() {
+describe("initialization", function() {
   describe("creating a nodeGraph", function() {
     var node, game: Game;
     beforeEach(function() {
@@ -23,7 +23,7 @@ describe.skip("initialization", function() {
     it("should create a valid nodeGraph with the passed options", function() {
       expect(game.story.graph).to.exist;
 
-      expect(game.story!.graph!.start).to.equal("1");
+      expect(game.story!.graph!.start).to.equal("node");
       expect(Object.keys(game.story!.graph!.nodes)).to.have.length(1);
     });
 
@@ -45,70 +45,57 @@ describe.skip("initialization", function() {
 
 describe("playing the node graph", function() {
   context("when starting the game", function() {
-    it("should play the appropriate content via an output", function() {
-      const game = new Game({
-        "graph": {
-          "start": "1",
-          "nodes": {
-            "1": {
-              "nodeId": "1",
-              "passages": [
-                {
-                  "passageId": "5",
-                  "type": "text",
-                  "content": "Hello World!"
-                }
-              ]
-            }
-          }
-        }
+    context.skip("when there is a quoted start node", () => {
+      it("should play the appropriate content via an output", function() {
+        const game = new Game(`
+          start: "node"
+
+          # node
+          text: "Hello World!"
+        `)
+
+        const callback = sinon.spy();
+        game.addOutput("text", callback);
+
+        game.start();
+        expect(callback).to.have.been.calledWith("Hello World!", sinon.match.any);
       });
+    })
 
-      const callback = spy();
-      game.addOutput("text", callback);
+    context("when there is an unquoted start node", () => {
+      it("should play the appropriate content via an output", function() {
+        const game = new Game(`
+          start: node
 
-      game.start();
+          # node
+          text: "Hello World!"
+        `)
 
-      expect(callback).to.have.been.calledWith("Hello World!", "5");
-    });
+        const callback = sinon.spy();
+        game.addOutput("text", callback);
+
+        game.start();
+        expect(callback).to.have.been.calledWith("Hello World!", sinon.match.any);
+      });
+    })
   });
 
   context("when a node has no passages", function() {
     let game: Game, callback: any;
     beforeEach(function() {
-      game = new Game({
-        "graph": {
-          "start": "1",
-          "nodes": {
-            "1": {
-              "nodeId": "1",
-              "choices": [
-                {
-                  "nodeId": "2",
-                  "predicate": {
-                    "continue": { "eq": true }
-                  }
-                }
-              ]
-            },
-            "2": {
-              "nodeId": "2",
-              "passages": [
-                {
-                  "passageId": "6",
-                  "type": "text",
-                  "content": "Goodbye World!"
-                }
-              ]
-            }
-          }
-        }
-      });
+      game = new Game(`
+        start: first
 
-      callback = spy();
+        # first
+        -> second: [ continue is true ]
+
+        # second
+        text: "Goodbye World!"
+      `)
+
+      callback = sinon.spy();
       game.addOutput("text", callback);
       game.start();
-
     });
 
     context("when a predicate has not yet been met", function() {
@@ -120,7 +107,7 @@ describe("playing the node graph", function() {
     context("when a predicate has been met", function() {
       it("should go immediately on", function() {
         game.receiveInput("continue", true)
-        expect(callback).to.have.been.calledWith("Goodbye World!", "6");
+        expect(callback).to.have.been.calledWith("Goodbye World!", sinon.match.any);
       });
     })
   })
@@ -128,157 +115,84 @@ describe("playing the node graph", function() {
   context("when there are multiple passages", function() {
     describe("waiting for completion", function() {
      let first, second, game: Game, callback: any;
-      beforeEach(function() {
-        first = {
-          "passageId": "2",
-          "type": "text",
-          "content": "First"
-        }
+      beforeEach(() => {
+        game = new Game(`
+          # node
+          text: First
+          text: Second
+        `)
 
-        second = {
-          "passageId": "3",
-          "type": "text",
-          "content": "Second"
-        }
-
-        game = new Game({
-          "graph": {
-            "start": "1",
-            "nodes": {
-              "1": {
-                "nodeId": "1",
-                "passages": [first, second]
-              },
-            }
-          }
-        });
-
-        callback = spy();
+        callback = sinon.spy();
         game.addOutput("text", callback);
 
         game.start();
       });
 
       it("shouldn't play the second passage when the first isn't done", function() {
-        expect(callback).to.have.been.calledWith("First", "2")
-        expect(callback).not.to.have.been.calledWith("Second", "3");
+        expect(callback).to.have.been.calledWith("First", "0")
+        expect(callback).not.to.have.been.calledWith("Second", sinon.match.any);
       });
 
       it("should play the second passage after the first is done", function() {
-        game.completePassage("2");
-        expect(callback).to.have.been.calledWith("Second", "3");
+        game.completePassage("0");
+        expect(callback).to.have.been.calledWith("Second", sinon.match.any);
       })
     })
 
     describe("when a passage has no content", function() {
       let first, second, game, callback: any;
       beforeEach(function() {
-        first = {
-          "passageId": "1"
-        }
+        game = new Game(`
+          # node
+          set foo to 5
+          text: Second
+        `)
 
-        second = {
-          "passageId": "2",
-          "type": "text",
-          "content": "Second"
-        }
-
-        game = new Game({
-          "graph": {
-            "start": "1",
-            "nodes": {
-              "1": {
-                "nodeId": "1",
-                "passages": [first, second]
-              },
-            }
-          }
-        });
-
-        callback = spy();
+        callback = sinon.spy();
         game.addOutput("text", callback);
         game.start()
       })
 
       it("should go on to the next passage", function() {
-        expect(callback).to.have.been.calledWith("Second", "2")
+        expect(callback).to.have.been.calledWith("Second", sinon.match.any)
       })
 
       context("when it's the last one in a node", function() {
-        let first, second, game, callback: any;
+        let game, callback: any;
         beforeEach(function() {
-          first = {
-            "passageId": "1"
-          }
+          game = new Game(`
+            # first
+            set foo to 5
+            -> second
 
-          second = {
-            "passageId": "2",
-            "type": "text",
-            "content": "Second"
-          }
+            # second
+            text: Second
+          `)
 
-          game = new Game({
-            "graph": {
-              "start": "1",
-              "nodes": {
-                "1": {
-                  "nodeId": "1",
-                  "passages": [first],
-                  "choices": [{
-                    "nodeId": "2"
-                  }]
-                },
-                "2": {
-                  "nodeId": "2",
-                  "passages": [second]
-                },
-              }
-            }
-          });
-
-          callback = spy();
+          callback = sinon.spy();
           game.addOutput("text", callback);
           game.start()
         })
 
         it("should go on to the next node", function() {
-          expect(callback).to.have.been.calledWith("Second", "2")
+          expect(callback).to.have.been.calledWith("Second", sinon.match.any)
         })
       })
     })
 
     describe("when one of them should be skipped", function() {
       describe("when there are passages after the skipped one", function() {
-        let first: Parser.Passage, second: Parser.Passage, game: Game, callback: any;
-        beforeEach(function() {
-          first = {
-            "passageId": "2",
-            "type": "text",
-            "content": "First",
-            "predicate": {foo: {lte: 0}}
-          }
-        })
+        let game: Game, callback: any;
         context("when the appropriate passage has no predicate", function() {
           beforeEach(function() {
-            second = {
-              "passageId": "3",
-              "type": "text",
-              "content": "Second"
-            }
+            game = new Game(`
+              # node
+              [ foo is false ]
+                text: First
+              text: Second
+            `)
 
-            game = new Game({
-              "graph": {
-                "start": "1",
-                "nodes": {
-                  "1": {
-                    "nodeId": "1",
-                    "passages": [first, second]
-                  },
-                }
-              }
-            });
-
-            callback = spy();
+            callback = sinon.spy();
             game.addOutput("text", callback);
             game.receiveInput("foo", true)
           })
@@ -286,42 +200,31 @@ describe("playing the node graph", function() {
           it("should go on to the next passage", function() {
             game.start();
 
-            expect(callback).not.to.have.been.calledWith("First", "2")
-            expect(callback).to.have.been.calledWith("Second", "3")
+            expect(callback).not.to.have.been.calledWith("First", sinon.match.any)
+            expect(callback).to.have.been.calledWith("Second", sinon.match.any)
           })
         });
 
         context("when the appropriate passage has a matching predicate", function() {
           beforeEach(function() {
-            second = {
-              "passageId": "3",
-              "type": "text",
-              "content": "Second",
-              "predicate": {bar: {gte: 1}}
-            }
+            game = new Game(`
+              # node
+              [ foo is false ]
+                text: First
+              [ bar is true ]
+                text: Second
+            `)
 
-            game = new Game({
-              "graph": {
-                "start": "1",
-                "nodes": {
-                  "1": {
-                    "nodeId": "1",
-                    "passages": [first, second]
-                  },
-                }
-              }
-            });
-
-            callback = spy();
+            callback = sinon.spy();
             game.addOutput("text", callback);
-            game.receiveInput("foo", 1)
-            game.receiveInput("bar", 1)
+            game.receiveInput("foo", true)
+            game.receiveInput("bar", true)
           })
 
           it("should go to the next passage", function() {
             game.start();
-            expect(callback).not.to.have.been.calledWith("First", "2")
-            expect(callback).to.have.been.calledWith("Second", "3")
+            expect(callback).not.to.have.been.calledWith("First", sinon.match.any)
+            expect(callback).to.have.been.calledWith("Second", sinon.match.any)
           })
         })
       })
@@ -339,7 +242,7 @@ describe("playing the node graph", function() {
               }
             }
           });
-          const callback = spy();
+          const callback = sinon.spy();
           game.addOutput("text", callback);
           game.start();
 
@@ -382,7 +285,7 @@ describe("playing the node graph", function() {
         }
       });
 
-      callback = spy();
+      callback = sinon.spy();
       game.addOutput("text", callback);
       game.start();
 
@@ -428,7 +331,7 @@ describe("playing the node graph", function() {
           }
         });
 
-        callback = spy();
+        callback = sinon.spy();
         game.addOutput("text", callback);
         game.start();
 
@@ -484,7 +387,7 @@ describe("playing the node graph", function() {
         }
       });
 
-      callback = spy();
+      callback = sinon.spy();
       game.addOutput("text", callback);
       game.start();
     });
@@ -541,7 +444,7 @@ describe("playing the node graph", function() {
             }
           }
         });
-       callback = spy();
+       callback = sinon.spy();
        game.addOutput("text", callback);
        game.start();
        game.completePassage("5");
@@ -607,7 +510,7 @@ describe("playing the node graph", function() {
         }
       });
 
-      callback = spy();
+      callback = sinon.spy();
       game.addOutput("text", callback);
 
       game.start();
@@ -650,7 +553,7 @@ describe("triggering events from the bag", function() {
         "bag": {"5": node}
       });
 
-      output = spy();
+      output = sinon.spy();
       game.addOutput("text", output);
 
       game.receiveInput("foo", 7);
@@ -680,7 +583,7 @@ describe("triggering events from the bag", function() {
           "bag": {"1": node}
         });
 
-        output = spy();
+        output = sinon.spy();
         game.addOutput("text", output);
         game.start();
       });
@@ -714,7 +617,7 @@ describe("triggering events from the bag", function() {
           "bag": {"5": node}
         });
 
-        output = spy();
+        output = sinon.spy();
         game.addOutput("text", output);
         game.start();
 
@@ -756,7 +659,7 @@ describe("triggering events from the bag", function() {
           "bag": {"5": node}
         });
 
-        output = spy();
+        output = sinon.spy();
         game.addOutput("text", output);
         game.start();
 
@@ -804,7 +707,7 @@ describe("triggering events from the bag", function() {
           }
         });
 
-        output = spy();
+        output = sinon.spy();
         game.addOutput("text", output);
         game.start();
       });
@@ -867,7 +770,7 @@ describe("triggering events from the bag", function() {
           }
         });
 
-        output = spy();
+        output = sinon.spy();
         game.addOutput("text", output);
         game.start();
       });
@@ -905,7 +808,7 @@ describe("triggering events from the bag", function() {
           "bag": {"5": node}
         });
 
-        output = spy();
+        output = sinon.spy();
         game.addOutput("text", output);
         game.start();
       })
@@ -946,7 +849,7 @@ describe("triggering events from the bag", function() {
           "bag": {"5": node}
         });
 
-        output = spy();
+        output = sinon.spy();
         game.addOutput("text", output);
         game.start();
       })
@@ -998,7 +901,7 @@ describe("triggering events from the bag", function() {
           "bag": {"1": node1, "2": node2}
         });
 
-        output = spy();
+        output = sinon.spy();
         game.addOutput("text", output);
         game.start();
       });
@@ -1044,7 +947,7 @@ describe("triggering events from the bag", function() {
           "bag": {"1": node1, "2": node2}
         });
 
-        output = spy();
+        output = sinon.spy();
         game.addOutput("text", output);
         game.start();
       });
@@ -1090,7 +993,7 @@ describe("triggering events from the bag", function() {
           "bag": {"1": node1, "2": node2}
         });
 
-        output = spy();
+        output = sinon.spy();
         game.addOutput("text", output);
         game.start();
       });
@@ -1203,7 +1106,7 @@ describe("receiveDispatch", function() {
     it("should trigger a sweep of new bag nodes", function() {
       // TODO: I'm not sure this is a valuable test!
       const game = new Game({});
-      stub(game.story.bag, "checkNodes");
+      sinon.stub(game.story.bag, "checkNodes");
       game.receiveDispatch(Actions.COMPLETE_BAG_NODE, "1");
 
       expect(game.story.bag.checkNodes).to.have.been.calledWith(game.state);
@@ -1232,9 +1135,9 @@ describe("receiveDispatch", function() {
     describe("selecting outputs", function() {
       let textOutput1: any, textOutput2: any, audioOutput: any, game, passage;
       beforeEach(function() {
-        textOutput1 = spy();
-        textOutput2 = spy();
-        audioOutput = spy();
+        textOutput1 = sinon.spy();
+        textOutput2 = sinon.spy();
+        audioOutput = sinon.spy();
 
         game = new Game({});
         game.addOutput("text", textOutput1);
@@ -1261,7 +1164,7 @@ describe("receiveDispatch", function() {
 
     it("should evaluate all embedded variables", function() {
       const game = new Game({});
-      const output = spy()
+      const output = sinon.spy()
 
       const passage = {
         "passageId": "5",
@@ -1280,7 +1183,7 @@ describe("receiveDispatch", function() {
 
     it("should allow nested keypaths in variables", function() {
       const game = new Game({});
-      const output = spy()
+      const output = sinon.spy()
 
       const passage = {
         "passageId": "5",
