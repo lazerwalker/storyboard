@@ -22,7 +22,7 @@ Storyboard draws on a rich history of choice-based interactive fiction platforms
 
 Many modern IF systems are written assuming the main way people will interact with your game is by reading text and tapping buttons. More complex interactions are possible, but usually require ugly plumbing.
 
-Storyboard was originally designed to be used in site-specific audio installations that responded to various sources of smartphone data (e.g. indoor location technology, device motion sensors, and external web APIs for things like weather). As a result, it consciously has a very small footprint. It knows how to take arbitrary input, modify its internal state as a result, and spit out arbitrary output as a result. That's it. It's a single-purpose tool that exists to manage the narrative flow of your game while the rest of your game engine handles the rest.
+Storyboard was originally designed to be used in site-specific audio installations that responded to various sources of smartphone data (e.g. indoor location technology, device motion sensors, and external web APIs for things like weather). As a result, it consciously has a very small footprint. It knows how to take arbitrary input, modify its internal state as a result, and spit out arbitrary output as a result. That's it. It's a single-purpose tool that exists to manage the narrative flow of your game, leaving the rest to your own engine.
 
 Storyboard is currently being used in production for projects that range from [a site-specific poetry walk](https://lazerwalker.com/flaneur) (a smartphone app using GPS, synthesized audio, and neural network-generated text) to powering the tutorial of a [game played on a 90-year-old telephone switchboard](https://lazerwalker.com/hellooperator).
 
@@ -139,6 +139,16 @@ game.receiveInput("player.score", 11)
 game.receiveInput("player.isCool", true)
 
 // game.state.player = { name: 'Mike', score: 11, isCool: true }
+```
+
+Any string, whether key or value, can also use `{handlebars}`-style keypath template strings, giving you a ton of flexibility.
+
+```js
+game.receiveInput("player", { name: "Bruce", nameField: "player.name" })
+game.receiveInput("secretIdentity", "Batman")
+game.receiveInput("{player.nameField}", "{secretIdentity}")
+
+// game.state.player = { name: "Batman"}
 ```
 
 #### Momentary inputs
