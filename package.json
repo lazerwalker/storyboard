@@ -9,19 +9,6 @@
     "prepublish": "npm run build",
     "build": "webpack"
   },
-  "babel": {
-    "presets": [
-      "es2015"
-    ],
-    "plugins": [
-      "transform-object-assign"
-    ]
-  },
-  "browserify": {
-    "transform": [
-      "babelify"
-    ]
-  },
   "repository": "git@github.com:lazerwalker/storyboard.git",
   "author": "Mike Lazer-Walker <michael@lazerwalker.com>",
   "license": "ISC",
