@@ -7,7 +7,7 @@
     "strictNullChecks": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "outDir": "dist"
+    "outDir": "types"
   },
   "include": ["src/**/*"]
 }

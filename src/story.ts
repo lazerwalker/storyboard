@@ -3,7 +3,7 @@ import { Graph } from "./nodeGraph"
 
 import * as Parser from "storyboard-lang"
 
-import { Dispatch } from '../types/dispatch'
+import { Dispatch } from './dispatch'
 
 export class Story {
   constructor(storyData: Parser.Story, dispatch: Dispatch) {

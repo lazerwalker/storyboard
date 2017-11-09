@@ -11,7 +11,7 @@ import { Node } from './node'
 import { State } from './state'
 import { Story } from './story'
 import * as Parser from 'storyboard-lang'
-import { Dispatch } from '../types/dispatch'
+import { Dispatch } from './dispatch'
 
 export type OutputCallback = ((content: string, passageId: Parser.PassageId) => void)
 
