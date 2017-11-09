@@ -2,7 +2,8 @@
   "name": "storyboard-engine",
   "version": "0.1.0",
   "description": "An engine for nonlinear and multilinear storytelling",
-  "main": "dist/src/game.js",
+  "main": "dist/bundle.js",
+  "types": "dist/types/game.d.ts",
   "scripts": {
     "test": "mocha-webpack tests",
     "prepublish": "npm run build",
