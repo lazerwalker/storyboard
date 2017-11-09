@@ -4,10 +4,9 @@
   "description": "An engine for nonlinear and multilinear storytelling",
   "main": "dist/src/game.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --compilers ts:ts-node/register,tsx:ts-node/register tests",
-    "compile": "./node_modules/gulp/bin/gulp.js node",
+    "test": "mocha-webpack tests",
     "prepublish": "npm run build",
-    "build": "tsc"
+    "build": "webpack"
   },
   "babel": {
     "presets": [
@@ -46,7 +45,7 @@
     "gulp-util": "^3.0.7",
     "mocha": "^2.3.4",
     "mocha-webpack": "^1.0.1",
-    "sinon": "^1.17.2",
+    "sinon": "^4.1.2",
     "sinon-chai": "^2.8.0",
     "ts-loader": "^3.1.1",
     "ts-node": "^3.3.0",
