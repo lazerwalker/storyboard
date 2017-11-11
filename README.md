@@ -193,27 +193,25 @@ There are a few other API methods, mostly to inspect the full state of the syste
 
 But otherwise, that's the entire API! Pass in your story, wire up your inputs and outputs, and Storyboard takes care of the rest.
 
-## Setup and Usage
+## Setup
 
-So, this really isn't yet suitable for people who aren't me to use. That said:
+So, this really isn't yet suitable for people who aren't me to use. I'm avoiding publishing it to npm until it's slightly more stable. As a result, using this is a wee bit involved:
 
-1. Clone [https://github.com/lazerwalker/storyboard-lang](https://github.com/lazerwalker/storyboard-lang), follow the setup instructions, and use `yarn link` from within its directory to get it set up with Yarn (since it isn't yet on `npm`)
+1. Clone this repo: `git clone git@github.com:lazerwalker/storyboard.git`
+2. Run `yarn install` to install dependencies
+3. Run `yarn run build` to compile the library. It'll output a `dist/bundle.js` file. If you use TypeScript, `dist/types` will contain type definitions.
 
-2. Clone this repo and run `yarn install`
-3. `npm run build` compiles Storyboard. It'll output to `dist/src`. (There's also type definitions in `dist/types` if you're a TypeScript user)
-4. You'll now want to include this whole folder in your own project that uses Storyboard, and import the module.
+The generated production library is built as a [UMD](https://github.com/umdjs/umd) module, so it's usable in Node, in-browser, etc.
 
-Yeah, it's not great. That'll change.
-
-Perhaps the biggest flaw of this all right now is that it currently no longer supports any execution environment other than Node (e.g. the browser). I'm working on fixing that (it requires both some fixes to the language compiler and setting up a proper webpack pipeline)
+If you're using it in a browser context, its namespace is placed in the global variable `storyboard`. So, the one real change over the above usage docs is you'll want to use `new storyboard.Game()` as a constructor instead of `new Game()`.
 
 The `tests` folder contains a fair number of BDD-style tests.
 
 ## iOS Project?
 
-This readme mentions an iOS reference project included as a submodule. I've left that in for historical purposes, but it doesn't currently work — it relies on an older version of the project that had a functioning browser/JavaScriptCore-compatible build.
+This readme mentions an iOS reference project included as a submodule. I've left that in for historical purposes, but it doesn't currently work — it relies on an older version of the project.
 
-Once this project works in non-Node environments again, you can expect to see a more functioning iOS reference implementation soon after.
+You can expect to see a more functioning iOS reference implementation sometime in the future.
 
 ## License
 
