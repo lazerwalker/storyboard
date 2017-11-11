@@ -205,7 +205,7 @@ The generated production library is built as a [UMD](https://github.com/umdjs/um
 
 If you're using it in a browser context, its namespace is placed in the global variable `storyboard`. So, the one real change over the above usage docs is you'll want to use `new storyboard.Game()` as a constructor instead of `new Game()`.
 
-The `tests` folder contains a fair number of BDD-style tests.
+The `tests` folder contains a fair number of BDD-style tests. `yarn test` runs 'em.
 
 ## iOS Project?
 
