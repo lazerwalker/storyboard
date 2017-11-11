@@ -42,6 +42,58 @@ Storyboard gives you the best of both worlds by including both a state machine-b
 
 ## Language Reference
 
+Okay, there's a lot to unpack here.
+
+### Nodes
+
+A Storyboard story is made up of a bunch of **nodes**. Each node represents a bunch of content being sent to the player.
+
+Here's an example node:
+
+```
+# start
+text: Hello world!
+text: "I'm so excited to be here!"
+sfx: tada.mp3
+```
+
+Each node has a **name** ("start", in this case), which needs to be unique across a story. You can optionally include a closing pound sign as well; `# start #` is identicaly to `# start `.
+
+This node has three **passages**, two of type "text" and one of type "sfx". You'll notice they can, but don't need to be, wrapped in double quotes.
+
+#### Passages
+A passage is a single piece of content. Each passage needs to have a type, but these can be anything you want: your own game engine is going to wire up different content types to do different things. In this example, we have two output types, "text" and "sfx"; the former would presumably output the given text to the user while the latter would presumably play the sound effect with the given filename.
+
+Within a node, passages are played sequentially.
+
+Passages can contain variables set elsewhere in the story:
+
+```
+# node
+set playerName = Mike
+text: Hello, {playerName}
+```
+
+
+This also works with keypaths for nested object access. For example, say you have a "player" object that looks like this: `{ name: "Mike" }`. The following would do what you'd expect:
+
+```
+# node
+set player.name to Mike
+text: Hello, {player.name}
+```
+
+
+
+
+#### Variable assignment
+You can also set global state
+
+### The Bag vs the Graph
+
+There are two different types of nodes. Each node consists of
+
+
 This is coming soon!
 
 For now, I'd recommend looking at the [elevator](https://github.com/lazerwalker/storyboard-lang/tree/master/examples/elevator.story) and [switchboard](https://github.com/lazerwalker/storyboard-lang/tree/master/examples/switchboard.story) sample scripts.
@@ -129,7 +181,11 @@ setTimeout(() => {
 
 This will log out "On a scale of 1 to 10, how excited are you?". 5 seconds later, when the `setTimeout` is executed, it'll log out "YEAH, LET'S DO THIS".
 
+<<<<<<< Updated upstream
 The values you pass in can be any valid JS object.
+=======
+The values you pass in can be any valid JS values, including objects.
+>>>>>>> Stashed changes
 
 Keys will also be evaluated as keypaths:
 
