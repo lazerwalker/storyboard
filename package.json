@@ -35,6 +35,6 @@
   "dependencies": {
     "lodash": "^4.17.4",
     "seedrandom": "^2.4.2",
-    "storyboard-lang": "file:../storyboard-lang"
+    "storyboard-lang": "^0.0.1"
   }
 }
