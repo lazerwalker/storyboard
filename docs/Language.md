@@ -4,11 +4,13 @@ So you want to write something in Storyboard. Awesome!
 
 ## High-level overview
 
-A Storyboard story is made up of a bunch of **nodes**. A node has a bunch of **passages**, which are bits of content that should be presented to the player. When a node is triggered, its first passage begins to play, followed by the rest of its passages in sequence.
+A Storyboard story is made up of a bunch of **nodes**. A node has a bunch of **passages**, which are bits of content that should be presented to the player.
 
-There are two ways a node can be surfaced in Storyboard: it can be part of the **graph** or the **bag**.
+When a node plays, its first passage plays, followed by the rest of its passages in sequence. What it means to "play" a passage depends on how Storyboard is connected to your game engine. A passage might represent a bit of dialog, an audio or animation cue, or anything else you can imagine!
 
-The **graph** is a linked tree of nodes that connect to each other. If you're familiar with Twine, it's like a Twine story; you can think of it as a directed graph or a finite state macine, if either of those terms mean anything to you. At any given time, the graph has a specific "active" node. Graph nodes have **choices**; when the player meets the conditions to trigger a choice on the active node, that node triggers and becomes the new active node.
+There are two ways a node can exist in Storyboard: it can be part of either the **graph** or the **bag**.
+
+The **graph** is a linked tree of nodes that connect to each other. If you're familiar with Twine, it's like a Twine story; you can also think of it as a directed graph or a finite state machine, if that helps. At any given time, the graph has a specific "active" node. Graph nodes have **choices**; when the player meets the conditions to trigger a choice on the active node, that node becomes the new active node and is played.
 
 The **bag** is a collection of nodes that each have conditions on which they'll **trigger**. Any time anything changes, Storyboard queries the bag to figure out which, if any, bag nodes should be triggered. If you're familiar with StoryNexus or other quality-based or salience-based systems, the bag works kinda like that.
 
