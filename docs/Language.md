@@ -290,6 +290,70 @@ text: Please go either left or right
 -> forkInTheRoad
 ```
 
+### Dead Ends
+
+When the last passage in a graph node is completed, if that graph node has no
+choices, and the next node in the document is a graph node, the graph will
+automatically transition to that node. You can add the `deadEnd` keyword to disable that.
+
+```
+# firstNode
+count: 1
+
+# secondNode
+count: 2
+-> thirdNode
+
+# twoPointFiveNode
+count: 2.5
+
+# thirdNode
+count: 3
+deadEnd
+
+# fourthNode
+count: 4
+```
+
+Will result in the following passages being played:
+
+```
+count: 1
+count: 2
+count: 3
+```
+
+### Starting Node
+
+By default, the first active graph node will be the first graph node listed in the file. You can change this by specifying a start node by name at the top of your story:
+
+
+```
+# JillIntro
+jill: "Hi Jack, my name is Jill!"
+
+# JackIntro
+jack: "Hi Jill, great to meet you!"
+```
+
+```
+start: JillIntro
+
+# JackIntro
+jack: "Hi Jill, great to meet you!"
+
+# JillIntro
+jill: "Hi Jack, my name is Jill!"
+-> JackIntro
+```
+
+Each of these will result in:
+
+```
+jill: "Hi Jack, my name is Jill!"
+jack: "Hi Jill, great to meet you!"
+```
+
 ## Advanced functionality
 
 ### Inline Bag Nodes
@@ -330,11 +394,14 @@ text: You reach a fork in the road. Do you go left or right?
   text: Please go either left or right
 ```
 
-If `choice` is set to something that isn't `"left"` or `"right"`, those two passages will be presented, but the graph will never have moved away from `forkInTheRoad`.
+If `choice` is set to something that isn't `"left"` or `"right"`, those two passages will be presented, but the current graph node will still be (and will never have changed from) `forkInTheRoad`.
 
 You can think of that as a bag node whose predicate is both the given predicate and one saying that it should only ever trigger if the current graph node is the one it's declared within.
 
 Inline bag nodes might seem a bit confusing at first, but they're a super useful tool, particularly for dead-end cases like this where you don't want handling error states to complicate your happy-path flow. They're a great example of how expressive having both graph-based and trigger-based systems coexisting can be.
+
+For some practical examples of inline bag nodes, check out the [switchboard](https://github.com/lazerwalker/storyboard-lang/blob/master/examples/switchboard.story) sample script.
+
 
 ### Global Game State
 
