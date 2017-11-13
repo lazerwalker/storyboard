@@ -42,9 +42,11 @@ Storyboard gives you the best of both worlds by including both a state machine-b
 
 ## How do I use this?
 
-If you're an **author** looking to write stories in Storyboard, check out the [language reference](TODO).
+Documentation lives in the `docs` folder of this repo!
 
-If you're a **programmer** looking to integrate Storyboard into your existing game engine, check out the [runtime API reference](TODO).
+If you're an **author** looking to write stories in Storyboard, check out the [language reference](https://github.com/lazerwalker/storyboard/blob/master/docs/Language.md).
+
+If you're a **programmer** looking to integrate Storyboard into your existing game engine, check out the [runtime API reference](https://github.com/lazerwalker/storyboard/blob/master/docs/API.md).
 
 (Not that I'm suggesting that being an author and a programmer are mutually exclusive!)
 
