@@ -11,11 +11,14 @@ export default function checkPredicate(predicate: Predicate|undefined, state: an
     // TODO: If this is slow, only do valueForKeyPath for strings that need it
     const value = keyPathify(key, state)
 
-    // TODO: Find a more generalizable version of this
     if (key === "or") {
-      // 'or' expects an array of predicates. Return if any of them are true.
       if (!_.isArray(obj)) { return false }
       return _.reduce(obj, ((memo: any, p: Predicate) =>  memo || checkPredicate(p, state)), false)
+    }
+
+    if (key === "and") {
+      if (!_.isArray(obj)) { return false}
+      return _.reduce(obj, ((memo: any, p: Predicate) =>  memo && checkPredicate(p, state)), true)
     }
 
 

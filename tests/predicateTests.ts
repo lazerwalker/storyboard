@@ -171,6 +171,32 @@ describe("predicates", () => {
       });
     })
 
+    describe("using an explicit AND", () => {
+      context("When used at the top level", () => {
+        beforeEach(function() {
+          predicate = {"and": [
+            {"foo": {"gte": 3}},
+            {"foo": {"lte": 5}}
+          ]}
+        })
+
+        it("should not trigger when only the first condition is met", function() {
+          const result = checkPredicate(predicate, {foo: 6})
+          expect(result).to.be.false;
+        });
+
+        it("should not trigger when the only second condition is met", function() {
+          const result = checkPredicate(predicate, {foo: 2})
+          expect(result).to.be.false;
+        });
+
+        it("should fire when neither condition is met", function() {
+          const result = checkPredicate(predicate, {foo: 4})
+          expect(result).to.be.true;
+        });
+      })
+    })
+
     describe("using an explicit OR", function() {
       context("when used at the top level of the predicate", function() {
         beforeEach(function() {
@@ -196,6 +222,7 @@ describe("predicates", () => {
         });
       })
 
+      // TODO: This behavior is deprecated?
       context("within a predicate key", function() {
         beforeEach(function() {
           predicate = {"foo": {"or": [
