@@ -208,11 +208,12 @@ Parentheses can be used to specify precedence
 A bag node always begins with a predicate descibing when that node should trigger.
 
 ```
-# gottenEnoughSleep
+## gottenEnoughSleep
 [ hoursOfSleep > 7 and hoursOfSleep < 9 ]
 text: "Wow, you got the perfect amount of sleep!"
 ```
 
+You'll also notice that bag nodes have **two pound signs** in their title line: (`## nodeName` or `## nodeName ##`).
 ### Tracks
 
 By default, only one bag node will play at a time.
