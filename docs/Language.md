@@ -415,6 +415,8 @@ As an example, the 'elevator' example story includes the following predicate: `[
 1. The choice that led the player to the current graph node relied on the `altitude` variable being greater than or equal to something else
 2. The current value of `altitude` is now less than or equal to what that value was.
 
-Right now, the structure of the game state isn't particularly well-documented. If you have a functioning local development copy of Storyboard, check out `dist/types/state.d.ts` for type definitions of what exists.
+The system's internal state tracking, and what variables are available to you, is documented in [src/state.ts](https://github.com/lazerwalker/storyboard/blob/master/src/state.ts).
+
+That sadly won't tell you the full story of what nested objects look like (e.g. how a choice is stored). If you're code-savvy, you can poke around the other source code files for descriptions, but ideally more docs are coming soon.
 
 **WARNING**: As there are no access permissions, all of this internal state is read/write. If you really want to, you can modify the internal state of a playthrough while it's happening. Unless you have a _very_ specific reason to do so, you probably don't want to do this. You can do some pretty powerful stuff with this sort of metaprogramming, but you're on your own.
