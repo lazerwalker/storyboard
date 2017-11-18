@@ -141,11 +141,15 @@ setTimeout(pressNextButton, 2000)
 Will lead to "Welcome! ..." being logged immediately, "Awesome! ..." after 1 second, and "You made it!" after another second.
 
 
-## ...and that's it!
+## Emitting state for debug purposes
 
-There are a few other API methods, mostly to inspect the full state of the system for debug purposes, that aren't documented yet. That'll change as they stabilize; you can read `game.ts` for now.
+If you want to display debug information about the state of your game, you can assign a `stateListener` function that will be called with a JSON string containing the entire state object every time it changes:
 
-But otherwise, that's the entire API! Pass in your story, wire up your inputs and outputs, and Storyboard takes care of the rest.
+```js
+game.stateListener = (json) => {
+  console.log("Current state: ", json)
+}
+```
 
 
 ## Formal API Reference

@@ -2,7 +2,7 @@
 
 [![CI Status](http://img.shields.io/travis/lazerwalker/storyboard.svg?style=flat)](https://travis-ci.org/lazerwalker/storyboard)
 
-Storyboard is a general-purpose engine for multilinear/nonlinear storytelling. It's written in TypeScript, and intended to be embedded within another game or application (such as the included-as-a-git-submodule [Storyboard-iOS](https://github.com/lazerwalker/storyboard-iOS.git) reference native iOS Swift project)
+Storyboard is a general-purpose engine for multilinear/nonlinear storytelling. It's written in TypeScript, and intended to be embedded within another game or application.
 
 Right now, it's pre-alpha. Stay tuned for more.
 
@@ -11,6 +11,8 @@ If you're interested in progress, you should check out https://twitch.tv/lzrwkr,
 Storyboard consists of two parts: a domain-specific language for authors to write stories ((that superficially looks a bit like [Ink](https://github.com/inkle/ink)) and a runtime narrative engine designed to be embedded within a larger game project.
 
 This repo specifically contains the runtime engine. It includes the language compiler as a dependency; that project lives at [https://github.com/lazerwalker/storyboard-lang](https://github.com/lazerwalker-storyboard-lang).
+
+If you're looking for an example of embedding Storyboard within a non-JS environment, [Storyboard-iOS](https://github.com/lazerwalker/storyboard-iOS.git) is a simple Swift iOS app that includes and runs Storyboard within an embedded JavaScript engine.
 
 
 ## Why Storyboard?
@@ -71,13 +73,6 @@ Looking to hack on Storyboard yourself?
 Webpack is used to compile Storyboard. You can run it via `yarn run build`. You can also manually run webpack (`./node_modules/.bin/webpack`, or a globally-installed version) with whatever other args you'd like, to e.g. enable watch mode. (Better dev support is coming!)
 
 The `tests` folder contains a fair number of BDD-style tests. `yarn test` runs 'em.
-
-
-## iOS Project?
-
-This readme mentions an iOS reference project included as a submodule. I've left that in for historical purposes, but it doesn't currently work — it relies on an older version of the project.
-
-You can expect to see a more functioning iOS reference implementation sometime in the future.
 
 
 ## License
