@@ -206,10 +206,7 @@ export class Game {
 
   emitState() {
     if (this.stateListener) {
-      let obj = (<any>Object).assign({}, this.state)
-      delete obj.story.bag
-      delete obj.story.graph // TODO: Keep this state
-      const json = JSON.stringify(obj, null, 2)
+      const json = JSON.stringify(this.state, null, 2)
       this.stateListener(json)
     }
   }
