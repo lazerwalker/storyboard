@@ -10,9 +10,10 @@ If you're interested in progress, you should check out https://twitch.tv/lzrwkr,
 
 Storyboard consists of two parts: a domain-specific language for authors to write stories ((that superficially looks a bit like [Ink](https://github.com/inkle/ink)) and a runtime narrative engine designed to be embedded within a larger game project.
 
-This repo specifically contains the runtime engine. It includes the language compiler as a dependency; that project lives at [https://github.com/lazerwalker/storyboard-lang](https://github.com/lazerwalker-storyboard-lang).
+This repo specifically contains the runtime engine. A few other projects exist:
 
-If you're looking for an example of embedding Storyboard within a non-JS environment, [Storyboard-iOS](https://github.com/lazerwalker/storyboard-iOS.git) is a simple Swift iOS app that includes and runs Storyboard within an embedded JavaScript engine.
+* [https://github.com/lazerwalker/storyboard-lang](https://github.com/lazerwalker/storyboard-lang) is the language compiler. This repo includes it as a dependency via npm.
+* [https://github.com/lazerwalker/storyboard-iOS](https://github.com/lazerwalker/storyboard-ios) is an iOS framework that provides a native Swift API layer on top of Storyboard running within an embedded JS runtime. It also includes a working sample app.
 
 
 ## Why Storyboard?
