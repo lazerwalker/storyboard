@@ -6,9 +6,9 @@ Storyboard is a general-purpose engine for multilinear/nonlinear storytelling. I
 
 Right now, it's pre-alpha. Stay tuned for more.
 
-If you're interested in progress, you should check out https://twitch.tv/lzrwkr, where I livestream dev work on this at least once a week.
+If you're interested in progress, you should check out https://twitch.tv/mlazerwalker, where I livestream dev work on this at least once a week.
 
-Storyboard consists of two parts: a domain-specific language for authors to write stories ((that superficially looks a bit like [Ink](https://github.com/inkle/ink)) and a runtime narrative engine designed to be embedded within a larger game project.
+Storyboard consists of two parts: a domain-specific language for authors to write stories (that superficially looks a bit like [Ink](https://github.com/inkle/ink)) and a runtime narrative engine designed to be embedded within a larger game project.
 
 This repo specifically contains the runtime engine. A few other projects exist:
 
