@@ -760,6 +760,164 @@ describe("receiving input", function() {
   })
 })
 
+describe("observing variables", function() {
+  let game: Game, output: any;
+
+  context("when the thing being observed is just a variable", () => {
+    context("changing the variable via input", () => {
+      beforeEach(function() {
+        game = new Game(`
+          ## node
+          text: Don't you watch!
+        `);
+
+        output = sinon.spy();
+
+        game.addObserver("pot", output);
+        game.start()
+        game.receiveInput("pot", "boiled");
+      });
+
+      it("should trigger when the value changes", () => {
+        expect(output).to.have.been.calledWith("boiled")
+      })
+    })
+
+    context("changing the variable within the story", () => {
+      beforeEach(function() {
+        game = new Game(`
+          ## node
+          set pot to "boiled"
+        `);
+
+        output = sinon.spy();
+
+        game.addObserver("pot", output);
+        game.start()
+      });
+
+      it("should trigger when the value changes", () => {
+        expect(output).to.have.been.calledWith("boiled")
+      })
+    })
+  })
+
+  context("when the thing being observed is a nested property", () => {
+    context("changing the value via input", () => {
+      beforeEach(function() {
+        game = new Game(`
+          ## node
+          text: Don't you watch!
+        `);
+
+        output = sinon.spy();
+
+        game.addObserver("pot.waterTemp", output);
+        game.start()
+        game.receiveInput("pot.waterTemp", "boiled");
+      });
+
+      it("should trigger when the value changes", () => {
+        expect(output).to.have.been.calledWith("boiled")
+      })
+
+      it("should trigger on subsequent changes", () => {
+        game.receiveInput("pot.waterTemp", "unboiled")
+        expect(output).to.have.been.calledWith("unboiled")
+      })
+
+      it("should trigger when undefined", () => {
+        game.receiveInput("pot.waterTemp", undefined)
+        expect(output).to.have.been.calledWith(undefined)
+      })
+
+      context("when there are multiple observers", () => {
+        let output2 = sinon.spy()
+        beforeEach(() => {
+          game.addObserver("pot.waterLevel", output)
+          game.addObserver("pot.waterLevel", output2)
+        })
+
+        it("should trigger both", () => {
+          game.receiveInput("pot.waterLevel", "3 quarts")
+
+          expect(output).to.have.been.calledWith("3 quarts")
+          expect(output2).to.have.been.calledWith("3 quarts")
+        })
+
+        context("when one is unobserved", () => {
+          it("should only call the right one", () => {
+            game.removeObserver("pot.waterLevel", output)
+            game.receiveInput("pot.waterLevel", "3 quarts")
+
+            expect(output).to.not.have.been.calledWith("3 quarts")
+            expect(output2).to.have.been.calledWith("3 quarts")
+          })
+        })
+      })
+
+      it("should not trigger after unobserving", () => {
+        game.removeObserver("pot.waterTemp", output)
+        game.receiveInput("pot.waterTemp", "unboiled")
+        expect(output).to.not.have.been.calledWith("unboiled")
+      })
+    })
+
+    context("changing the value within the story", () => {
+      beforeEach(function() {
+        game = new Game(`
+          ## node
+          set pot.waterTemp to "boiled"
+        `);
+
+        output = sinon.spy();
+
+        game.addObserver("pot.waterTemp", output);
+        game.start()
+      });
+
+      it("should trigger when the value changes", () => {
+        expect(output).to.have.been.calledWith("boiled")
+      })
+
+      it("should trigger on subsequent changes", () => {
+        game = new Game(`
+          ## node
+          set pot.waterTemp to "boiled"
+          set pot.waterTemp to "unboiled"
+        `);
+
+        output = sinon.spy();
+
+        game.addObserver("pot.waterTemp", output);
+        game.start()
+
+        expect(output).to.have.been.calledWith("boiled")
+        expect(output).to.have.been.calledWith("unboiled")
+      })
+    })
+  })
+
+  // TODO
+  context.skip("when the thing being observed is a system variable", () => {
+    beforeEach(function() {
+      game = new Game(`
+        ## node
+        set pot.waterTemp to "boiled"
+      `);
+
+      output = sinon.spy();
+
+      game.addObserver("graph.currentNodeId", output);
+      game.start()
+    });
+
+    it("should trigger when the value changes", () => {
+      expect(output).to.have.been.calledWith("node")
+    })
+  })
+})
+
 // TODO: Find somewhere else for these to live?
 describe("receiveDispatch", function() {
   // TODO: Backfill this out

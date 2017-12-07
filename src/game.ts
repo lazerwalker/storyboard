@@ -14,8 +14,11 @@ import * as Parser from 'storyboard-lang'
 import { Dispatch } from './dispatch'
 
 export type OutputCallback = ((content: string, passageId: Parser.PassageId) => void)
+export type ObserverCallback = ((content: any) => void)
 
 export class Game {
+  observers: {[keypath: string]: ObserverCallback[]}
+
   constructor(storyData: string|Parser.Story) {
     let story: Parser.Story
     if (typeof storyData === "string") {
@@ -32,6 +35,7 @@ export class Game {
     this.started = false;
 
     this.outputs = {};
+    this.observers = {};
 
     var that = this;
     this.addOutput("wait", (timeout: string, passageId: Parser.PassageId) => {
@@ -136,6 +140,12 @@ export class Game {
       });
       _.assign(this.state, newState)
 
+      _.forIn(data, (value: any, key: string) => {
+        if (this.observers[key]) {
+          _.forEach(this.observers[key], (fn) => fn(value))
+        }
+      })
+
       if (this.started) {
         if (this.story.graph) {
           this.story.graph.checkChoiceTransitions(this.state);
@@ -144,11 +154,18 @@ export class Game {
         this.story.bag.checkNodes(this.state);
       }
     } else if (action === Actions.SET_VARIABLES) {
+      // TODO: I don't think "set foo.bar to 'baz'" will work?
       const keyPathedData: any = _.mapValues(data, (val: any, key: string) => {
         return keyPathify(val, this.state, true)
       });
 
       (<any>Object).assign(this.state, keyPathedData)
+
+      _.forIn(data, (value: any, key: string) => {
+        if (this.observers[key]) {
+          _.forEach(this.observers[key], (fn) => fn(value))
+        }
+      })
 
       if (this.started) {
         if (this.story.graph) {
@@ -178,6 +195,17 @@ export class Game {
       this.outputs[type] = [];
     }
     this.outputs[type].push(callback);
+  }
+
+  addObserver(type: string, callback: ObserverCallback) {
+    if (!this.observers[type]) {
+      this.observers[type] = []
+    }
+    this.observers[type].push(callback)
+  }
+
+  removeObserver(type: string, callback: ObserverCallback) {
+    this.observers[type] = _.without(this.observers[type], callback)
   }
 
   receiveInput(type: string, value: any) {
