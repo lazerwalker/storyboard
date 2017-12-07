@@ -154,12 +154,11 @@ export class Game {
         this.story.bag.checkNodes(this.state);
       }
     } else if (action === Actions.SET_VARIABLES) {
-      // TODO: I don't think "set foo.bar to 'baz'" will work?
-      const keyPathedData: any = _.mapValues(data, (val: any, key: string) => {
-        return keyPathify(val, this.state, true)
+      let newState =_.assign({}, this.state)
+      _.forIn(data, (value: any, key: string) => {
+        _.set(newState, key, keyPathify(value, this.state, true))
       });
-
-      (<any>Object).assign(this.state, keyPathedData)
+      _.assign(this.state, newState)
 
       _.forIn(data, (value: any, key: string) => {
         if (this.observers[key]) {

@@ -18,6 +18,7 @@ describe("setting variables", function() {
         # node
           set foo to bar
           set baz to graph.currentNodeId
+          set a.b to "c"
       `
       game = new Game(story)
 
@@ -38,8 +39,12 @@ describe("setting variables", function() {
       expect(game.state.foo).to.equal("bar")
     })
 
-    it("should set keypath variables", function() {
+    it("should evaluate values that are keypaths", function() {
       expect(game.state.baz).to.equal("node")
+    })
+
+    it("should evaluate keys that are keypaths", () => {
+      expect(game.state.a.b).to.equal("c")
     })
 
     context("functionality not yet in the lang", () => {
