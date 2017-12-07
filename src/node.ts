@@ -11,12 +11,14 @@ export class Node implements Parser.Node {
   constructor(data={}, dispatch: Dispatch) {
     (<any>Object).assign(this, data)
     this.dispatch = dispatch
+
+    if (!this.track) this.track = "default"
   }
 
   readonly nodeId: Parser.NodeId;
   readonly passages?: Parser.Passage[];
   readonly choices?: Parser.Choice[];
-  readonly track?: string;
+  readonly track: string;
   readonly predicate?: Parser.Predicate;
   readonly allowRepeats?: boolean;
 

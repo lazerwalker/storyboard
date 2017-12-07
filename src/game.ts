@@ -105,12 +105,19 @@ export class Game {
 
     } else if (action === Actions.TRIGGERED_BAG_NODES) {
       _.forEach(data, (nodes: Node[], track: string) => {
+        if (nodes.length < 1) { return }
         const node = nodes[0];
         const nodeId = node.nodeId;
 
+        // TODO: Figure out how to write a test for this.
+        // Our existing track tests fail because checkBagNodes() will never get called more than once
+        // We were running into this when setting a variable from within a bag node
+        if (this.state.bag.activeTracks[node.track]) {
+          return
+        }
+
         this.state.bag.activePassageIndexes[nodeId] =  0;
-        // TODO: We should have a BagNode class that always has track defined
-        this.state.bag.activeTracks[node.track!] = true
+        this.state.bag.activeTracks[node.track] = true
         this.story.bag.playCurrentPassage(nodeId, this.state);
       })
     } else if (action === Actions.CHANGE_BAG_PASSAGE) {
