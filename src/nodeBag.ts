@@ -37,10 +37,11 @@ export class Bag {
   checkNodes(state: State) {
     const filteredNodes = _.filter(this.nodes, (node) => checkPredicate(node.predicate, state));
     if (filteredNodes.length > 0 && this.dispatch) {
-      const nodesByTrack = _.groupBy(filteredNodes, "track")
-      const singleNodesByTrack = _.mapValues(nodesByTrack, (nodes) => {
-        return nodes[0]
-      })
+      const singleNodesByTrack = _(filteredNodes)
+        .groupBy("track")
+        .mapValues((nodes) => nodes[0])
+        .omitBy((_, track) => state.bag.activeTracks[track])
+        .value()
 
       this.dispatch(Actions.TRIGGERED_BAG_NODES, singleNodesByTrack);
     }

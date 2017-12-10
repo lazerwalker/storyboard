@@ -107,13 +107,6 @@ export class Game {
       _.forEach(data, (node: Node, track: string) => {
         const nodeId = node.nodeId;
 
-        // TODO: Figure out how to write a test for this.
-        // Our existing track tests fail because checkBagNodes() will never get called more than once
-        // We were running into this when setting a variable from within a bag node
-        if (this.state.bag.activeTracks[node.track]) {
-          return
-        }
-
         this.state.bag.activePassageIndexes[nodeId] =  0;
         this.state.bag.activeTracks[node.track] = true
         this.story.bag.playCurrentPassage(nodeId, this.state);

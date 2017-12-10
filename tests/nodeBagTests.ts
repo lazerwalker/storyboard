@@ -12,6 +12,35 @@ import { State } from '../src/state'
 import * as Parser from 'storyboard-lang'
 
 describe("filtering nodes", function() {
+  context("when a track is already active", () => {
+    it("should ignore just that track", () => {
+      const story = Parser.parseString(`
+        ## first
+        [ foo < 9 ]
+        text: Hi
+
+        ## second
+        [ foo <= 10 ]
+        text: Hello
+
+        ## third
+        [ foo  < 100 ]
+        track: otherTrack
+        text: La dee dah, off in my own world
+      `) as Parser.Story
+
+      const dispatch = sinon.spy()
+      const bag = new Bag(story.bag!, dispatch)
+
+      const state = new State()
+      state.bag.activeTracks.default = true
+
+      bag.checkNodes(state);
+
+      expect(dispatch).to.have.been.calledWith(Actions.TRIGGERED_BAG_NODES, {"otherTrack": bag.nodes.third})
+    })
+  })
+
   context("when some nodes match the predicate but others don't", function() {
     it("should only return the nodes that match", function() {
       const story = Parser.parseString(`
