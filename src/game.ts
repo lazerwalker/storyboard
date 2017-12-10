@@ -104,9 +104,7 @@ export class Game {
       this.story.bag.checkNodes(this.state);
 
     } else if (action === Actions.TRIGGERED_BAG_NODES) {
-      _.forEach(data, (nodes: Node[], track: string) => {
-        if (nodes.length < 1) { return }
-        const node = nodes[0];
+      _.forEach(data, (node: Node, track: string) => {
         const nodeId = node.nodeId;
 
         // TODO: Figure out how to write a test for this.

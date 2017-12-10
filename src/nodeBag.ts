@@ -38,7 +38,11 @@ export class Bag {
     const filteredNodes = _.filter(this.nodes, (node) => checkPredicate(node.predicate, state));
     if (filteredNodes.length > 0 && this.dispatch) {
       const nodesByTrack = _.groupBy(filteredNodes, "track")
-      this.dispatch(Actions.TRIGGERED_BAG_NODES, nodesByTrack);
+      const singleNodesByTrack = _.mapValues(nodesByTrack, (nodes) => {
+        return nodes[0]
+      })
+
+      this.dispatch(Actions.TRIGGERED_BAG_NODES, singleNodesByTrack);
     }
   }
 

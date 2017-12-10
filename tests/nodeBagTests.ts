@@ -1,38 +1,42 @@
 import * as chai from 'chai';
 import * as sinonChai from 'sinon-chai'
+import * as sinon from 'sinon'
 
 chai.use(sinonChai);
 const expect = chai.expect
 
 import { Bag } from '../src/nodeBag'
 import * as Actions from '../src/gameActions'
-import * as Parser from 'storyboard-lang'
 import { State } from '../src/state'
+
+import * as Parser from 'storyboard-lang'
 
 describe("filtering nodes", function() {
   context("when some nodes match the predicate but others don't", function() {
     it("should only return the nodes that match", function() {
-      const bagData: Parser.NodeBag = {
-        first: {nodeId: "first", predicate: { "foo": { "lte": 10 }}, track: "default"},
-        second: {nodeId: "second", predicate: { "foo": { "lte": 9 }}, track: "default"},
-        third: {nodeId: "third", predicate: { "foo": { "lte": 0 }}, track: "default"}
-      }
+      const story = Parser.parseString(`
+        ## first
+        [ foo < 9 ]
+        text: first
 
-      let action, data;
+        ## second
+        [ foo <= 10 ]
+        text: second
 
-      function dispatch(passedAction: string, passedData: any) {
-        expect(passedAction).to.equal(Actions.TRIGGERED_BAG_NODES)
+        ## third
+        [ foo  <= 0 ]
+        text: third
+      `) as Parser.Story
 
-        let firstNode = bag.nodes["first"]
-        let secondNode = bag.nodes["second"]
-        expect(passedData).to.eql({"default": [firstNode, secondNode]});
-      }
+      const dispatch = sinon.spy()
 
-      const bag = new Bag(bagData, dispatch);
+      const bag = new Bag(story.bag, dispatch);
       const state = new State()
       state.foo = "5"
 
       bag.checkNodes(state);
-    });
-  })
+
+      expect(dispatch).to.have.been.calledWith(Actions.TRIGGERED_BAG_NODES, {"default": bag.nodes.first})
+    })
+  });
 });
