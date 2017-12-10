@@ -39,7 +39,7 @@ export class Bag {
     if (filteredNodes.length > 0 && this.dispatch) {
       const singleNodesByTrack = _(filteredNodes)
         .groupBy("track")
-        .mapValues((nodes) => nodes[0])
+        .mapValues(_.sample) // TODO: Eventually let people pass in their own fitness fn
         .omitBy((_, track) => state.bag.activeTracks[track])
         .value()
 

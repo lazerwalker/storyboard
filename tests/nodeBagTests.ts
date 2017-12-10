@@ -49,12 +49,8 @@ describe("filtering nodes", function() {
         text: first
 
         ## second
-        [ foo <= 10 ]
+        [ foo <= 0 ]
         text: second
-
-        ## third
-        [ foo  <= 0 ]
-        text: third
       `) as Parser.Story
 
       const dispatch = sinon.spy()

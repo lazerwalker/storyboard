@@ -649,12 +649,7 @@ describe("triggering events from the bag", function() {
       });
 
       it("should only play one of them at once", function() {
-        // NOTE: This test takes advantage of the implementation detail.
-        // If a bunch of potential nodes can be triggered, the engine currently picks the first one.
-        // This may change in the future, and this test will fail as a result.
-
         expect(output).to.have.been.calledOnce;
-        expect(output).to.have.been.calledWith("First", sinon.match.any);
       })
     });
 
@@ -678,12 +673,7 @@ describe("triggering events from the bag", function() {
       });
 
       it("should only play one of them at once", function() {
-        // NOTE: This test takes advantage of the implementation detail.
-        // If a bunch of potential nodes can be triggered, the engine currently picks the first one.
-        // This may change in the future, and this test will fail as a result.
-
         expect(output).to.have.been.calledOnce;
-        expect(output).to.have.been.calledWith("First", sinon.match.any);
       })
     });
 
