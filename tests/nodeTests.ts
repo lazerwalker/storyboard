@@ -100,7 +100,7 @@ describe("setting variables", function() {
       })
 
       it("should output the content", function() {
-        expect(callback).to.have.been.calledWith("Hi there!", sinon.match.any)
+        expect(callback).to.have.been.calledWith("Hi there!", sinon.match.any, "default")
       })
 
       it("should set the variable", function() {

@@ -32,7 +32,8 @@ export class Node implements Parser.Node {
     const hasContent = !_.isUndefined(passage.content)
 
     if (hasContent) {
-      this.dispatch(Actions.OUTPUT, passage);
+      const data = _.assign({}, passage, {track: this.track})
+      this.dispatch(Actions.OUTPUT, data);
     }
 
     if (passage.set) {

@@ -13,7 +13,7 @@ import { Story } from './story'
 import * as Parser from 'storyboard-lang'
 import { Dispatch } from './dispatch'
 
-export type OutputCallback = ((content: string, passageId: Parser.PassageId) => void)
+export type OutputCallback = ((content: string, passageId: Parser.PassageId, track: String) => void)
 export type ObserverCallback = ((content: any) => void)
 
 export class Game {
@@ -63,7 +63,7 @@ export class Game {
           /\{(.+?)\}/g,
           (match: string, keyPath: string) => _(this.state).get(keyPath)
         );
-        outputCallback(string, data.passageId);
+        outputCallback(string, data.passageId, data.track);
       }
     } else if (action === Actions.MAKE_GRAPH_CHOICE) {
       if (!this.state.graph.currentNodeId) return

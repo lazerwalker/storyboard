@@ -432,6 +432,7 @@ describe("triggering events from the bag", function() {
       beforeEach(function() {
         game = new Game(`
           ## node
+          track: other
           text: First
         `);
 
@@ -441,7 +442,7 @@ describe("triggering events from the bag", function() {
       });
 
       it("should play a valid event node", function() {
-        expect(output).to.have.been.calledWith("First", sinon.match.any)
+        expect(output).to.have.been.calledWith("First", sinon.match.any, "other")
       })
     });
 

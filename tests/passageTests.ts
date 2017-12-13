@@ -27,14 +27,14 @@ describe("'wait' passages", function() {
 
   context("immediately", function() {
     it("should not play the next passage yet", function () {
-      expect(callback).not.to.have.been.calledWith("You made it!", sinon.match.any)
+      expect(callback).not.to.have.been.calledWith("You made it!", sinon.match.any, "default")
     })
   })
 
   context("after enough time has passed", function () {
     it("should play the next passage", function(done) {
         setTimeout(function() {
-          expect(callback).to.have.been.calledWith("You made it!", sinon.match.any);
+          expect(callback).to.have.been.calledWith("You made it!", sinon.match.any, "default");
           done();
         }, 5);
     });
