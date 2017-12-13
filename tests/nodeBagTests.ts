@@ -33,7 +33,7 @@ describe("filtering nodes", function() {
       const bag = new Bag(story.bag!, dispatch)
 
       const state = new State()
-      state.bag.activeTracks.default = true
+      state.bag.activeTracks.default = "first"
 
       bag.checkNodes(state);
 

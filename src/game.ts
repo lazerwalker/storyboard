@@ -108,7 +108,7 @@ export class Game {
         const nodeId = node.nodeId;
 
         this.state.bag.activePassageIndexes[nodeId] =  0;
-        this.state.bag.activeTracks[node.track] = true
+        this.state.bag.activeTracks[node.track] = nodeId
         this.story.bag.playCurrentPassage(nodeId, this.state);
       })
     } else if (action === Actions.CHANGE_BAG_PASSAGE) {
@@ -121,8 +121,7 @@ export class Game {
       delete this.state.bag.activePassageIndexes[nodeId];
 
       const node = this.story.bag.nodes[nodeId]
-      // TODO: Waiting on having a BagNode thing
-      this.state.bag.activeTracks[node.track!] = false
+      delete this.state.bag.activeTracks[node.track!]
 
       if (!this.state.bag.nodeHistory[nodeId]) {
         this.state.bag.nodeHistory[nodeId] = 0;

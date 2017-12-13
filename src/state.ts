@@ -61,7 +61,7 @@ export class BagState {
   nodeHistory: {[key: string]: number} = {}
 
   /** Whether a given track is active or not.
-   *  Keys are track names, values are true if there is a passage actively being played on that track.
+   *  Keys are track names. If a track is active, its value will be the node name
    */
-  activeTracks: {[trackName: string]: boolean} = {}
+  activeTracks: {[trackName: string]: string|undefined} = {}
 }
