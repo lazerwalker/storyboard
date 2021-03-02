@@ -1,10 +1,18 @@
+import { initial } from 'lodash'
 import * as Parser from 'storyboard-lang'
 import { Node } from './node'
 
 export class State {
-  constructor() {
+  constructor(initialState?: any) {
     this.graph = new GraphState()
     this.bag = new BagState()
+
+    if (initialState) {
+      Object.keys(initialState).forEach(key => {
+        if (key === "graph" || key === "bag") return
+        this[key] = initialState[key]
+      })
+    }
   }
 
   /** Whenever you set any state (either via `game.receiveInput` or `set foo to bar` in script), it gets shoved onto this object. */

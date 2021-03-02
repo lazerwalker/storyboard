@@ -19,7 +19,7 @@ export type ObserverCallback = ((content: any) => void)
 export class Game {
   observers: {[keypath: string]: ObserverCallback[]}
 
-  constructor(storyData: string|Parser.Story) {
+  constructor(storyData: string|Parser.Story, initialState: State|undefined) {
     let story: Parser.Story
     if (typeof storyData === "string") {
       // TODO: Error handling
@@ -27,17 +27,17 @@ export class Game {
     } else {
       story = storyData
     }
-
+      
     let dispatch = _.bind(this.receiveDispatch, this) as Dispatch
     this.story = new Story(story, dispatch)
-    this.state = new State()
+    this.state = new State(initialState)
 
     this.started = false;
 
     this.outputs = {};
     this.observers = {};
 
-    var that = this;
+    var that = this; // TODO: I don't think this does anything?
     this.addOutput("wait", (timeout: string, passageId: Parser.PassageId) => {
       setTimeout(() => {
         this.completePassage(passageId);
