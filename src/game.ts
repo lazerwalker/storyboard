@@ -1,7 +1,6 @@
+// TODO: Look into how much of the lodash functionality we're using
+// has been pulled into vanilla TS/JS
 import * as _ from "lodash"
-
-import NodeBag from "./nodeBag"
-import NodeGraph from "./nodeGraph"
 
 import keyPathify from "./keyPathify"
 
@@ -51,7 +50,8 @@ export class Game {
   outputs: {[name: string]: OutputCallback[]}
   started: boolean;
 
-  stateListener?:((serializedState: string) => void)
+  stateListener?:((state: State) => void)
+  jsonStateListener?: ((serializedState: string) => void)
 
   receiveDispatch(action: string, data: any) {
     if (action === Actions.OUTPUT) {
@@ -230,8 +230,12 @@ export class Game {
 
   emitState() {
     if (this.stateListener) {
+      this.stateListener({...this.state})
+    }
+
+    if (this.jsonStateListener) {
       const json = JSON.stringify(this.state, null, 2)
-      this.stateListener(json)
+      this.jsonStateListener(json)
     }
   }
 }
