@@ -20,7 +20,10 @@ export class Node implements Parser.Node {
   readonly choices?: Parser.Choice[];
   readonly track: string;
   readonly predicate?: Parser.Predicate;
-  readonly allowRepeats?: boolean;
+
+  // TODO: Documentation is now out-of-date.
+  // I don't know what behavior is better, or what higher-level abstraction should exist
+  readonly allowRepeats?: boolean = true;
 
   dispatch: Dispatch;
 
