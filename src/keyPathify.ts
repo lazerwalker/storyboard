@@ -1,8 +1,6 @@
 import * as _ from 'lodash'
 const seedrandom = require('seedrandom');
 
-import { State } from './state'
-
 var seed: string|number|undefined;
 var rng = seedrandom();
 
@@ -20,10 +18,10 @@ export default function keyPathify(input: string|any, state: any, checkIfDefined
       const lower = input.randInt[0];
       const upper = input.randInt[1];
       return Math.floor(rng() * (upper - lower)) + lower;
-    } else {
-      return input;
     }
-  } else if (!_.isString(input)) {
+  } 
+  
+  if (!_.isString(input)) {
     return input;
   }
 

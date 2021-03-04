@@ -18,7 +18,7 @@ export type ObserverCallback = ((content: any) => void)
 export class Game {
   observers: {[keypath: string]: ObserverCallback[]}
 
-  constructor(storyData: string|Parser.Story, initialState: State|undefined) {
+  constructor(storyData: string|Parser.Story, initialState?: State) {
     let story: Parser.Story
     if (typeof storyData === "string") {
       // TODO: Error handling
@@ -135,7 +135,7 @@ export class Game {
       _.forIn(data, (value: any, key: string) => {
         _.set(newState, key, keyPathify(value, this.state, true))
       });
-      _.assign(this.state, newState)
+      this.state = {...this.state, ...newState}
 
       _.forIn(data, (value: any, key: string) => {
         if (this.observers[key]) {
@@ -193,6 +193,7 @@ export class Game {
     this.outputs[type].push(callback);
   }
 
+  // TODO: What's the difference between this and emitState?
   addObserver(type: string, callback: ObserverCallback) {
     if (!this.observers[type]) {
       this.observers[type] = []
@@ -210,7 +211,7 @@ export class Game {
     this.receiveDispatch(Actions.RECEIVE_INPUT, obj)
   }
 
-  receiveMomentaryInput(type: string, value?: string) {
+  receiveMomentaryInput(type: string, value?: any) {
     let trueObj: any = {}
     trueObj[type] = value || true
     this.receiveDispatch(Actions.RECEIVE_INPUT, trueObj)
