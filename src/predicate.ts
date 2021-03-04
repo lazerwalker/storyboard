@@ -30,7 +30,7 @@ export default function checkPredicate(predicate: Predicate|undefined, state: an
     }
 
     if (!_.isUndefined(obj.eq)) {
-       memo = memo && (value === keyPathify(obj.eq, state, true));
+       memo = memo && (value === obj.eq || (value === keyPathify(obj.eq, state, true)))
     }
 
     if (!_.isUndefined(obj.gte)) {

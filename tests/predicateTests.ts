@@ -101,6 +101,22 @@ describe("predicates", () => {
           const result = checkPredicate(predicate, {foo: "ba"})
           expect(result).to.be.false
         })
+
+        context("when the equality value is a valid keypath", () => {
+          it("should return true if the keypath value matches", () => {
+            const predicate = {"a": {"eq": "b"}}
+            const state = {"a": "the answer", "b": "the answer"}
+            const result = checkPredicate(predicate, state)
+            expect(result).to.be.true
+          })
+
+          it("should return true when matching the exact string literal, not keypath-d", () => {
+            const predicate = {"a": {"eq": "exact match"}}
+            const state = {"a": "exact match", "exact match": "not it"}
+            const result = checkPredicate(predicate, state)
+            expect(result).to.be.true
+          })
+        })
       })
     })
 
