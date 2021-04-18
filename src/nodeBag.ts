@@ -75,12 +75,23 @@ export class Bag {
     const currentPassage = node.passages[currentIndex];
     if (passageId !== currentPassage.passageId) return;
 
-    const newIndex = currentIndex + 1;
-
-    if (newIndex >= node.passages.length) {
-      this.dispatch(Actions.COMPLETE_BAG_NODE, node.nodeId)
-    } else {
-      this.dispatch(Actions.CHANGE_BAG_PASSAGE, [node.nodeId, newIndex])
+    let found = false
+    let newPassageIndex = currentIndex
+    
+    while(!found) {
+      newPassageIndex = newPassageIndex! + 1
+      if (_.isUndefined(node.passages) || newPassageIndex >= node.passages!.length) {
+        found = true;
+        this.dispatch(Actions.COMPLETE_GRAPH_NODE, node.nodeId)
+      } else {
+        const newPassage = node.passages![newPassageIndex];
+        if ((!newPassage.predicate) || checkPredicate(newPassage.predicate, state)) {
+          found = true;
+          this.dispatch(Actions.CHANGE_BAG_PASSAGE, [node.nodeId, newPassageIndex])
+        } else {
+          console.log("failed predicate")
+        }
+      }
     }
   }
 }

@@ -6,8 +6,6 @@ chai.use(sinonChai);
 const expect = chai.expect
 
 import { Game } from '../src/game'
-import * as Actions from '../src/gameActions'
-import keyPathify from '../src/keyPathify'
 
 describe("'wait' passages", function() {
   let game, callback: any;
@@ -39,6 +37,104 @@ describe("'wait' passages", function() {
         }, 5);
     });
   });
-
-
 });
+
+// TODO: It is bonkers this logic is reimplemented in both the bag and graph
+describe("passages with predicates", () => {
+  context("graph", () => { 
+    let game: Game, callback: any;
+    beforeEach(function() {
+      const story = `
+        # theNode
+          set sawDefault to true
+          [unless sawDefault]
+            set sawFalseNode to true
+          [sawDefault]
+            set sawTrueNode to true
+      `
+      game = new Game(story)
+      console.log(JSON.stringify(game.story.graph, null, 2))
+      game.start();
+    });
+
+    it("should play normal predicate-less nodes", () => {
+      expect(game.state.sawDefault).to.equal(true)
+    })
+
+    it("should play true predicates", function () {
+      expect(game.state.sawTrueNode).to.equal(true)
+    })
+
+    it("should skip false predicates", function () {
+      expect(game.state.sawFalseNode).to.not.exist
+    })
+
+    // TODO: unimplemented functionality!
+    it.skip("should allow checking raw values instead of state", () => {
+      const story = `
+        # theNode
+          set sawDefault to true
+          [false]
+            set sawFalseNode to true
+          [true]
+            set sawTrueNode to true
+      `
+      game = new Game(story)
+      console.log(JSON.stringify(game.story.graph, null, 2))
+      game.start(); 
+
+      expect(game.state.sawDefault).to.equal(true)
+      expect(game.state.sawTrueNode).to.equal(true) 
+      expect(game.state.sawFalseNode).to.equal(false)
+    })
+  })
+
+  context("bag", () => { 
+    let game: Game, callback: any;
+    beforeEach(function() {
+      const story = `
+        ## theNode
+        [unless somethingFalse exists]
+          set sawDefault to true
+          [unless sawDefault]
+            set sawFalseNode to true
+          [sawDefault]
+            set sawTrueNode to true
+      `
+      game = new Game(story)
+      console.log(JSON.stringify(game.story.graph, null, 2))
+      game.start();
+    });
+
+    it("should play normal predicate-less nodes", () => {
+      expect(game.state.sawDefault).to.equal(true)
+    })
+
+    it("should play true predicates", function () {
+      expect(game.state.sawTrueNode).to.equal(true)
+    })
+
+    it("should skip false predicates", function () {
+      expect(game.state.sawFalseNode).to.not.exist
+    })
+
+    // TODO: unimplemented functionality!
+    it.skip("should allow checking raw values instead of state", () => {
+      const story = `
+        ## theNode
+          set sawDefault to true
+          [false]
+            set sawFalseNode to true
+          [true]
+            set sawTrueNode to true
+      `
+      game = new Game(story)
+      console.log(JSON.stringify(game.story.graph, null, 2))
+      game.start(); 
+
+      expect(game.state.sawDefault).to.equal(true)
+      expect(game.state.sawTrueNode).to.equal(true) 
+      expect(game.state.sawFalseNode).to.equal(false)
+    })
+  })
+})

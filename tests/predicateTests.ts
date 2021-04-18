@@ -9,6 +9,9 @@ import * as Parser from 'storyboard-lang'
 import checkPredicate from '../src/predicate'
 import keyPathify from '../src/keyPathify'
 
+// TODO: We have no tests for [unless foo] or [if not foo] (parsed as { not: {...predicate }})
+// passageTests includes coverage for this, but it should be explicitly covered here
+
 describe("predicates", () => {
   let predicate: Parser.Predicate;
 
