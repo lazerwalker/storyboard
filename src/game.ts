@@ -20,11 +20,14 @@ import { Story } from './story'
 import * as Parser from 'storyboard-lang'
 import { Dispatch } from './dispatch'
 
+export { default as keyPathify } from './keyPathify'
+
 export type OutputCallback = ((content: string, passageId: Parser.PassageId, track: String) => void)
 export type ObserverCallback = ((content: any) => void)
 
 export class Game {
   observers: {[keypath: string]: ObserverCallback[]}
+  valid: boolean = true
 
   constructor(storyData: string|Parser.Story, initialState?: State) {
     let story: Parser.Story
