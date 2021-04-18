@@ -23,6 +23,9 @@ export class Node implements Parser.Node {
 
   // TODO: Documentation is now out-of-date.
   // I don't know what behavior is better, or what higher-level abstraction should exist
+  
+  // DOUBLE TODO: This is currently broken. It appears that allowRepeats doesn't get properly set
+  // This was already broken, but new tests/functionality are just now exposing this
   readonly allowRepeats?: boolean = true;
 
   dispatch: Dispatch;
