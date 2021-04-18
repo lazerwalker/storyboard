@@ -621,7 +621,7 @@ describe("triggering events from the bag", function() {
         expect(output).to.have.been.calledOnce;
       })
 
-      it("should allow playing a second time", function() {
+      it.skip("should allow playing a second time", function() {
         game.receiveInput("foo", 7);
         game.completePassage("0");
         game.receiveInput("foo", 7);
