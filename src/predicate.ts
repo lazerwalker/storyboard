@@ -39,6 +39,11 @@ export default function checkPredicate(predicate: Predicate|undefined, state: an
        memo = memo && (value === obj.eq || (value === keyPathify(obj.eq, state, true)))
     }
 
+    // TODO: No tests for this
+    if (!_.isUndefined(obj.neq)) {
+      memo = memo && (value !== obj.neq && (value !== keyPathify(obj.neq, state, true)))
+    }
+
     if (!_.isUndefined(obj.gte)) {
       memo = memo && (value >= keyPathify(obj.gte, state, true));
     }
