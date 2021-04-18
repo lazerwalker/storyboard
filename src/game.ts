@@ -55,6 +55,14 @@ export class Game {
         this.completePassage(passageId);
       }, parseInt(timeout))
     });
+
+
+    // TODO: For now, comments are mistakenly parsed as passages
+    // This lets us just immediately move past the comment for now. 
+    // To be fixed properly at the parser level -- comments shouldn't be stored as passages!
+    this.addOutput('', (_, passageId) => {
+      this.completePassage(passageId)
+    })
   }
 
   readonly story: Story;
