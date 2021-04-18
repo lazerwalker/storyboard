@@ -2,6 +2,14 @@
 // has been pulled into vanilla TS/JS
 import * as _ from "lodash"
 
+/* Identified parser issues
+- Spaces in node IDs
+- Can we avoid needing node IDs for bag nodes?
+- asterisks in comments
+- text like [[this]] in a variable setting
+- to confirm: if you have a passage with a predicate, can you have (a) multiple passages tied to that predicate, and/or (b) non-predicated passages after it?
+*/
+
 import keyPathify from "./keyPathify"
 
 import * as Actions from "./gameActions"
