@@ -29,8 +29,13 @@ export class Game {
   constructor(storyData: string|Parser.Story, initialState?: State) {
     let story: Parser.Story
     if (typeof storyData === "string") {
-      // TODO: Error handling
-      story = Parser.parseString(storyData)!
+        story = Parser.parseString(storyData)!
+      if (!story) {
+        // I'm having trouble handling this error properly. This is a hack.
+        this.valid = false
+        console.log("Throwing invalid story")
+        throw("Invalid story")
+      }
     } else {
       story = storyData
     }
