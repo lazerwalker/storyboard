@@ -4,7 +4,7 @@
 
 Storyboard is a general-purpose engine for multilinear/nonlinear storytelling. It's written in TypeScript, and intended to be embedded within another game or application.
 
-Right now, it's pre-alpha. Stay tuned for more.
+**As a warning, this is academic software that isn't particularly suited for production use by people who didn't build it**. I'd like to get this production-ready at some point, but can make no promises about a timeline. If you're looking for a narrative engine you can ship in your commercial game today, you may want to check out [Yarn Spinner](https://yarnspinner.dev) or [Ink](https://www.inklestudios.com/ink/), although neither quite has a general-purpose storylet system like Storyboard does/did.
 
 If you're interested in progress, you should check out https://twitch.tv/mlazerwalker, where I livestream dev work on this at least once a week.
 
